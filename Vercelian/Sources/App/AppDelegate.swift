@@ -51,30 +51,50 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
+    private func makeSharpTriangleImage(size: CGFloat = 16) -> NSImage {
+        let height = size * 0.875
+        let image = NSImage(size: NSSize(width: size, height: height))
+        image.lockFocus()
+        let path = NSBezierPath()
+        path.move(to: NSPoint(x: size / 2, y: height))
+        path.line(to: NSPoint(x: size, y: 0))
+        path.line(to: NSPoint(x: 0, y: 0))
+        path.close()
+        NSColor.black.setFill()
+        path.fill()
+        image.unlockFocus()
+        image.isTemplate = true
+        return image
+    }
+
     private func updateMenuBarIcon(state: MenuBarIconState) {
         guard let button = statusItem.button else { return }
 
         currentIconState = state
         let settings = SettingsManager.shared
 
-        if settings.dynamicMenuBarIcon {
-            // Dynamic icon - changes color based on state
-            if let color = state.tintColor {
-                let config = NSImage.SymbolConfiguration(pointSize: 16, weight: .medium)
-                if let image = NSImage(systemSymbolName: state.symbolName, accessibilityDescription: "Vercelian")?
-                    .withSymbolConfiguration(config) {
-                    let coloredImage = image.tinted(with: color)
-                    coloredImage.isTemplate = false
-                    button.image = coloredImage
-                }
+        if state == .error {
+            // Use SF Symbol for error state (exclamation triangle)
+            let config = NSImage.SymbolConfiguration(pointSize: 16, weight: .medium)
+            if settings.dynamicMenuBarIcon, let color = state.tintColor,
+               let image = NSImage(systemSymbolName: state.symbolName, accessibilityDescription: "Vercelian")?
+                .withSymbolConfiguration(config) {
+                let coloredImage = image.tinted(with: color)
+                coloredImage.isTemplate = false
+                button.image = coloredImage
             } else {
                 button.image = NSImage(systemSymbolName: state.symbolName, accessibilityDescription: "Vercelian")
                 button.image?.isTemplate = true
             }
+        } else if settings.dynamicMenuBarIcon, let color = state.tintColor {
+            // Dynamic colored sharp triangle
+            let image = makeSharpTriangleImage()
+            let coloredImage = image.tinted(with: color)
+            coloredImage.isTemplate = false
+            button.image = coloredImage
         } else {
-            // Static icon - always template
-            button.image = NSImage(systemSymbolName: "triangle.fill", accessibilityDescription: "Vercelian")
-            button.image?.isTemplate = true
+            // Static or normal sharp triangle
+            button.image = makeSharpTriangleImage()
         }
     }
 

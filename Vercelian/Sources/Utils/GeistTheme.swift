@@ -35,7 +35,7 @@ struct GeistColors {
     // MARK: - Status Colors - Ready (Green - Vercel green)
     static let successLighter = Color(hex: "D3F9D8")
     static let successLight = Color(hex: "52C41A")
-    static let success = Color(hex: "0D9E00")
+    static let success = Color(hex: "17B169")
     static let successDark = Color(hex: "0A7E00")
 
     // MARK: - Status Colors - Error (Red)
@@ -96,7 +96,7 @@ struct GeistColors {
     }
 
     static func border(_ colorScheme: ColorScheme) -> Color {
-        colorScheme == .dark ? grayDark3 : gray2
+        colorScheme == .dark ? grayDark2 : gray2
     }
 
     static func borderSecondary(_ colorScheme: ColorScheme) -> Color {
@@ -256,6 +256,19 @@ struct GeistButtonStyle: ButtonStyle {
     }
 }
 
+// MARK: - Sharp Triangle Shape
+
+struct SharpTriangle: Shape {
+    func path(in rect: CGRect) -> Path {
+        Path { path in
+            path.move(to: CGPoint(x: rect.midX, y: rect.minY))
+            path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
+            path.addLine(to: CGPoint(x: rect.minX, y: rect.maxY))
+            path.closeSubpath()
+        }
+    }
+}
+
 // MARK: - Vercel Logo View
 
 struct VercelLogo: View {
@@ -263,9 +276,9 @@ struct VercelLogo: View {
     @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
-        Image(systemName: "triangle.fill")
-            .font(.system(size: size, weight: .black))
-            .foregroundColor(GeistColors.foreground(colorScheme))
+        SharpTriangle()
+            .fill(GeistColors.foreground(colorScheme))
+            .frame(width: size, height: size * 0.875)
     }
 }
 

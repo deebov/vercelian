@@ -60,8 +60,8 @@ struct LoginView: View {
         VStack(spacing: GeistSpacing.md) {
             Button(action: openVercelTokenPage) {
                 HStack(spacing: 10) {
-                    Image(systemName: "triangle.fill")
-                        .font(.system(size: 14, weight: .black))
+                    SharpTriangle()
+                        .frame(width: 14, height: 12.25)
                     Text("Continue with Vercel")
                         .font(GeistFont.medium(GeistFont.body))
                 }

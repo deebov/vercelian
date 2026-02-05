@@ -76,7 +76,7 @@ struct DeploymentRowView: View {
                     Circle()
                         .fill(GeistColors.success)
                         .frame(width: 6, height: 6)
-                    Text("Live")
+                    Text("Current")
                         .font(GeistFont.medium(GeistFont.caption2))
                 }
                 .padding(.horizontal, 8)
