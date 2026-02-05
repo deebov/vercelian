@@ -1,0 +1,46 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-release:
+    runs-on: macos-15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_16.2.app/Contents/Developer
+
+      - name: Create Secrets.xcconfig
+        run: |
+          cat > Vercelian/Configuration/Secrets.xcconfig << 'EOF'
+          OAUTH_CLIENT_ID = ${{ secrets.OAUTH_CLIENT_ID }}
+          OAUTH_CLIENT_SECRET = ${{ secrets.OAUTH_CLIENT_SECRET }}
+          EOF
+
+      - name: Build Release
+        run: |
+          xcodebuild build \
+            -project Vercelian.xcodeproj \
+            -scheme Vercelian \
+            -configuration Release \
+            -derivedDataPath build \
+            -destination 'platform=macOS' \
+            CODE_SIGN_IDENTITY="-" \
+            CODE_SIGNING_REQUIRED=NO
+
+      - name: Package app
+        run: |
+          cd build/Build/Products/Release
+          zip -r -y Vercelian.zip Vercelian.app
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/Build/Products/Release/Vercelian.zip
+          generate_release_notes: true
