@@ -51,6 +51,7 @@
 		E91000002B5A000000000018 /* ProjectSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectSelectorView.swift; sourceTree = "<group>"; };
 		E91000002B5A000000000019 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E91000002B5A00000000001A /* Vercelian.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Vercelian.entitlements; sourceTree = "<group>"; };
+		E91000002B5A00000000001B /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,12 +76,21 @@
 		E90000002B5A000000000002 /* Vercelian */ = {
 			isa = PBXGroup;
 			children = (
+				E90000002B5A00000000000B /* Configuration */,
 				E90000002B5A000000000004 /* Sources */,
 				E91000002B5A000000000015 /* Assets.xcassets */,
 				E91000002B5A000000000019 /* Info.plist */,
 				E91000002B5A00000000001A /* Vercelian.entitlements */,
 			);
 			path = Vercelian;
+			sourceTree = "<group>";
+		};
+		E90000002B5A00000000000B /* Configuration */ = {
+			isa = PBXGroup;
+			children = (
+				E91000002B5A00000000001B /* Secrets.xcconfig */,
+			);
+			path = Configuration;
 			sourceTree = "<group>";
 		};
 		E90000002B5A000000000003 /* Products */ = {
@@ -251,6 +261,7 @@
 /* Begin XCBuildConfiguration section */
 		E90000002B5A000000000021 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E91000002B5A00000000001B /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -284,6 +295,7 @@
 		};
 		E90000002B5A000000000022 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E91000002B5A00000000001B /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

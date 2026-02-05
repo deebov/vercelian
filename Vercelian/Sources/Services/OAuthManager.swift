@@ -10,9 +10,9 @@ final class OAuthManager: ObservableObject {
     private let authorizationURL = "https://vercel.com/oauth/authorize"
     private let tokenURL = "https://api.vercel.com/login/oauth/token"
 
-    // Vercelian OAuth App credentials
-    private let clientId = "cl_DWYG4Akiq0eNKosBi6lKgMt0eAoaZIDu"
-    private let clientSecret = ""
+    // Vercelian OAuth App credentials (loaded from Secrets.xcconfig via Info.plist)
+    private let clientId: String = Bundle.main.infoDictionary?["OAuthClientID"] as? String ?? ""
+    private let clientSecret: String = Bundle.main.infoDictionary?["OAuthClientSecret"] as? String ?? ""
 
     // Local callback server
     private var server: LocalHTTPServer?

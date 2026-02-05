@@ -21,6 +21,9 @@ DerivedData/
 # Firebase
 firebase-debug.log
 
+# Secrets
+Secrets.xcconfig
+
 # App archives
 *.app
 *.dSYM.zip
