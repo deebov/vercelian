@@ -1,0 +1,464 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		D928F7AE2F34CE640080018A /* NotificationManager 2.swift in Sources */ = {isa = PBXBuildFile; fileRef = D928F7AD2F34CE640080018A /* NotificationManager 2.swift */; };
+		D928F7B02F34CE670080018A /* NotificationNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = D928F7AF2F34CE670080018A /* NotificationNames.swift */; };
+		D928F7B22F34CE790080018A /* NotificationManager 3.swift in Sources */ = {isa = PBXBuildFile; fileRef = D928F7B12F34CE790080018A /* NotificationManager 3.swift */; };
+		D928F7B42F34CE810080018A /* SettingsManager 2.swift in Sources */ = {isa = PBXBuildFile; fileRef = D928F7B32F34CE810080018A /* SettingsManager 2.swift */; };
+		E91000012B5A00000000000A /* VercelianApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91000002B5A00000000000A /* VercelianApp.swift */; };
+		E91000012B5A00000000000B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91000002B5A00000000000B /* AppDelegate.swift */; };
+		E91000012B5A00000000000C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91000002B5A00000000000C /* ContentView.swift */; };
+		E91000012B5A00000000000D /* DeploymentListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91000002B5A00000000000D /* DeploymentListView.swift */; };
+		E91000012B5A00000000000E /* DeploymentRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91000002B5A00000000000E /* DeploymentRowView.swift */; };
+		E91000012B5A00000000000F /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91000002B5A00000000000F /* SettingsView.swift */; };
+		E91000012B5A000000000010 /* Deployment.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91000002B5A000000000010 /* Deployment.swift */; };
+		E91000012B5A000000000011 /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91000002B5A000000000011 /* Project.swift */; };
+		E91000012B5A000000000012 /* VercelAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91000002B5A000000000012 /* VercelAPI.swift */; };
+		E91000012B5A000000000013 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91000002B5A000000000013 /* KeychainManager.swift */; };
+		E91000012B5A000000000014 /* DeploymentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91000002B5A000000000014 /* DeploymentStore.swift */; };
+		E91000012B5A000000000015 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E91000002B5A000000000015 /* Assets.xcassets */; };
+		E91000012B5A000000000016 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91000002B5A000000000016 /* LoginView.swift */; };
+		E91000012B5A000000000017 /* DeploymentDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91000002B5A000000000017 /* DeploymentDetailView.swift */; };
+		E91000012B5A000000000018 /* ProjectSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91000002B5A000000000018 /* ProjectSelectorView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		D928F7AD2F34CE640080018A /* NotificationManager 2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NotificationManager 2.swift"; sourceTree = "<group>"; };
+		D928F7AF2F34CE670080018A /* NotificationNames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationNames.swift; sourceTree = "<group>"; };
+		D928F7B12F34CE790080018A /* NotificationManager 3.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NotificationManager 3.swift"; sourceTree = "<group>"; };
+		D928F7B32F34CE810080018A /* SettingsManager 2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SettingsManager 2.swift"; sourceTree = "<group>"; };
+		E90000002B5A00000000000A /* Vercelian.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Vercelian.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E91000002B5A00000000000A /* VercelianApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VercelianApp.swift; sourceTree = "<group>"; };
+		E91000002B5A00000000000B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		E91000002B5A00000000000C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		E91000002B5A00000000000D /* DeploymentListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeploymentListView.swift; sourceTree = "<group>"; };
+		E91000002B5A00000000000E /* DeploymentRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeploymentRowView.swift; sourceTree = "<group>"; };
+		E91000002B5A00000000000F /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		E91000002B5A000000000010 /* Deployment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Deployment.swift; sourceTree = "<group>"; };
+		E91000002B5A000000000011 /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
+		E91000002B5A000000000012 /* VercelAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VercelAPI.swift; sourceTree = "<group>"; };
+		E91000002B5A000000000013 /* KeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
+		E91000002B5A000000000014 /* DeploymentStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeploymentStore.swift; sourceTree = "<group>"; };
+		E91000002B5A000000000015 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		E91000002B5A000000000016 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		E91000002B5A000000000017 /* DeploymentDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeploymentDetailView.swift; sourceTree = "<group>"; };
+		E91000002B5A000000000018 /* ProjectSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectSelectorView.swift; sourceTree = "<group>"; };
+		E91000002B5A000000000019 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E91000002B5A00000000001A /* Vercelian.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Vercelian.entitlements; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E90000012B5A000000000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		E90000002B5A000000000001 = {
+			isa = PBXGroup;
+			children = (
+				E90000002B5A000000000002 /* Vercelian */,
+				E90000002B5A000000000003 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		E90000002B5A000000000002 /* Vercelian */ = {
+			isa = PBXGroup;
+			children = (
+				E90000002B5A000000000004 /* Sources */,
+				E91000002B5A000000000015 /* Assets.xcassets */,
+				E91000002B5A000000000019 /* Info.plist */,
+				E91000002B5A00000000001A /* Vercelian.entitlements */,
+			);
+			path = Vercelian;
+			sourceTree = "<group>";
+		};
+		E90000002B5A000000000003 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E90000002B5A00000000000A /* Vercelian.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E90000002B5A000000000004 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				E90000002B5A000000000005 /* App */,
+				E90000002B5A000000000006 /* Views */,
+				E90000002B5A000000000007 /* Models */,
+				E90000002B5A000000000008 /* Services */,
+				E90000002B5A000000000009 /* Utils */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		E90000002B5A000000000005 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				E91000002B5A00000000000A /* VercelianApp.swift */,
+				E91000002B5A00000000000B /* AppDelegate.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		E90000002B5A000000000006 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				E91000002B5A00000000000C /* ContentView.swift */,
+				E91000002B5A000000000016 /* LoginView.swift */,
+				E91000002B5A00000000000D /* DeploymentListView.swift */,
+				E91000002B5A00000000000E /* DeploymentRowView.swift */,
+				E91000002B5A000000000017 /* DeploymentDetailView.swift */,
+				E91000002B5A000000000018 /* ProjectSelectorView.swift */,
+				E91000002B5A00000000000F /* SettingsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		E90000002B5A000000000007 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				E91000002B5A000000000010 /* Deployment.swift */,
+				E91000002B5A000000000011 /* Project.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		E90000002B5A000000000008 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				E91000002B5A000000000012 /* VercelAPI.swift */,
+				E91000002B5A000000000014 /* DeploymentStore.swift */,
+				D928F7AD2F34CE640080018A /* NotificationManager 2.swift */,
+				D928F7AF2F34CE670080018A /* NotificationNames.swift */,
+				D928F7B12F34CE790080018A /* NotificationManager 3.swift */,
+				D928F7B32F34CE810080018A /* SettingsManager 2.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		E90000002B5A000000000009 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				E91000002B5A000000000013 /* KeychainManager.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		E90000002B5A000000000010 /* Vercelian */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E90000002B5A000000000020 /* Build configuration list for PBXNativeTarget "Vercelian" */;
+			buildPhases = (
+				E90000002B5A000000000011 /* Sources */,
+				E90000012B5A000000000001 /* Frameworks */,
+				E90000002B5A000000000012 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Vercelian;
+			productName = Vercelian;
+			productReference = E90000002B5A00000000000A /* Vercelian.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E90000002B5A000000000000 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 2620;
+				TargetAttributes = {
+					E90000002B5A000000000010 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = E90000002B5A000000000030 /* Build configuration list for PBXProject "Vercelian" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = E90000002B5A000000000001;
+			productRefGroup = E90000002B5A000000000003 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E90000002B5A000000000010 /* Vercelian */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E90000002B5A000000000012 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E91000012B5A000000000015 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E90000002B5A000000000011 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E91000012B5A00000000000A /* VercelianApp.swift in Sources */,
+				D928F7AE2F34CE640080018A /* NotificationManager 2.swift in Sources */,
+				D928F7B42F34CE810080018A /* SettingsManager 2.swift in Sources */,
+				E91000012B5A00000000000B /* AppDelegate.swift in Sources */,
+				E91000012B5A00000000000C /* ContentView.swift in Sources */,
+				E91000012B5A00000000000D /* DeploymentListView.swift in Sources */,
+				E91000012B5A00000000000E /* DeploymentRowView.swift in Sources */,
+				E91000012B5A00000000000F /* SettingsView.swift in Sources */,
+				E91000012B5A000000000010 /* Deployment.swift in Sources */,
+				E91000012B5A000000000011 /* Project.swift in Sources */,
+				E91000012B5A000000000012 /* VercelAPI.swift in Sources */,
+				E91000012B5A000000000013 /* KeychainManager.swift in Sources */,
+				E91000012B5A000000000014 /* DeploymentStore.swift in Sources */,
+				E91000012B5A000000000016 /* LoginView.swift in Sources */,
+				D928F7B02F34CE670080018A /* NotificationNames.swift in Sources */,
+				D928F7B22F34CE790080018A /* NotificationManager 3.swift in Sources */,
+				E91000012B5A000000000017 /* DeploymentDetailView.swift in Sources */,
+				E91000012B5A000000000018 /* ProjectSelectorView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		E90000002B5A000000000021 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Vercelian/Vercelian.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = WYK4PQWW66;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Vercelian/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Vercelian;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vercelian.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		E90000002B5A000000000022 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Vercelian/Vercelian.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = WYK4PQWW66;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Vercelian/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Vercelian;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vercelian.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		E90000002B5A000000000031 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		E90000002B5A000000000032 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E90000002B5A000000000020 /* Build configuration list for PBXNativeTarget "Vercelian" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E90000002B5A000000000021 /* Debug */,
+				E90000002B5A000000000022 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E90000002B5A000000000030 /* Build configuration list for PBXProject "Vercelian" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E90000002B5A000000000031 /* Debug */,
+				E90000002B5A000000000032 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = E90000002B5A000000000000 /* Project object */;
+}
