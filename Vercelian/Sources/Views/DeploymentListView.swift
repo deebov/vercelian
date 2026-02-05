@@ -104,7 +104,8 @@ struct SwipeableRow<Content: View>: View {
     @ObservedObject private var manager = RowSwipeManager.shared
     @Environment(\.colorScheme) var colorScheme
 
-    private let maxActionWidth: CGFloat = 64
+    private let minButtonWidth: CGFloat = 72
+    private let maxActionWidth: CGFloat = 72
 
     init(rowId: String, actions: [SwipeAction], @ViewBuilder content: () -> Content) {
         self.rowId = rowId
@@ -126,14 +127,20 @@ struct SwipeableRow<Content: View>: View {
 
     var body: some View {
         ZStack(alignment: .trailing) {
-            // Action buttons behind - expand to fill revealed space
+            // Action buttons - deck of cards layout
             if revealedWidth > 0 {
-                HStack(spacing: 0) {
-                    ForEach(actions) { action in
-                        swipeActionButton(action: action)
+                ZStack(alignment: .leading) {
+                    let count = CGFloat(actions.count)
+                    let cardWidth = max(minButtonWidth, revealedWidth / count)
+                    ForEach(Array(actions.enumerated()), id: \.element.id) { index, action in
+                        let i = CGFloat(index)
+                        let cardX = revealedWidth * (i / count)
+                        swipeActionButton(action: action, width: cardWidth)
+                            .offset(x: cardX)
+                            .zIndex(Double(index))
                     }
                 }
-                .frame(width: revealedWidth)
+                .frame(width: revealedWidth, alignment: .leading)
             }
 
             // Main content
@@ -149,9 +156,8 @@ struct SwipeableRow<Content: View>: View {
         }
     }
 
-    private func swipeActionButton(action: SwipeAction) -> some View {
-        let buttonWidth = revealedWidth / CGFloat(actions.count)
-        return Button {
+    private func swipeActionButton(action: SwipeAction, width: CGFloat) -> some View {
+        Button {
             manager.close()
             action.action()
         } label: {
@@ -164,9 +170,8 @@ struct SwipeableRow<Content: View>: View {
                     .fixedSize(horizontal: true, vertical: false)
             }
             .foregroundColor(.white)
-            .frame(width: buttonWidth)
+            .frame(width: width)
             .frame(maxHeight: .infinity)
-            .clipped()
             .background(action.color)
         }
         .buttonStyle(.plain)

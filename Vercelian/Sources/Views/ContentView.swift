@@ -312,13 +312,13 @@ struct HeaderView: View {
 
     var body: some View {
         HStack {
-            // Vercel logo / title
-            HStack(spacing: 8) {
-                VercelLogo(size: 18)
-                Text("Vercelian")
-                    .font(GeistFont.semibold(GeistFont.title3))
-                    .foregroundColor(GeistColors.foreground(colorScheme))
-            }
+            // Wordmark logo
+            Image("VercelianWordmark")
+                .renderingMode(.template)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(height: 14)
+                .foregroundColor(GeistColors.foreground(colorScheme))
 
             Spacer()
 
