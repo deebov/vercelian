@@ -256,7 +256,7 @@ struct SettingsView: View {
                 linkRow(
                     icon: "star",
                     title: "Star on GitHub",
-                    url: "https://github.com/yourusername/vercelian"
+                    url: "https://github.com/deebov/vercelian"
                 )
 
                 Divider()
@@ -266,7 +266,7 @@ struct SettingsView: View {
                 linkRow(
                     icon: "exclamationmark.bubble",
                     title: "Report an Issue",
-                    url: "https://github.com/yourusername/vercelian/issues"
+                    url: "https://github.com/deebov/vercelian/issues"
                 )
             }
             .frame(maxWidth: .infinity)

@@ -25,7 +25,7 @@ A native macOS menu bar app for monitoring Vercel deployments. Built with SwiftU
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/vercelian.git
+   git clone https://github.com/deebov/vercelian.git
    cd vercelian
    ```
 
