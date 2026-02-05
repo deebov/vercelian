@@ -125,16 +125,16 @@ struct DeploymentRowView: View {
 
     private var statusIndicator: some View {
         ZStack {
+            if deployment.state == .building || deployment.state == .initializing || deployment.state == .queued {
+                Circle()
+                    .fill(stateColor)
+                    .frame(width: 8, height: 8)
+                    .modifier(ExpandingPulse())
+            }
+
             Circle()
                 .fill(stateColor)
                 .frame(width: 8, height: 8)
-
-            if deployment.state == .building || deployment.state == .initializing || deployment.state == .queued {
-                Circle()
-                    .stroke(stateColor.opacity(0.3), lineWidth: 2)
-                    .frame(width: 14, height: 14)
-                    .modifier(PulseAnimation())
-            }
         }
         .frame(width: 20, height: 20)
     }

@@ -342,6 +342,23 @@ struct PulseAnimation: ViewModifier {
     }
 }
 
+struct ExpandingPulse: ViewModifier {
+    @State private var animate = false
+
+    func body(content: Content) -> some View {
+        content
+            .scaleEffect(animate ? 2.5 : 1.0)
+            .opacity(animate ? 0.0 : 0.6)
+            .animation(
+                .easeOut(duration: 1.2).repeatForever(autoreverses: false),
+                value: animate
+            )
+            .onAppear {
+                animate = true
+            }
+    }
+}
+
 // MARK: - Deployment State Extension
 
 extension DeploymentState {
