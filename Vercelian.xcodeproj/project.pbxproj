@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D928F7AE2F34CE640080018A /* NotificationManager 2.swift in Sources */ = {isa = PBXBuildFile; fileRef = D928F7AD2F34CE640080018A /* NotificationManager 2.swift */; };
-		D928F7B02F34CE670080018A /* NotificationNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = D928F7AF2F34CE670080018A /* NotificationNames.swift */; };
-		D928F7B22F34CE790080018A /* NotificationManager 3.swift in Sources */ = {isa = PBXBuildFile; fileRef = D928F7B12F34CE790080018A /* NotificationManager 3.swift */; };
-		D928F7B42F34CE810080018A /* SettingsManager 2.swift in Sources */ = {isa = PBXBuildFile; fileRef = D928F7B32F34CE810080018A /* SettingsManager 2.swift */; };
+		D928F7AE2F34CE640080018A /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D928F7AD2F34CE640080018A /* NotificationManager.swift */; };
+		D928F7B22F34CE790080018A /* OAuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D928F7B12F34CE790080018A /* OAuthManager.swift */; };
+		D928F7B42F34CE810080018A /* SettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D928F7B32F34CE810080018A /* SettingsManager.swift */; };
+		D928F7B62F34CE830080018A /* GeistTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = D928F7B52F34CE830080018A /* GeistTheme.swift */; };
 		E91000012B5A00000000000A /* VercelianApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91000002B5A00000000000A /* VercelianApp.swift */; };
 		E91000012B5A00000000000B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91000002B5A00000000000B /* AppDelegate.swift */; };
 		E91000012B5A00000000000C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91000002B5A00000000000C /* ContentView.swift */; };
@@ -29,10 +29,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		D928F7AD2F34CE640080018A /* NotificationManager 2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NotificationManager 2.swift"; sourceTree = "<group>"; };
-		D928F7AF2F34CE670080018A /* NotificationNames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationNames.swift; sourceTree = "<group>"; };
-		D928F7B12F34CE790080018A /* NotificationManager 3.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NotificationManager 3.swift"; sourceTree = "<group>"; };
-		D928F7B32F34CE810080018A /* SettingsManager 2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SettingsManager 2.swift"; sourceTree = "<group>"; };
+		D928F7AD2F34CE640080018A /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
+		D928F7B12F34CE790080018A /* OAuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthManager.swift; sourceTree = "<group>"; };
+		D928F7B32F34CE810080018A /* SettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsManager.swift; sourceTree = "<group>"; };
+		D928F7B52F34CE830080018A /* GeistTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeistTheme.swift; sourceTree = "<group>"; };
 		E90000002B5A00000000000A /* Vercelian.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Vercelian.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E91000002B5A00000000000A /* VercelianApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VercelianApp.swift; sourceTree = "<group>"; };
 		E91000002B5A00000000000B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -150,10 +150,9 @@
 			children = (
 				E91000002B5A000000000012 /* VercelAPI.swift */,
 				E91000002B5A000000000014 /* DeploymentStore.swift */,
-				D928F7AD2F34CE640080018A /* NotificationManager 2.swift */,
-				D928F7AF2F34CE670080018A /* NotificationNames.swift */,
-				D928F7B12F34CE790080018A /* NotificationManager 3.swift */,
-				D928F7B32F34CE810080018A /* SettingsManager 2.swift */,
+				D928F7AD2F34CE640080018A /* NotificationManager.swift */,
+				D928F7B12F34CE790080018A /* OAuthManager.swift */,
+				D928F7B32F34CE810080018A /* SettingsManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -162,6 +161,7 @@
 			isa = PBXGroup;
 			children = (
 				E91000002B5A000000000013 /* KeychainManager.swift */,
+				D928F7B52F34CE830080018A /* GeistTheme.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -236,8 +236,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				E91000012B5A00000000000A /* VercelianApp.swift in Sources */,
-				D928F7AE2F34CE640080018A /* NotificationManager 2.swift in Sources */,
-				D928F7B42F34CE810080018A /* SettingsManager 2.swift in Sources */,
+				D928F7AE2F34CE640080018A /* NotificationManager.swift in Sources */,
+				D928F7B42F34CE810080018A /* SettingsManager.swift in Sources */,
 				E91000012B5A00000000000B /* AppDelegate.swift in Sources */,
 				E91000012B5A00000000000C /* ContentView.swift in Sources */,
 				E91000012B5A00000000000D /* DeploymentListView.swift in Sources */,
@@ -249,8 +249,8 @@
 				E91000012B5A000000000013 /* KeychainManager.swift in Sources */,
 				E91000012B5A000000000014 /* DeploymentStore.swift in Sources */,
 				E91000012B5A000000000016 /* LoginView.swift in Sources */,
-				D928F7B02F34CE670080018A /* NotificationNames.swift in Sources */,
-				D928F7B22F34CE790080018A /* NotificationManager 3.swift in Sources */,
+				D928F7B22F34CE790080018A /* OAuthManager.swift in Sources */,
+				D928F7B62F34CE830080018A /* GeistTheme.swift in Sources */,
 				E91000012B5A000000000017 /* DeploymentDetailView.swift in Sources */,
 				E91000012B5A000000000018 /* ProjectSelectorView.swift in Sources */,
 			);
