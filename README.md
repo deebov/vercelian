@@ -8,8 +8,15 @@ A native macOS menu bar app for monitoring Vercel deployments. Built with SwiftU
 
 ## Download
 
-- **GitHub Releases**: Download the latest `.app` from [Releases](https://github.com/deebov/vercelian/releases)
+- **GitHub Releases**: Download the latest `.zip` from [Releases](https://github.com/deebov/vercelian/releases)
 - **App Store**: Coming soon
+
+> **Note**: Since the app is not notarized, macOS Gatekeeper will block it on first launch. To open it:
+> 1. Right-click (or Control-click) on **Vercelian.app**
+> 2. Select **Open** from the context menu
+> 3. Click **Open** in the dialog that appears
+>
+> You only need to do this once.
 
 ## Features
 
@@ -117,8 +124,6 @@ Vercelian/
 ├── Info.plist
 └── Vercelian.entitlements
 ```
-
-> **Note**: The app icon (`AppIcon.appiconset`) does not yet contain images. You'll need to add icon files to `Vercelian/Assets.xcassets/AppIcon.appiconset/` before submitting to the App Store.
 
 ### Architecture
 
