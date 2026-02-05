@@ -33,16 +33,71 @@ enum NavigationDestination: Equatable {
     }
 }
 
+// MARK: - Trackpad Swipe Detection
+
+final class SwipeEventMonitor: ObservableObject {
+    var onSwipe: ((CGFloat, NSEvent.Phase) -> Void)?
+    private var monitor: Any?
+    private var isTracking = false
+    private var isHorizontalGesture = false
+
+    func start() {
+        guard monitor == nil else { return }
+        monitor = NSEvent.addLocalMonitorForEvents(matching: .scrollWheel) { [weak self] event in
+            guard let self = self else { return event }
+            guard event.phase != [] || event.momentumPhase != [] else { return event }
+
+            let phase: NSEvent.Phase = event.phase != [] ? event.phase : event.momentumPhase
+
+            if phase == .began {
+                self.isTracking = true
+                // Lock direction based on which axis has more movement
+                self.isHorizontalGesture = abs(event.scrollingDeltaX) > abs(event.scrollingDeltaY)
+            }
+
+            if phase == .ended || phase == .cancelled {
+                let wasHorizontal = self.isHorizontalGesture
+                self.isTracking = false
+                self.isHorizontalGesture = false
+                if wasHorizontal {
+                    self.onSwipe?(event.scrollingDeltaX, phase)
+                    return nil // consume the event
+                }
+                return event
+            }
+
+            if self.isTracking && self.isHorizontalGesture {
+                self.onSwipe?(event.scrollingDeltaX, phase)
+                return nil // consume — prevent vertical scroll
+            }
+
+            return event
+        }
+    }
+
+    func stop() {
+        if let monitor = monitor {
+            NSEvent.removeMonitor(monitor)
+            self.monitor = nil
+        }
+    }
+
+    deinit {
+        stop()
+    }
+}
+
 struct MainView: View {
     @ObservedObject var store = DeploymentStore.shared
     @Environment(\.colorScheme) var colorScheme
     @Binding var showSettings: Bool
     @State private var currentDestination: NavigationDestination = .list
-    @State private var slideDirection: SlideDirection = .forward
+    @State private var swipeOffset: CGFloat = 0
+    @State private var isSwiping = false
+    @State private var lastDetail: Deployment?
+    @StateObject private var swipeMonitor = SwipeEventMonitor()
 
-    enum SlideDirection {
-        case forward, backward
-    }
+    private let viewWidth: CGFloat = 380
 
     var body: some View {
         VStack(spacing: 0) {
@@ -51,9 +106,9 @@ struct MainView: View {
                 showSettings: currentDestination == .settings,
                 onSettingsTap: {
                     if currentDestination == .settings {
-                        navigateTo(.list, direction: .backward)
+                        navigateBack()
                     } else {
-                        navigateTo(.settings, direction: .forward)
+                        navigateForward(.settings)
                     }
                 }
             )
@@ -61,58 +116,153 @@ struct MainView: View {
             Divider()
                 .background(GeistColors.border(colorScheme))
 
-            // Content with transitions
-            ZStack {
-                switch currentDestination {
-                case .list:
+            // Content area
+            GeometryReader { geo in
+                ZStack {
+                    // List is always rendered behind
                     listContent
-                        .transition(.asymmetric(
-                            insertion: .move(edge: .leading),
-                            removal: .move(edge: .leading)
-                        ))
+                        .frame(width: geo.size.width, height: geo.size.height)
+                        .offset(x: listOffset)
 
-                case .detail(let deployment):
-                    DeploymentDetailView(deployment: deployment, onBack: {
-                        navigateTo(.list, direction: .backward)
-                    })
-                    .transition(.asymmetric(
-                        insertion: .move(edge: .trailing),
-                        removal: .move(edge: .trailing)
-                    ))
-
-                case .settings:
-                    SettingsView(showSettings: .constant(true))
-                        .transition(.asymmetric(
-                            insertion: .move(edge: .trailing),
-                            removal: .move(edge: .trailing)
-                        ))
+                    // Overlay page (detail or settings) on top
+                    if showsOverlay {
+                        overlayView
+                            .frame(width: geo.size.width, height: geo.size.height)
+                            .background(GeistColors.background(colorScheme))
+                            .offset(x: overlayOffset)
+                    }
                 }
             }
             .clipped()
-            .animation(.easeInOut(duration: 0.25), value: currentDestination)
         }
         .background(GeistColors.background(colorScheme))
+        .onAppear {
+            swipeMonitor.onSwipe = { [self] delta, phase in
+                handleSwipe(delta: delta, phase: phase)
+            }
+            swipeMonitor.start()
+        }
+        .onDisappear {
+            swipeMonitor.stop()
+        }
+    }
+
+    private var listOffset: CGFloat {
+        if currentDestination == .list && !isSwiping {
+            return 0
+        }
+        let clamped = min(swipeOffset, viewWidth)
+        let parallax = viewWidth / 3
+        return -parallax + (clamped / viewWidth) * parallax
+    }
+
+    private var overlayOffset: CGFloat {
+        if currentDestination == .list && !isSwiping {
+            return viewWidth
+        }
+        return swipeOffset
+    }
+
+    private var showsOverlay: Bool {
+        currentDestination != .list || isSwiping
+    }
+
+    @ViewBuilder
+    private var overlayView: some View {
+        switch currentDestination {
+        case .detail(let deployment):
+            DeploymentDetailView(deployment: deployment, onBack: {
+                navigateBack()
+            })
+        case .settings:
+            SettingsView(showSettings: .constant(true))
+        case .list:
+            // Show last detail during swipe-out animation
+            if let dep = lastDetail {
+                DeploymentDetailView(deployment: dep, onBack: {})
+            }
+        }
     }
 
     private var listContent: some View {
         VStack(spacing: 0) {
-            // Project selector
             ProjectSelectorView()
 
             Divider()
                 .background(GeistColors.border(colorScheme))
 
-            // Deployment list
             DeploymentListView(onSelect: { deployment in
-                navigateTo(.detail(deployment), direction: .forward)
+                navigateForward(.detail(deployment))
             })
         }
     }
 
-    private func navigateTo(_ destination: NavigationDestination, direction: SlideDirection) {
-        slideDirection = direction
-        withAnimation(.easeInOut(duration: 0.25)) {
-            currentDestination = destination
+    private func navigateForward(_ destination: NavigationDestination) {
+        if case .detail(let d) = destination {
+            lastDetail = d
+        }
+        // Start off-screen right, animate in
+        swipeOffset = viewWidth
+        currentDestination = destination
+        withAnimation(.easeOut(duration: 0.25)) {
+            swipeOffset = 0
+        }
+    }
+
+    private func navigateBack() {
+        if case .detail(let d) = currentDestination {
+            lastDetail = d
+        }
+        withAnimation(.easeOut(duration: 0.25)) {
+            swipeOffset = viewWidth
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+            currentDestination = .list
+            swipeOffset = 0
+            isSwiping = false
+        }
+    }
+
+    @State private var swipeCompleted = false
+
+    private func handleSwipe(delta: CGFloat, phase: NSEvent.Phase) {
+        guard currentDestination != .list, !swipeCompleted else { return }
+
+        switch phase {
+        case .began:
+            isSwiping = true
+            swipeCompleted = false
+
+        case .changed:
+            isSwiping = true
+            swipeOffset = min(max(0, swipeOffset + delta), viewWidth)
+
+        case .ended, .cancelled:
+            if swipeOffset > viewWidth * 0.35 {
+                swipeCompleted = true
+                if case .detail(let d) = currentDestination {
+                    lastDetail = d
+                }
+                withAnimation(.easeOut(duration: 0.2)) {
+                    swipeOffset = viewWidth
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                    currentDestination = .list
+                    swipeOffset = 0
+                    isSwiping = false
+                    swipeCompleted = false
+                }
+            } else {
+                withAnimation(.easeOut(duration: 0.2)) {
+                    swipeOffset = 0
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                    isSwiping = false
+                }
+            }
+
+        default:
+            break
         }
     }
 }

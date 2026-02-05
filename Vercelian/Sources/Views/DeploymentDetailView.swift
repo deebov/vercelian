@@ -29,7 +29,7 @@ struct DeploymentDetailView: View {
                 GeistStatusBadge(state: deployment.state)
             }
             .padding(.horizontal, GeistSpacing.md)
-            .padding(.vertical, GeistSpacing.sm)
+            .frame(height: 40)
 
             Divider()
                 .background(GeistColors.border(colorScheme))

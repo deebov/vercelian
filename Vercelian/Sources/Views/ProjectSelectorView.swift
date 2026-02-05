@@ -83,7 +83,7 @@ struct ProjectSelectorView: View {
             Spacer()
         }
         .padding(.horizontal, GeistSpacing.md)
-        .padding(.vertical, GeistSpacing.sm)
+        .frame(height: 40)
     }
 }
 
