@@ -11,88 +11,148 @@ struct SwipeAction: Identifiable {
     let action: () -> Void
 }
 
+// MARK: - Row Swipe Manager (shared state for trackpad-driven row swiping)
+
+final class RowSwipeManager: ObservableObject {
+    static let shared = RowSwipeManager()
+
+    @Published var activeRowId: String?
+    @Published var swipeOffset: CGFloat = 0
+
+    private var hoveredRowId: String?
+    private var isRevealed = false
+    private var maxReveal: CGFloat = 192 // 3 actions * 64
+
+    func setHovered(_ rowId: String?) {
+        hoveredRowId = rowId
+    }
+
+    func setMaxReveal(_ width: CGFloat) {
+        maxReveal = width
+    }
+
+    func handleScroll(delta: CGFloat, phase: NSEvent.Phase) {
+        switch phase {
+        case .began:
+            // If swiping on a different row, close the old one first
+            if let hovered = hoveredRowId, hovered != activeRowId {
+                if activeRowId != nil {
+                    close()
+                }
+                activeRowId = hovered
+            } else if activeRowId == nil {
+                activeRowId = hoveredRowId
+            }
+
+        case .changed:
+            guard activeRowId != nil else { return }
+            let raw: CGFloat
+            if isRevealed {
+                raw = swipeOffset + delta
+            } else {
+                raw = min(0, swipeOffset + delta)
+            }
+            // Native-style rubber band beyond maxReveal
+            if raw < -maxReveal {
+                let overscroll = -raw - maxReveal
+                // Apple's rubber band formula: x = d * (1 - 1/((d*c/dim)+1))
+                let c: CGFloat = 0.55
+                let dim = maxReveal
+                let rubberBanded = overscroll * c / (1 + overscroll * c / dim)
+                swipeOffset = -(maxReveal + rubberBanded)
+            } else {
+                swipeOffset = max(-maxReveal, raw)
+            }
+
+        case .ended, .cancelled:
+            guard activeRowId != nil else { return }
+            let threshold = maxReveal * 0.35
+            if -swipeOffset > threshold {
+                // Snap open with spring (bounces back from elastic overscroll)
+                withAnimation(.spring(response: 0.3, dampingFraction: 0.85)) {
+                    swipeOffset = -maxReveal
+                }
+                isRevealed = true
+            } else {
+                // Snap closed
+                close()
+            }
+
+        default:
+            break
+        }
+    }
+
+    func close() {
+        withAnimation(.easeOut(duration: 0.2)) {
+            swipeOffset = 0
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
+            self?.activeRowId = nil
+            self?.isRevealed = false
+        }
+    }
+}
+
 // MARK: - Swipeable Row
 
 struct SwipeableRow<Content: View>: View {
+    let rowId: String
     let content: Content
     let actions: [SwipeAction]
 
-    @State private var offset: CGFloat = 0
-    @State private var isRevealed = false
+    @ObservedObject private var manager = RowSwipeManager.shared
     @Environment(\.colorScheme) var colorScheme
 
-    private let actionButtonWidth: CGFloat = 64
-    private var totalActionsWidth: CGFloat { CGFloat(actions.count) * actionButtonWidth }
+    private let maxActionWidth: CGFloat = 64
 
-    init(actions: [SwipeAction], @ViewBuilder content: () -> Content) {
+    init(rowId: String, actions: [SwipeAction], @ViewBuilder content: () -> Content) {
+        self.rowId = rowId
         self.actions = actions
         self.content = content()
     }
 
+    private var isActive: Bool {
+        manager.activeRowId == rowId
+    }
+
+    private var currentOffset: CGFloat {
+        isActive ? manager.swipeOffset : 0
+    }
+
+    private var revealedWidth: CGFloat {
+        abs(min(currentOffset, 0))
+    }
+
     var body: some View {
         ZStack(alignment: .trailing) {
-            // Action buttons behind
-            HStack(spacing: 0) {
-                ForEach(actions) { action in
-                    swipeActionButton(action: action)
+            // Action buttons behind - expand to fill revealed space
+            if revealedWidth > 0 {
+                HStack(spacing: 0) {
+                    ForEach(actions) { action in
+                        swipeActionButton(action: action)
+                    }
                 }
+                .frame(width: revealedWidth)
             }
-            .frame(width: totalActionsWidth)
 
             // Main content
             content
-                .offset(x: offset)
-                .gesture(
-                    DragGesture(minimumDistance: 15)
-                        .onChanged { value in
-                            let horizontal = value.translation.width
-                            // Only allow swipe left (negative), or swipe right to close
-                            if isRevealed {
-                                offset = min(0, max(-totalActionsWidth, -totalActionsWidth + horizontal))
-                            } else {
-                                offset = min(0, horizontal)
-                            }
-                        }
-                        .onEnded { value in
-                            let threshold = totalActionsWidth * 0.4
-                            if isRevealed {
-                                // If already open, close if swiped right enough
-                                if value.translation.width > threshold {
-                                    close()
-                                } else {
-                                    open()
-                                }
-                            } else {
-                                // Open if swiped left enough
-                                if -value.translation.width > threshold || -value.velocity.width > 500 {
-                                    open()
-                                } else {
-                                    close()
-                                }
-                            }
-                        }
-                )
+                .offset(x: currentOffset)
         }
         .clipped()
-    }
-
-    private func open() {
-        withAnimation(.easeOut(duration: 0.2)) {
-            offset = -totalActionsWidth
-            isRevealed = true
-        }
-    }
-
-    private func close() {
-        withAnimation(.easeOut(duration: 0.2)) {
-            offset = 0
-            isRevealed = false
+        .onHover { hovering in
+            if hovering {
+                manager.setHovered(rowId)
+                manager.setMaxReveal(CGFloat(actions.count) * maxActionWidth)
+            }
         }
     }
 
     private func swipeActionButton(action: SwipeAction) -> some View {
-        Button {
-            close()
+        let buttonWidth = revealedWidth / CGFloat(actions.count)
+        return Button {
+            manager.close()
             action.action()
         } label: {
             VStack(spacing: 4) {
@@ -100,10 +160,13 @@ struct SwipeableRow<Content: View>: View {
                     .font(.system(size: 14, weight: .medium))
                 Text(action.title)
                     .font(GeistFont.medium(GeistFont.caption2))
+                    .lineLimit(1)
+                    .fixedSize(horizontal: true, vertical: false)
             }
             .foregroundColor(.white)
-            .frame(width: actionButtonWidth)
+            .frame(width: buttonWidth)
             .frame(maxHeight: .infinity)
+            .clipped()
             .background(action.color)
         }
         .buttonStyle(.plain)
@@ -208,7 +271,7 @@ struct DeploymentListView: View {
             LazyVStack(spacing: 0) {
                 ForEach(store.deployments) { deployment in
                     VStack(spacing: 0) {
-                        SwipeableRow(actions: swipeActions(for: deployment)) {
+                        SwipeableRow(rowId: deployment.uid, actions: swipeActions(for: deployment)) {
                             DeploymentRowView(
                                 deployment: deployment,
                                 isCurrentProduction: store.currentProductionDeploymentIds.contains(deployment.uid)
@@ -216,6 +279,7 @@ struct DeploymentListView: View {
                             .background(GeistColors.background(colorScheme))
                             .contentShape(Rectangle())
                             .onTapGesture {
+                                RowSwipeManager.shared.close()
                                 onSelect(deployment)
                             }
                         }

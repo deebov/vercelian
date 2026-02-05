@@ -37,21 +37,36 @@ enum NavigationDestination: Equatable {
 
 final class SwipeEventMonitor: ObservableObject {
     var onSwipe: ((CGFloat, NSEvent.Phase) -> Void)?
+    var onRowSwipe: ((CGFloat, NSEvent.Phase) -> Void)?
+    var isOnListPage: (() -> Bool)?
     private var monitor: Any?
     private var isTracking = false
     private var isHorizontalGesture = false
+    private var consumeMomentum = false
 
     func start() {
         guard monitor == nil else { return }
         monitor = NSEvent.addLocalMonitorForEvents(matching: .scrollWheel) { [weak self] event in
             guard let self = self else { return event }
-            guard event.phase != [] || event.momentumPhase != [] else { return event }
 
-            let phase: NSEvent.Phase = event.phase != [] ? event.phase : event.momentumPhase
+            // Handle momentum events: consume them silently if the gesture was horizontal
+            if event.momentumPhase != [] {
+                if self.consumeMomentum {
+                    if event.momentumPhase == .ended {
+                        self.consumeMomentum = false
+                    }
+                    return nil
+                }
+                return event
+            }
+
+            // Only process direct finger contact (event.phase)
+            guard event.phase != [] else { return event }
+            let phase = event.phase
 
             if phase == .began {
                 self.isTracking = true
-                // Lock direction based on which axis has more movement
+                self.consumeMomentum = false
                 self.isHorizontalGesture = abs(event.scrollingDeltaX) > abs(event.scrollingDeltaY)
             }
 
@@ -60,15 +75,24 @@ final class SwipeEventMonitor: ObservableObject {
                 self.isTracking = false
                 self.isHorizontalGesture = false
                 if wasHorizontal {
-                    self.onSwipe?(event.scrollingDeltaX, phase)
-                    return nil // consume the event
+                    self.consumeMomentum = true
+                    if self.isOnListPage?() == true {
+                        self.onRowSwipe?(event.scrollingDeltaX, phase)
+                    } else {
+                        self.onSwipe?(event.scrollingDeltaX, phase)
+                    }
+                    return nil
                 }
                 return event
             }
 
             if self.isTracking && self.isHorizontalGesture {
-                self.onSwipe?(event.scrollingDeltaX, phase)
-                return nil // consume — prevent vertical scroll
+                if self.isOnListPage?() == true {
+                    self.onRowSwipe?(event.scrollingDeltaX, phase)
+                } else {
+                    self.onSwipe?(event.scrollingDeltaX, phase)
+                }
+                return nil
             }
 
             return event
@@ -96,6 +120,8 @@ struct MainView: View {
     @State private var isSwiping = false
     @State private var lastDetail: Deployment?
     @StateObject private var swipeMonitor = SwipeEventMonitor()
+    // Static flag so the event monitor closure can read current state
+    static var _isOnListPage = true
 
     private let viewWidth: CGFloat = 380
 
@@ -139,6 +165,12 @@ struct MainView: View {
         .onAppear {
             swipeMonitor.onSwipe = { [self] delta, phase in
                 handleSwipe(delta: delta, phase: phase)
+            }
+            swipeMonitor.onRowSwipe = { delta, phase in
+                RowSwipeManager.shared.handleScroll(delta: delta, phase: phase)
+            }
+            swipeMonitor.isOnListPage = {
+                MainView._isOnListPage
             }
             swipeMonitor.start()
         }
@@ -204,6 +236,7 @@ struct MainView: View {
         // Start off-screen right, animate in
         swipeOffset = viewWidth
         currentDestination = destination
+        Self._isOnListPage = false
         withAnimation(.easeOut(duration: 0.25)) {
             swipeOffset = 0
         }
@@ -218,6 +251,7 @@ struct MainView: View {
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
             currentDestination = .list
+            Self._isOnListPage = true
             swipeOffset = 0
             isSwiping = false
         }
@@ -248,6 +282,7 @@ struct MainView: View {
                 }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                     currentDestination = .list
+                    Self._isOnListPage = true
                     swipeOffset = 0
                     isSwiping = false
                     swipeCompleted = false
