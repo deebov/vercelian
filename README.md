@@ -6,6 +6,11 @@ A native macOS menu bar app for monitoring Vercel deployments. Built with SwiftU
 ![Swift](https://img.shields.io/badge/Swift-5.9-orange)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
+## Download
+
+- **GitHub Releases**: Download the latest `.app` from [Releases](https://github.com/deebov/vercelian/releases)
+- **App Store**: Coming soon
+
 ## Features
 
 - **Menu Bar Access**: Quick access to your deployments from the macOS menu bar
@@ -29,40 +34,29 @@ A native macOS menu bar app for monitoring Vercel deployments. Built with SwiftU
    cd vercelian
    ```
 
-2. Build with Swift Package Manager:
+2. Copy the example secrets config and fill in your OAuth credentials:
    ```bash
-   swift build -c release
+   cp Vercelian/Configuration/Secrets.xcconfig.example Vercelian/Configuration/Secrets.xcconfig
    ```
+   Edit `Secrets.xcconfig` with your Vercel OAuth app credentials. You can register an OAuth app at [vercel.com/account/oauth-apps](https://vercel.com/account/oauth-apps).
 
-3. Copy to Applications:
+3. Open in Xcode and build:
    ```bash
-   cp -r .build/release/Vercelian /Applications/
+   open Vercelian.xcodeproj
    ```
 
 ### Requirements
 
 - macOS 14.0 (Sonoma) or later
-- Xcode 15+ or Swift 5.9+ (for building)
+- Xcode 15+ (for building from source)
 
 ## Setup
 
 1. Launch Vercelian from your Applications folder
-2. Click the triangle icon (▲) in your menu bar
-3. Click **"Sign in with Vercel"** - this opens your browser to create an access token
-4. In your browser:
-   - Sign in to Vercel (if not already signed in)
-   - Give your token a name (e.g., "Vercelian")
-   - Select the scope - "Full Account" recommended for all features
-   - Click "Create Token"
-   - Copy the generated token
-5. Paste the token back in Vercelian and click **"Connect"**
-
-### Token Permissions
-
-For full functionality, your token needs these permissions:
-- **Read deployments** - View deployment status and history
-- **Read projects** - List and filter by projects
-- **Read teams** - Switch between personal and team accounts
+2. Click the triangle icon in your menu bar
+3. Click **"Sign in with Vercel"** to authenticate via OAuth
+4. Authorize the app in your browser
+5. You'll be redirected back to Vercelian automatically
 
 ## Usage
 
@@ -84,6 +78,7 @@ From the deployment detail view, you can:
 ## Security
 
 - Your Vercel access token is stored securely in **macOS Keychain**
+- OAuth credentials are loaded from a local config file excluded from git
 - The token never leaves your machine except to communicate with Vercel's official API
 - All network requests use HTTPS
 - No analytics or tracking - completely private
@@ -94,42 +89,36 @@ From the deployment detail view, you can:
 
 ```
 Vercelian/
+├── Configuration/
+│   ├── Secrets.xcconfig          # OAuth credentials (git-ignored)
+│   └── Secrets.xcconfig.example  # Template for credentials
 ├── Sources/
 │   ├── App/
-│   │   ├── VercelianApp.swift      # App entry point
-│   │   └── AppDelegate.swift       # Menu bar setup
+│   │   ├── VercelianApp.swift
+│   │   └── AppDelegate.swift
 │   ├── Views/
-│   │   ├── ContentView.swift       # Main container
-│   │   ├── LoginView.swift         # Authentication flow
+│   │   ├── ContentView.swift
+│   │   ├── LoginView.swift
 │   │   ├── DeploymentListView.swift
 │   │   ├── DeploymentRowView.swift
 │   │   ├── DeploymentDetailView.swift
 │   │   ├── ProjectSelectorView.swift
 │   │   └── SettingsView.swift
 │   ├── Models/
-│   │   ├── Deployment.swift        # Deployment data model
-│   │   └── Project.swift           # Project/Team models
+│   │   ├── Deployment.swift
+│   │   └── Project.swift
 │   ├── Services/
-│   │   ├── VercelAPI.swift         # Vercel REST API client
-│   │   ├── DeploymentStore.swift   # State management
-│   │   └── OAuthManager.swift      # OAuth utilities (for future use)
+│   │   ├── VercelAPI.swift
+│   │   ├── DeploymentStore.swift
+│   │   └── OAuthManager.swift
 │   └── Utils/
-│       └── KeychainManager.swift   # Secure token storage
-└── Package.swift
+│       └── KeychainManager.swift
+├── Assets.xcassets
+├── Info.plist
+└── Vercelian.entitlements
 ```
 
-### Building
-
-```bash
-# Debug build
-swift build
-
-# Release build
-swift build -c release
-
-# Run locally
-.build/debug/Vercelian
-```
+> **Note**: The app icon (`AppIcon.appiconset`) does not yet contain images. You'll need to add icon files to `Vercelian/Assets.xcassets/AppIcon.appiconset/` before submitting to the App Store.
 
 ### Architecture
 
@@ -144,13 +133,19 @@ swift build -c release
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/my-feature`)
+3. Copy `Secrets.xcconfig.example` to `Secrets.xcconfig` and add your credentials
+4. Make your changes
+5. Commit and push to your branch
+6. Open a Pull Request
+
 ### Ideas for Contribution
 
-- [ ] Native notifications for deployment status changes
 - [ ] Keyboard shortcuts
 - [ ] Multiple account support
 - [ ] Deployment logs viewer
-- [ ] GitHub Actions integration (like Deplog 2.0)
+- [ ] Sparkle auto-update integration
 
 ## License
 
