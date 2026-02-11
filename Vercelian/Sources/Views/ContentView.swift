@@ -125,6 +125,26 @@ struct MainView: View {
 
     private let viewWidth: CGFloat = 380
 
+    /// 0 = list visible, 1 = detail/settings fully visible
+    private var detailProgress: CGFloat {
+        if currentDestination == .list && !isSwiping {
+            return 0
+        }
+        if currentDestination != .list {
+            // swipeOffset goes from viewWidth (entering) to 0 (fully visible)
+            // During swipe-back it goes from 0 to viewWidth
+            let progress = 1 - (swipeOffset / viewWidth)
+            return max(0, min(1, progress))
+        }
+        // Swiping out from detail back to list
+        return max(0, min(1, 1 - (swipeOffset / viewWidth)))
+    }
+
+    private var activeDeployment: Deployment? {
+        if case .detail(let d) = currentDestination { return d }
+        return lastDetail
+    }
+
     var body: some View {
         VStack(spacing: 0) {
             // Header
@@ -141,6 +161,14 @@ struct MainView: View {
 
             Divider()
                 .background(GeistColors.border(colorScheme))
+
+            // Unified sub-header: filters vs back+badge
+            if currentDestination != .settings {
+                subHeader
+
+                Divider()
+                    .background(GeistColors.border(colorScheme))
+            }
 
             // Content area
             GeometryReader { geo in
@@ -216,17 +244,45 @@ struct MainView: View {
         }
     }
 
-    private var listContent: some View {
-        VStack(spacing: 0) {
+    @ViewBuilder
+    private var subHeader: some View {
+        ZStack {
+            // List filters — visible when on list
             ProjectSelectorView()
+                .opacity(1 - detailProgress)
+                .allowsHitTesting(detailProgress < 0.5)
 
-            Divider()
-                .background(GeistColors.border(colorScheme))
+            // Detail header: back button + status badge
+            HStack {
+                Button(action: { navigateBack() }) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "chevron.left")
+                            .font(.system(size: 12, weight: .semibold))
+                        Text("Back")
+                            .font(GeistFont.medium(GeistFont.body))
+                    }
+                    .foregroundColor(GeistColors.foreground(colorScheme))
+                }
+                .buttonStyle(.plain)
 
-            DeploymentListView(onSelect: { deployment in
-                navigateForward(.detail(deployment))
-            })
+                Spacer()
+
+                if let deployment = activeDeployment {
+                    GeistStatusBadge(state: deployment.state)
+                }
+            }
+            .padding(.horizontal, GeistSpacing.md)
+            .frame(height: 40)
+            .opacity(detailProgress)
+            .allowsHitTesting(detailProgress >= 0.5)
         }
+        .frame(height: 40)
+    }
+
+    private var listContent: some View {
+        DeploymentListView(onSelect: { deployment in
+            navigateForward(.detail(deployment))
+        })
     }
 
     private func navigateForward(_ destination: NavigationDestination) {

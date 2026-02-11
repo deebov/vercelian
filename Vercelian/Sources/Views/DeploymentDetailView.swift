@@ -10,156 +10,131 @@ struct DeploymentDetailView: View {
     @State private var copiedURL = false
 
     var body: some View {
-        VStack(spacing: 0) {
-            // Navigation header
-            HStack {
-                Button(action: onBack) {
-                    HStack(spacing: 6) {
-                        Image(systemName: "chevron.left")
-                            .font(.system(size: 12, weight: .semibold))
-                        Text("Back")
-                            .font(GeistFont.medium(GeistFont.body))
-                    }
-                    .foregroundColor(GeistColors.foreground(colorScheme))
+        ScrollView {
+            VStack(alignment: .leading, spacing: GeistSpacing.lg) {
+                // Project info
+                detailSection(title: "Project") {
+                    Text(deployment.name)
+                        .font(GeistFont.medium(GeistFont.bodyLarge))
+                        .foregroundColor(GeistColors.foreground(colorScheme))
                 }
-                .buttonStyle(.plain)
 
-                Spacer()
-
-                GeistStatusBadge(state: deployment.state)
-            }
-            .padding(.horizontal, GeistSpacing.md)
-            .frame(height: 40)
-
-            Divider()
-                .background(GeistColors.border(colorScheme))
-
-            ScrollView {
-                VStack(alignment: .leading, spacing: GeistSpacing.lg) {
-                    // Project info
-                    detailSection(title: "Project") {
-                        Text(deployment.name)
-                            .font(GeistFont.medium(GeistFont.bodyLarge))
-                            .foregroundColor(GeistColors.foreground(colorScheme))
-                    }
-
-                    // URL with copy button
-                    detailSection(title: "URL") {
-                        HStack(spacing: GeistSpacing.xs) {
-                            Link(destination: URL(string: "https://\(deployment.displayUrl)")!) {
-                                Text(deployment.displayUrl)
-                                    .font(GeistFont.regular(GeistFont.body))
-                                    .lineLimit(1)
-                                    .foregroundColor(GeistColors.vercelBlue)
-                            }
-
-                            Spacer()
-
-                            Button(action: {
-                                NSPasteboard.general.clearContents()
-                                NSPasteboard.general.setString("https://\(deployment.displayUrl)", forType: .string)
-                                withAnimation {
-                                    copiedURL = true
-                                }
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                    withAnimation {
-                                        copiedURL = false
-                                    }
-                                }
-                            }) {
-                                Image(systemName: copiedURL ? "checkmark" : "doc.on.doc")
-                                    .font(.system(size: 12))
-                                    .foregroundColor(copiedURL ? GeistColors.success : GeistColors.foregroundSecondary(colorScheme))
-                            }
-                            .buttonStyle(.plain)
-                        }
-                    }
-
-                    // Git info
-                    if let meta = deployment.meta {
-                        if let branch = meta.githubCommitRef {
-                            detailSection(title: "Branch") {
-                                HStack(spacing: 6) {
-                                    Image(systemName: "arrow.triangle.branch")
-                                        .font(.system(size: 12))
-                                        .foregroundColor(GeistColors.foregroundSecondary(colorScheme))
-                                    Text(branch)
-                                        .font(GeistFont.regular(GeistFont.body))
-                                        .foregroundColor(GeistColors.foreground(colorScheme))
-                                }
-                            }
-                        }
-
-                        if let message = meta.githubCommitMessage {
-                            detailSection(title: "Commit") {
-                                VStack(alignment: .leading, spacing: 6) {
-                                    Text(message)
-                                        .font(GeistFont.regular(GeistFont.body))
-                                        .foregroundColor(GeistColors.foreground(colorScheme))
-                                        .lineLimit(3)
-
-                                    if let sha = meta.githubCommitSha {
-                                        Text(String(sha.prefix(7)))
-                                            .font(GeistFont.mono(GeistFont.caption))
-                                            .foregroundColor(GeistColors.foregroundTertiary(colorScheme))
-                                            .padding(.horizontal, 6)
-                                            .padding(.vertical, 2)
-                                            .background(GeistColors.backgroundSecondary(colorScheme))
-                                            .cornerRadius(GeistRadius.xs)
-                                    }
-                                }
-                            }
-                        }
-
-                        if let repo = meta.githubRepo, let org = meta.githubOrg {
-                            detailSection(title: "Repository") {
-                                Link(destination: URL(string: "https://github.com/\(org)/\(repo)")!) {
-                                    HStack(spacing: 6) {
-                                        Image(systemName: "link")
-                                            .font(.system(size: 11))
-                                        Text("\(org)/\(repo)")
-                                            .font(GeistFont.regular(GeistFont.body))
-                                    }
-                                    .foregroundColor(GeistColors.vercelBlue)
-                                }
-                            }
-                        }
-                    }
-
-                    // Target
-                    detailSection(title: "Environment") {
-                        HStack(spacing: 8) {
-                            Circle()
-                                .fill(deployment.isCurrentProduction ? GeistColors.success : (deployment.isProduction ? GeistColors.vercelBlue : GeistColors.foregroundTertiary(colorScheme)))
-                                .frame(width: 8, height: 8)
-                            Text(deployment.target?.capitalized ?? "Preview")
+                // URL with copy button
+                detailSection(title: "URL") {
+                    HStack(spacing: GeistSpacing.xs) {
+                        Link(destination: URL(string: "https://\(deployment.displayUrl)")!) {
+                            Text(deployment.displayUrl)
                                 .font(GeistFont.regular(GeistFont.body))
-                                .foregroundColor(GeistColors.foreground(colorScheme))
+                                .lineLimit(1)
+                                .foregroundColor(GeistColors.vercelBlue)
+                        }
 
-                            if deployment.isCurrentProduction {
-                                Text("Live")
-                                    .font(GeistFont.medium(GeistFont.caption2))
-                                    .padding(.horizontal, 6)
-                                    .padding(.vertical, 2)
-                                    .background(GeistColors.success.opacity(0.1))
-                                    .foregroundColor(GeistColors.success)
-                                    .cornerRadius(GeistRadius.xs)
+                        Spacer()
+
+                        Button(action: {
+                            NSPasteboard.general.clearContents()
+                            NSPasteboard.general.setString("https://\(deployment.displayUrl)", forType: .string)
+                            withAnimation {
+                                copiedURL = true
+                            }
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                withAnimation {
+                                    copiedURL = false
+                                }
+                            }
+                        }) {
+                            Image(systemName: copiedURL ? "checkmark" : "doc.on.doc")
+                                .font(.system(size: 12))
+                                .foregroundColor(copiedURL ? GeistColors.success : GeistColors.foregroundSecondary(colorScheme))
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+
+                // Git info
+                if let meta = deployment.meta {
+                    if let branch = meta.githubCommitRef {
+                        detailSection(title: "Branch") {
+                            HStack(spacing: 6) {
+                                Image(systemName: "arrow.triangle.branch")
+                                    .font(.system(size: 12))
+                                    .foregroundColor(GeistColors.foregroundSecondary(colorScheme))
+                                Text(branch)
+                                    .font(GeistFont.regular(GeistFont.body))
+                                    .foregroundColor(GeistColors.foreground(colorScheme))
                             }
                         }
                     }
 
-                    // Created
-                    detailSection(title: "Created") {
-                        Text(formatDate(deployment.createdDate))
+                    if let message = meta.githubCommitMessage {
+                        detailSection(title: "Commit") {
+                            VStack(alignment: .leading, spacing: 6) {
+                                Text(message)
+                                    .font(GeistFont.regular(GeistFont.body))
+                                    .foregroundColor(GeistColors.foreground(colorScheme))
+                                    .lineLimit(3)
+
+                                if let sha = meta.githubCommitSha {
+                                    Text(String(sha.prefix(7)))
+                                        .font(GeistFont.mono(GeistFont.caption))
+                                        .foregroundColor(GeistColors.foregroundTertiary(colorScheme))
+                                        .padding(.horizontal, 6)
+                                        .padding(.vertical, 2)
+                                        .background(GeistColors.backgroundSecondary(colorScheme))
+                                        .cornerRadius(GeistRadius.xs)
+                                }
+                            }
+                        }
+                    }
+
+                    if let repo = meta.githubRepo, let org = meta.githubOrg {
+                        detailSection(title: "Repository") {
+                            Link(destination: URL(string: "https://github.com/\(org)/\(repo)")!) {
+                                HStack(spacing: 6) {
+                                    Image(systemName: "link")
+                                        .font(.system(size: 11))
+                                    Text("\(org)/\(repo)")
+                                        .font(GeistFont.regular(GeistFont.body))
+                                }
+                                .foregroundColor(GeistColors.vercelBlue)
+                            }
+                        }
+                    }
+                }
+
+                // Target
+                detailSection(title: "Environment") {
+                    HStack(spacing: 8) {
+                        Circle()
+                            .fill(deployment.isCurrentProduction ? GeistColors.success : (deployment.isProduction ? GeistColors.vercelBlue : GeistColors.foregroundTertiary(colorScheme)))
+                            .frame(width: 8, height: 8)
+                        Text(deployment.target?.capitalized ?? "Preview")
                             .font(GeistFont.regular(GeistFont.body))
                             .foregroundColor(GeistColors.foreground(colorScheme))
-                    }
 
-                    // Actions
-                    actionsSection
+                        if deployment.isCurrentProduction {
+                            Text("Live")
+                                .font(GeistFont.medium(GeistFont.caption2))
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 2)
+                                .background(GeistColors.success.opacity(0.1))
+                                .foregroundColor(GeistColors.success)
+                                .cornerRadius(GeistRadius.xs)
+                        }
+                    }
                 }
-                .padding(GeistSpacing.md)
+
+                // Created
+                detailSection(title: "Created") {
+                    Text(formatDate(deployment.createdDate))
+                        .font(GeistFont.regular(GeistFont.body))
+                        .foregroundColor(GeistColors.foreground(colorScheme))
+                }
+
+                // Actions
+                actionsSection
             }
+            .padding(GeistSpacing.md)
         }
     }
 
