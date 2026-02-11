@@ -85,14 +85,6 @@
 			path = Vercelian;
 			sourceTree = "<group>";
 		};
-		E90000002B5A00000000000B /* Configuration */ = {
-			isa = PBXGroup;
-			children = (
-				E91000002B5A00000000001B /* Secrets.xcconfig */,
-			);
-			path = Configuration;
-			sourceTree = "<group>";
-		};
 		E90000002B5A000000000003 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -164,6 +156,14 @@
 				D928F7B52F34CE830080018A /* GeistTheme.swift */,
 			);
 			path = Utils;
+			sourceTree = "<group>";
+		};
+		E90000002B5A00000000000B /* Configuration */ = {
+			isa = PBXGroup;
+			children = (
+				E91000002B5A00000000001B /* Secrets.xcconfig */,
+			);
+			path = Configuration;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

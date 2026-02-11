@@ -18,10 +18,13 @@ final class RowSwipeManager: ObservableObject {
 
     @Published var activeRowId: String?
     @Published var swipeOffset: CGFloat = 0
+    @Published var closingRowId: String?
+    @Published var closingOffset: CGFloat = 0
 
     private var hoveredRowId: String?
     private var isRevealed = false
     private var maxReveal: CGFloat = 192 // 3 actions * 64
+    private var rawOffset: CGFloat = 0 // unbounded logical offset, tracks actual finger movement
 
     func setHovered(_ rowId: String?) {
         hoveredRowId = rowId
@@ -34,44 +37,67 @@ final class RowSwipeManager: ObservableObject {
     func handleScroll(delta: CGFloat, phase: NSEvent.Phase) {
         switch phase {
         case .began:
-            // If swiping on a different row, close the old one first
+            // If swiping on a different row, animate old one closed
             if let hovered = hoveredRowId, hovered != activeRowId {
-                if activeRowId != nil {
-                    close()
+                if let oldRow = activeRowId {
+                    // Capture current offset and set up closing state
+                    closingRowId = oldRow
+                    closingOffset = swipeOffset
+
+                    // Switch to the new row immediately
+                    activeRowId = hovered
+                    swipeOffset = 0
+                    rawOffset = 0
+                    isRevealed = false
+
+                    // Animate close on next frame so SwiftUI sees the starting value first
+                    DispatchQueue.main.async { [weak self] in
+                        withAnimation(.easeOut(duration: 0.15)) {
+                            self?.closingOffset = 0
+                        }
+                    }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self] in
+                        if self?.closingRowId == oldRow {
+                            self?.closingRowId = nil
+                            self?.closingOffset = 0
+                        }
+                    }
+                } else {
+                    swipeOffset = 0
+                    rawOffset = 0
+                    isRevealed = false
+                    activeRowId = hovered
                 }
-                activeRowId = hovered
             } else if activeRowId == nil {
                 activeRowId = hoveredRowId
+                rawOffset = isRevealed ? -maxReveal : 0
             }
 
         case .changed:
             guard activeRowId != nil else { return }
-            let raw: CGFloat
-            if isRevealed {
-                raw = swipeOffset + delta
-            } else {
-                raw = min(0, swipeOffset + delta)
-            }
-            // Native-style rubber band beyond maxReveal
-            if raw < -maxReveal {
-                let overscroll = -raw - maxReveal
-                // Apple's rubber band formula: x = d * (1 - 1/((d*c/dim)+1))
-                let c: CGFloat = 0.55
+            // Accumulate into unbounded raw offset (capped at 0 — can't swipe right past origin)
+            rawOffset = min(0, rawOffset + delta)
+
+            // Apply rubber band for the visual offset beyond maxReveal
+            if rawOffset < -maxReveal {
+                let overscroll = -rawOffset - maxReveal
+                let c: CGFloat = 0.3
                 let dim = maxReveal
                 let rubberBanded = overscroll * c / (1 + overscroll * c / dim)
                 swipeOffset = -(maxReveal + rubberBanded)
             } else {
-                swipeOffset = max(-maxReveal, raw)
+                swipeOffset = rawOffset
             }
 
         case .ended, .cancelled:
             guard activeRowId != nil else { return }
             let threshold = maxReveal * 0.35
             if -swipeOffset > threshold {
-                // Snap open with spring (bounces back from elastic overscroll)
+                // Snap to open position, spring back from any overscroll
                 withAnimation(.spring(response: 0.3, dampingFraction: 0.85)) {
                     swipeOffset = -maxReveal
                 }
+                rawOffset = -maxReveal
                 isRevealed = true
             } else {
                 // Snap closed
@@ -84,12 +110,17 @@ final class RowSwipeManager: ObservableObject {
     }
 
     func close() {
+        let closingRowId = activeRowId
+        rawOffset = 0
         withAnimation(.easeOut(duration: 0.2)) {
             swipeOffset = 0
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
-            self?.activeRowId = nil
-            self?.isRevealed = false
+            guard let self = self else { return }
+            if self.activeRowId == closingRowId {
+                self.activeRowId = nil
+                self.isRevealed = false
+            }
         }
     }
 }
@@ -117,8 +148,14 @@ struct SwipeableRow<Content: View>: View {
         manager.activeRowId == rowId
     }
 
+    private var isClosing: Bool {
+        manager.closingRowId == rowId
+    }
+
     private var currentOffset: CGFloat {
-        isActive ? manager.swipeOffset : 0
+        if isActive { return manager.swipeOffset }
+        if isClosing { return manager.closingOffset }
+        return 0
     }
 
     private var revealedWidth: CGFloat {
@@ -237,7 +274,7 @@ struct DeploymentListView: View {
         var actions: [SwipeAction] = []
 
         actions.append(SwipeAction(
-            title: "Open",
+            title: "Visit",
             icon: "safari",
             color: GeistColors.vercelBlue,
             action: {
@@ -249,7 +286,7 @@ struct DeploymentListView: View {
 
         if let inspectorUrl = deployment.inspectorUrl, let url = URL(string: inspectorUrl) {
             actions.append(SwipeAction(
-                title: "Vercel",
+                title: "Deployment",
                 icon: "arrow.up.right.square",
                 color: Color(hex: "555555"),
                 action: {

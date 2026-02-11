@@ -24,8 +24,11 @@ struct DeploymentRowView: View {
 
                     if let branch = deployment.meta?.githubCommitRef {
                         HStack(spacing: 4) {
-                            Image(systemName: "arrow.triangle.branch")
-                                .font(.system(size: 10))
+                            Image("BranchIcon")
+                                .renderingMode(.template)
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 10, height: 10)
                             Text(branch)
                                 .font(GeistFont.regular(GeistFont.caption))
                         }
