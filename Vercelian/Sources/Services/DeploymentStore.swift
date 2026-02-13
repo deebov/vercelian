@@ -239,9 +239,12 @@ final class DeploymentStore: ObservableObject {
 
     func redeployDeployment(_ deployment: Deployment) async {
         do {
-            _ = try await api.redeployDeployment(id: deployment.uid)
+            NSLog("[Vercelian] Store: redeploying \(deployment.uid)")
+            try await api.redeployDeployment(id: deployment.uid)
+            NSLog("[Vercelian] Store: redeploy succeeded, reloading deployments")
             await loadDeployments()
         } catch {
+            NSLog("[Vercelian] Store: redeploy error: \(error)")
             self.error = error.localizedDescription
         }
     }

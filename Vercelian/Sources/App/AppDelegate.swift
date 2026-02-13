@@ -16,14 +16,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         case building
         case error
 
-        var symbolName: String {
-            switch self {
-            case .normal: return "triangle.fill"
-            case .building: return "triangle.fill"
-            case .error: return "exclamationmark.triangle.fill"
-            }
-        }
-
         var tintColor: NSColor? {
             switch self {
             case .normal: return nil // Template image, follows system
@@ -73,27 +65,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         currentIconState = state
         let settings = SettingsManager.shared
 
-        if state == .error {
-            // Use SF Symbol for error state (exclamation triangle)
-            let config = NSImage.SymbolConfiguration(pointSize: 16, weight: .medium)
-            if settings.dynamicMenuBarIcon, let color = state.tintColor,
-               let image = NSImage(systemSymbolName: state.symbolName, accessibilityDescription: "Vercelian")?
-                .withSymbolConfiguration(config) {
-                let coloredImage = image.tinted(with: color)
-                coloredImage.isTemplate = false
-                button.image = coloredImage
-            } else {
-                button.image = NSImage(systemSymbolName: state.symbolName, accessibilityDescription: "Vercelian")
-                button.image?.isTemplate = true
-            }
-        } else if settings.dynamicMenuBarIcon, let color = state.tintColor {
-            // Dynamic colored sharp triangle
+        if settings.dynamicMenuBarIcon, let color = state.tintColor {
             let image = makeSharpTriangleImage()
             let coloredImage = image.tinted(with: color)
             coloredImage.isTemplate = false
             button.image = coloredImage
         } else {
-            // Static or normal sharp triangle
             button.image = makeSharpTriangleImage()
         }
     }

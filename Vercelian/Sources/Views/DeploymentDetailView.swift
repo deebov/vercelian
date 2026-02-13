@@ -56,8 +56,11 @@ struct DeploymentDetailView: View {
                     if let branch = meta.githubCommitRef {
                         detailSection(title: "Branch") {
                             HStack(spacing: 6) {
-                                Image(systemName: "arrow.triangle.branch")
-                                    .font(.system(size: 12))
+                                Image("BranchIcon")
+                                    .renderingMode(.template)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 12, height: 12)
                                     .foregroundColor(GeistColors.foregroundSecondary(colorScheme))
                                 Text(branch)
                                     .font(GeistFont.regular(GeistFont.body))
@@ -276,9 +279,12 @@ struct DeploymentDetailView: View {
     }
 
     private func redeploy() {
+        NSLog("[Vercelian] redeploy() called for deployment: \(deployment.uid)")
         isPerformingAction = true
         Task {
+            NSLog("[Vercelian] calling store.redeployDeployment...")
             await store.redeployDeployment(deployment)
+            NSLog("[Vercelian] redeployDeployment finished")
             isPerformingAction = false
             onBack()
         }

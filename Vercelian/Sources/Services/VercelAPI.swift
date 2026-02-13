@@ -135,7 +135,7 @@ final class VercelAPI {
 
     // MARK: - Redeploy
 
-    func redeployDeployment(id: String) async throws -> Deployment {
+    func redeployDeployment(id: String) async throws {
         var endpoint = "/v13/deployments?forceNew=1"
         if let teamId = teamId {
             endpoint += "&teamId=\(teamId)"
@@ -154,7 +154,10 @@ final class VercelAPI {
             target: deployment.target
         )
 
-        return try await request(endpoint: endpoint, method: "POST", body: body)
+        // Encode here where concrete type is known (avoids Encodable existential issue)
+        let bodyData = try JSONEncoder().encode(body)
+        log("Redeploy request body: \(String(data: bodyData, encoding: .utf8) ?? "nil")")
+        try await requestVoid(endpoint: endpoint, method: "POST", bodyData: bodyData)
     }
 
     // MARK: - Private Request Method
@@ -205,6 +208,40 @@ final class VercelAPI {
             log("Decoding error: \(error)")
             log("Raw JSON (first 1000 chars): \(String(rawJson.prefix(1000)))")
             throw APIError.decodingError(error)
+        }
+    }
+
+    private func requestVoid(
+        endpoint: String,
+        method: String = "GET",
+        bodyData: Data? = nil
+    ) async throws {
+        guard let token = token else {
+            throw APIError.noToken
+        }
+
+        guard let url = URL(string: baseURL + endpoint) else {
+            throw APIError.invalidURL
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = method
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = bodyData
+
+        let (data, response) = try await session.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw APIError.invalidResponse
+        }
+
+        log("Response status: \(httpResponse.statusCode) for \(endpoint)")
+
+        if httpResponse.statusCode < 200 || httpResponse.statusCode >= 300 {
+            let errorMessage = String(data: data, encoding: .utf8)
+            log("Error response: \(errorMessage ?? "nil")")
+            throw APIError.httpError(httpResponse.statusCode, errorMessage)
         }
     }
 

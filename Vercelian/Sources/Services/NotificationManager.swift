@@ -1,5 +1,6 @@
 import Foundation
 import UserNotifications
+import AppKit
 
 @MainActor
 final class NotificationManager: ObservableObject {
@@ -88,6 +89,13 @@ final class NotificationManager: ObservableObject {
             content.userInfo = ["url": url]
         }
 
+        // Attach app icon
+        if let iconURL = writeAppIconToTemp() {
+            if let attachment = try? UNNotificationAttachment(identifier: "appIcon", url: iconURL, options: nil) {
+                content.attachments = [attachment]
+            }
+        }
+
         let request = UNNotificationRequest(
             identifier: UUID().uuidString,
             content: content,
@@ -99,5 +107,15 @@ final class NotificationManager: ObservableObject {
                 print("Failed to send notification: \(error)")
             }
         }
+    }
+
+    private func writeAppIconToTemp() -> URL? {
+        guard let icon = NSImage(named: "AppIcon") else { return nil }
+        guard let tiff = icon.tiffRepresentation,
+              let bitmap = NSBitmapImageRep(data: tiff),
+              let png = bitmap.representation(using: .png, properties: [:]) else { return nil }
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent("vercelian_icon.png")
+        try? png.write(to: url)
+        return url
     }
 }
