@@ -1,4 +1,5 @@
 import SwiftUI
+import AppKit
 
 struct SettingsView: View {
     @ObservedObject var store = DeploymentStore.shared
@@ -33,9 +34,9 @@ struct SettingsView: View {
             }
             .padding(GeistSpacing.md)
         }
-        .alert("Sign Out", isPresented: $showLogoutConfirmation) {
+        .alert("Sign out", isPresented: $showLogoutConfirmation) {
             Button("Cancel", role: .cancel) {}
-            Button("Sign Out", role: .destructive) {
+            Button("Sign out", role: .destructive) {
                 store.logout()
             }
         } message: {
@@ -104,7 +105,7 @@ struct SettingsView: View {
                             }
                         }
                     )) {
-                        Text("Personal Account").tag("personal")
+                        Text("Personal account").tag("personal")
 
                         if !store.teams.isEmpty {
                             Divider()
@@ -135,7 +136,7 @@ struct SettingsView: View {
             VStack(alignment: .leading, spacing: 0) {
                 settingsToggle(
                     icon: "bell.fill",
-                    title: "Enable Notifications",
+                    title: "Enable notifications",
                     isOn: $settings.notificationsEnabled
                 )
 
@@ -208,7 +209,7 @@ struct SettingsView: View {
                             .font(.system(size: 12))
                             .foregroundColor(GeistColors.foregroundSecondary(colorScheme))
                         VStack(alignment: .leading, spacing: 2) {
-                            Text("Dynamic Menu Bar Icon")
+                            Text("Dynamic menu bar icon")
                                 .font(GeistFont.regular(GeistFont.body))
                                 .foregroundColor(GeistColors.foreground(colorScheme))
                             Text("Icon changes color when building or on error")
@@ -265,7 +266,7 @@ struct SettingsView: View {
 
                 linkRow(
                     icon: "exclamationmark.bubble",
-                    title: "Report an Issue",
+                    title: "Report an issue",
                     url: "https://github.com/deebov/vercelian/issues"
                 )
             }
@@ -287,7 +288,7 @@ struct SettingsView: View {
                 HStack {
                     Image(systemName: "rectangle.portrait.and.arrow.right")
                         .font(.system(size: 13))
-                    Text("Sign Out")
+                    Text("Sign out")
                         .font(GeistFont.medium(GeistFont.body))
                 }
                 .frame(maxWidth: .infinity)
@@ -295,6 +296,27 @@ struct SettingsView: View {
                 .background(GeistColors.error.opacity(0.1))
                 .foregroundColor(GeistColors.error)
                 .cornerRadius(GeistRadius.sm)
+            }
+            .buttonStyle(.plain)
+
+            Button(action: {
+                NSApplication.shared.terminate(nil)
+            }) {
+                HStack {
+                    Image(systemName: "power")
+                        .font(.system(size: 12, weight: .medium))
+                    Text("Quit Vercelian")
+                        .font(GeistFont.medium(GeistFont.body))
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, GeistSpacing.xs)
+                .background(GeistColors.backgroundSecondary(colorScheme))
+                .foregroundColor(GeistColors.foregroundSecondary(colorScheme))
+                .cornerRadius(GeistRadius.sm)
+                .overlay(
+                    RoundedRectangle(cornerRadius: GeistRadius.sm)
+                        .stroke(GeistColors.border(colorScheme), lineWidth: 1)
+                )
             }
             .buttonStyle(.plain)
 

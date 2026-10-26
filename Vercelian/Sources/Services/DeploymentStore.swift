@@ -168,16 +168,15 @@ final class DeploymentStore: ObservableObject {
     }
 
     private func updateMenuBarIconState() {
-        // Determine the overall state for the menu bar icon
-        let hasBuilding = deployments.contains { $0.state == .building || $0.state == .initializing || $0.state == .queued }
-        let hasError = deployments.prefix(5).contains { $0.state == .error } // Only check recent deployments for error
-
+        // Match the icon to the first visible deployment (top row in the current list).
+        let latestState = deployments.first?.state
         let iconState: String
-        if hasBuilding {
+        switch latestState {
+        case .building, .initializing, .queued:
             iconState = "building"
-        } else if hasError {
+        case .error:
             iconState = "error"
-        } else {
+        default:
             iconState = "normal"
         }
 

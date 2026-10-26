@@ -127,6 +127,9 @@ struct MainView: View {
 
     /// 0 = list visible, 1 = detail/settings fully visible
     private var detailProgress: CGFloat {
+        if currentDestination == .settings {
+            return 0
+        }
         if currentDestination == .list && !isSwiping {
             return 0
         }
@@ -162,32 +165,53 @@ struct MainView: View {
             Divider()
                 .background(GeistColors.border(colorScheme))
 
-            // Unified sub-header: filters vs back+badge
-            if currentDestination != .settings {
+            if currentDestination == .settings {
+                // Settings transition: move list sub-header + list content as one stack.
+                GeometryReader { geo in
+                    ZStack {
+                        VStack(spacing: 0) {
+                            subHeader
+                            Divider()
+                                .background(GeistColors.border(colorScheme))
+                            listContent
+                        }
+                        .frame(width: geo.size.width, height: geo.size.height)
+                        .offset(x: settingsListOffset)
+                        .allowsHitTesting(false)
+
+                        if showsOverlay {
+                            overlayView
+                                .frame(width: geo.size.width, height: geo.size.height)
+                                .background(GeistColors.background(colorScheme))
+                                .offset(x: overlayOffset)
+                        }
+                    }
+                }
+                .clipped()
+            } else {
                 subHeader
 
                 Divider()
                     .background(GeistColors.border(colorScheme))
-            }
 
-            // Content area
-            GeometryReader { geo in
-                ZStack {
-                    // List is always rendered behind
-                    listContent
-                        .frame(width: geo.size.width, height: geo.size.height)
-                        .offset(x: listOffset)
-
-                    // Overlay page (detail or settings) on top
-                    if showsOverlay {
-                        overlayView
+                GeometryReader { geo in
+                    ZStack {
+                        // List is always rendered behind
+                        listContent
                             .frame(width: geo.size.width, height: geo.size.height)
-                            .background(GeistColors.background(colorScheme))
-                            .offset(x: overlayOffset)
+                            .offset(x: listOffset)
+
+                        // Overlay page (detail or settings) on top
+                        if showsOverlay {
+                            overlayView
+                                .frame(width: geo.size.width, height: geo.size.height)
+                                .background(GeistColors.background(colorScheme))
+                                .offset(x: overlayOffset)
+                        }
                     }
                 }
+                .clipped()
             }
-            .clipped()
         }
         .background(GeistColors.background(colorScheme))
         .onAppear {
@@ -214,6 +238,10 @@ struct MainView: View {
         let clamped = min(swipeOffset, viewWidth)
         let parallax = viewWidth / 3
         return -parallax + (clamped / viewWidth) * parallax
+    }
+
+    private var settingsListOffset: CGFloat {
+        -(viewWidth - swipeOffset)
     }
 
     private var overlayOffset: CGFloat {
@@ -363,24 +391,43 @@ struct HeaderView: View {
     @Environment(\.colorScheme) var colorScheme
     var showSettings: Bool
     var onSettingsTap: () -> Void
+    @State private var isManualRefreshing = false
     @State private var refreshHovered = false
     @State private var settingsHovered = false
 
     var body: some View {
         HStack {
-            // Wordmark logo
-            Image("VercelianWordmark")
-                .renderingMode(.template)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(height: 14)
-                .foregroundColor(GeistColors.foreground(colorScheme))
+            HStack(alignment: .center, spacing: 10) {
+                // Wordmark logo
+                Image("VercelianWordmark")
+                    .renderingMode(.template)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(height: 14)
+                    .foregroundColor(GeistColors.foreground(colorScheme))
+
+                if isManualRefreshing {
+                    ProgressView()
+                        .controlSize(.small)
+                        .scaleEffect(0.62)
+                        .frame(width: 10, height: 14, alignment: .center)
+                        .offset(y: 0.5)
+                        .tint(GeistColors.foregroundTertiary(colorScheme))
+                }
+            }
 
             Spacer()
 
             // Refresh button
             Button(action: {
+                guard !isManualRefreshing else { return }
+                isManualRefreshing = true
                 Task {
+                    defer {
+                        Task { @MainActor in
+                            isManualRefreshing = false
+                        }
+                    }
                     await store.refresh()
                 }
             }) {
@@ -392,7 +439,7 @@ struct HeaderView: View {
                     .cornerRadius(GeistRadius.sm)
             }
             .buttonStyle(.plain)
-            .disabled(store.isLoading)
+            .disabled(isManualRefreshing)
             .onHover { hovering in
                 withAnimation(.easeInOut(duration: 0.15)) {
                     refreshHovered = hovering
