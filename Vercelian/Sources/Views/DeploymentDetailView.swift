@@ -279,12 +279,9 @@ struct DeploymentDetailView: View {
     }
 
     private func redeploy() {
-        NSLog("[Vercelian] redeploy() called for deployment: \(deployment.uid)")
         isPerformingAction = true
         Task {
-            NSLog("[Vercelian] calling store.redeployDeployment...")
             await store.redeployDeployment(deployment)
-            NSLog("[Vercelian] redeployDeployment finished")
             isPerformingAction = false
             onBack()
         }

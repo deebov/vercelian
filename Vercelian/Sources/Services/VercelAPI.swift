@@ -31,36 +31,20 @@ final class VercelAPI {
 
     private let baseURL = "https://api.vercel.com"
     private let session: URLSession
-    private let logFile: URL
 
     private init() {
         let config = URLSessionConfiguration.default
         config.timeoutIntervalForRequest = 30
         config.timeoutIntervalForResource = 60
         self.session = URLSession(configuration: config)
-
-        // Setup log file
-        let tempDir = FileManager.default.temporaryDirectory
-        self.logFile = tempDir.appendingPathComponent("vercelian_debug.log")
-        log("VercelAPI initialized")
     }
 
-    private func log(_ message: String) {
-        let timestamp = ISO8601DateFormatter().string(from: Date())
-        let logMessage = "[\(timestamp)] \(message)\n"
-        print(logMessage, terminator: "")
-
-        if let data = logMessage.data(using: .utf8) {
-            if FileManager.default.fileExists(atPath: logFile.path) {
-                if let handle = try? FileHandle(forWritingTo: logFile) {
-                    handle.seekToEndOfFile()
-                    handle.write(data)
-                    handle.closeFile()
-                }
-            } else {
-                try? data.write(to: logFile)
-            }
-        }
+    /// Debug-only. Response bodies carry account data, so nothing here is
+    /// compiled into release builds.
+    private func log(_ message: @autoclosure () -> String) {
+        #if DEBUG
+        NSLog("[Vercelian.API] %@", message())
+        #endif
     }
 
     private var token: String? {

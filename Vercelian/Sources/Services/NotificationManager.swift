@@ -20,17 +20,13 @@ final class NotificationManager: ObservableObject {
     }
 
     func requestAuthorization() async -> Bool {
-        guard canUseNotifications else {
-            print("Notifications not available - no bundle identifier")
-            return false
-        }
+        guard canUseNotifications else { return false }
 
         do {
             let granted = try await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge])
             isAuthorized = granted
             return granted
         } catch {
-            print("Notification authorization error: \(error)")
             return false
         }
     }
@@ -102,11 +98,7 @@ final class NotificationManager: ObservableObject {
             trigger: nil
         )
 
-        UNUserNotificationCenter.current().add(request) { error in
-            if let error = error {
-                print("Failed to send notification: \(error)")
-            }
-        }
+        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
     }
 
     private func writeAppIconToTemp() -> URL? {
