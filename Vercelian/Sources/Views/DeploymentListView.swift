@@ -226,6 +226,8 @@ struct DeploymentListView: View {
         Group {
             if store.isLoading && store.deployments.isEmpty {
                 loadingView
+            } else if store.deployments.isEmpty, let error = store.error {
+                errorView(error)
             } else if store.deployments.isEmpty {
                 emptyView
             } else {
@@ -270,6 +272,56 @@ struct DeploymentListView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
+    /// Nothing loaded and the last request failed. Without this a failed
+    /// load looked identical to an account with no deployments.
+    private func errorView(_ message: String) -> some View {
+        VStack(spacing: GeistSpacing.sm) {
+            ZStack {
+                Circle()
+                    .fill(GeistColors.backgroundSecondary(colorScheme))
+                    .frame(width: 56, height: 56)
+
+                Image(systemName: "exclamationmark.triangle")
+                    .font(.system(size: 22))
+                    .foregroundColor(GeistColors.error)
+            }
+
+            Text("Couldn't load deployments")
+                .font(GeistFont.medium(GeistFont.body))
+                .foregroundColor(GeistColors.foreground(colorScheme))
+
+            Text(message)
+                .font(GeistFont.regular(GeistFont.caption))
+                .foregroundColor(GeistColors.foregroundTertiary(colorScheme))
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, GeistSpacing.xl)
+
+            Button("Try again") {
+                Task { await store.refresh() }
+            }
+            .buttonStyle(GeistButtonStyle(variant: .secondary))
+            .padding(.top, GeistSpacing.xs)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    /// Deployments are on screen but the last request failed: a refresh
+    /// (so the list may be stale) or a cancel/redeploy.
+    private func errorBanner(_ message: String) -> some View {
+        HStack(spacing: 6) {
+            Image(systemName: "exclamationmark.circle.fill")
+                .font(.system(size: 11))
+            Text(message)
+                .font(GeistFont.regular(GeistFont.caption))
+                .lineLimit(2)
+            Spacer(minLength: 0)
+        }
+        .foregroundColor(GeistColors.error)
+        .padding(.horizontal, GeistSpacing.md)
+        .padding(.vertical, GeistSpacing.xs)
+        .background(GeistColors.error.opacity(0.08))
+    }
+
     private func swipeActions(for deployment: Deployment) -> [SwipeAction] {
         var actions: [SwipeAction] = []
 
@@ -309,32 +361,38 @@ struct DeploymentListView: View {
     }
 
     private var deploymentList: some View {
-        ScrollView {
-            LazyVStack(spacing: 0) {
-                ForEach(store.deployments) { deployment in
-                    VStack(spacing: 0) {
-                        SwipeableRow(rowId: deployment.uid, actions: swipeActions(for: deployment)) {
-                            DeploymentRowView(
-                                deployment: deployment,
-                                isCurrentProduction: store.currentProductionDeploymentIds.contains(deployment.uid)
-                            )
-                            .background(GeistColors.background(colorScheme))
-                            .contentShape(Rectangle())
-                            .onTapGesture {
-                                RowSwipeManager.shared.close()
-                                onSelect(deployment)
-                            }
-                        }
+        VStack(spacing: 0) {
+            if let error = store.error {
+                errorBanner(error)
+            }
 
-                        if deployment.id != store.deployments.last?.id {
-                            Divider()
-                                .background(GeistColors.border(colorScheme))
-                                .padding(.leading, GeistSpacing.md + 20 + GeistSpacing.sm)
+            ScrollView {
+                LazyVStack(spacing: 0) {
+                    ForEach(store.deployments) { deployment in
+                        VStack(spacing: 0) {
+                            SwipeableRow(rowId: deployment.uid, actions: swipeActions(for: deployment)) {
+                                DeploymentRowView(
+                                    deployment: deployment,
+                                    isCurrentProduction: store.currentProductionDeploymentIds.contains(deployment.uid)
+                                )
+                                .background(GeistColors.background(colorScheme))
+                                .contentShape(Rectangle())
+                                .onTapGesture {
+                                    RowSwipeManager.shared.close()
+                                    onSelect(deployment)
+                                }
+                            }
+
+                            if deployment.id != store.deployments.last?.id {
+                                Divider()
+                                    .background(GeistColors.border(colorScheme))
+                                    .padding(.leading, GeistSpacing.md + 20 + GeistSpacing.sm)
+                            }
                         }
                     }
                 }
+                .padding(.vertical, GeistSpacing.xs)
             }
-            .padding(.vertical, GeistSpacing.xs)
         }
     }
 }

@@ -11,12 +11,12 @@ A native macOS menu bar app for monitoring Vercel deployments. Built with SwiftU
 - **GitHub Releases**: Download the latest `.zip` from [Releases](https://github.com/deebov/vercelian/releases)
 - **App Store**: Coming soon
 
-> **Note**: Since the app is not notarized, macOS Gatekeeper will block it on first launch. To open it:
-> 1. Right-click (or Control-click) on **Vercelian.app**
-> 2. Select **Open** from the context menu
-> 3. Click **Open** in the dialog that appears
+> **Note**: GitHub builds are not notarized, so macOS blocks them on first launch. To open one:
+> 1. Double-click **Vercelian.app** and dismiss the warning
+> 2. Open **System Settings → Privacy & Security**
+> 3. Scroll to the message saying Vercelian was blocked and click **Open Anyway**
 >
-> You only need to do this once.
+> You only need to do this once. (On macOS 15 Sequoia and later, Control-click → Open no longer bypasses this.)
 
 ## Features
 
@@ -41,13 +41,7 @@ A native macOS menu bar app for monitoring Vercel deployments. Built with SwiftU
    cd vercelian
    ```
 
-2. Copy the example secrets config and fill in your OAuth credentials:
-   ```bash
-   cp Vercelian/Configuration/Secrets.xcconfig.example Vercelian/Configuration/Secrets.xcconfig
-   ```
-   Edit `Secrets.xcconfig` with your Vercel OAuth app credentials. You can register an OAuth app at [vercel.com/account/oauth-apps](https://vercel.com/account/oauth-apps).
-
-3. Open in Xcode and build:
+2. Open in Xcode and build:
    ```bash
    open Vercelian.xcodeproj
    ```
@@ -61,9 +55,20 @@ A native macOS menu bar app for monitoring Vercel deployments. Built with SwiftU
 
 1. Launch Vercelian from your Applications folder
 2. Click the triangle icon in your menu bar
-3. Click **"Sign in with Vercel"** to authenticate via OAuth
-4. Authorize the app in your browser
-5. You'll be redirected back to Vercelian automatically
+3. Click **Continue with Vercel**. Your browser opens [vercel.com/account/tokens](https://vercel.com/account/tokens)
+4. Create a token and copy it
+5. Paste it into Vercelian and click **Connect**
+
+If the token later expires or is revoked, Vercelian signs out and asks for a new one.
+
+### The menu bar icon is missing
+
+On a MacBook with a notch, status icons that don't fit to the right of the notch are hidden, starting with the most recently launched app. That is usually Vercelian, since it's often started after everything else. To get it back:
+
+1. Quit another menu bar app (or several) until the triangle reappears
+2. Hold **⌘** and drag the triangle further right, past icons you use less
+
+macOS remembers the new position on future launches.
 
 ## Usage
 
@@ -85,7 +90,6 @@ From the deployment detail view, you can:
 ## Security
 
 - Your Vercel access token is stored securely in **macOS Keychain**
-- OAuth credentials are loaded from a local config file excluded from git
 - The token never leaves your machine except to communicate with Vercel's official API
 - All network requests use HTTPS
 - No analytics or tracking - completely private
@@ -96,9 +100,6 @@ From the deployment detail view, you can:
 
 ```
 Vercelian/
-├── Configuration/
-│   ├── Secrets.xcconfig          # OAuth credentials (git-ignored)
-│   └── Secrets.xcconfig.example  # Template for credentials
 ├── Sources/
 │   ├── App/
 │   │   ├── VercelianApp.swift
@@ -117,8 +118,10 @@ Vercelian/
 │   ├── Services/
 │   │   ├── VercelAPI.swift
 │   │   ├── DeploymentStore.swift
-│   │   └── OAuthManager.swift
+│   │   ├── NotificationManager.swift
+│   │   └── SettingsManager.swift
 │   └── Utils/
+│       ├── GeistTheme.swift
 │       └── KeychainManager.swift
 ├── Assets.xcassets
 ├── Info.plist
@@ -140,10 +143,9 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/my-feature`)
-3. Copy `Secrets.xcconfig.example` to `Secrets.xcconfig` and add your credentials
-4. Make your changes
-5. Commit and push to your branch
-6. Open a Pull Request
+3. Make your changes
+4. Commit and push to your branch
+5. Open a Pull Request
 
 ### Ideas for Contribution
 

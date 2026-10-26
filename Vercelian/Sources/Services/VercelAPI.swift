@@ -3,6 +3,7 @@ import Foundation
 enum APIError: LocalizedError {
     case invalidURL
     case noToken
+    case invalidToken
     case invalidResponse
     case httpError(Int, String?)
     case decodingError(Error)
@@ -14,10 +15,15 @@ enum APIError: LocalizedError {
             return "Invalid URL"
         case .noToken:
             return "No access token configured"
+        case .invalidToken:
+            return "Your access token is invalid, expired, or was revoked."
         case .invalidResponse:
             return "Invalid response from server"
         case .httpError(let code, let message):
-            return "HTTP Error \(code): \(message ?? "Unknown error")"
+            if let message = message {
+                return "Vercel returned an error (\(code)): \(message)"
+            }
+            return "Vercel returned an error (\(code))"
         case .decodingError(let error):
             return "Failed to decode response: \(error.localizedDescription)"
         case .networkError(let error):
@@ -31,36 +37,20 @@ final class VercelAPI {
 
     private let baseURL = "https://api.vercel.com"
     private let session: URLSession
-    private let logFile: URL
 
     private init() {
         let config = URLSessionConfiguration.default
         config.timeoutIntervalForRequest = 30
         config.timeoutIntervalForResource = 60
         self.session = URLSession(configuration: config)
-
-        // Setup log file
-        let tempDir = FileManager.default.temporaryDirectory
-        self.logFile = tempDir.appendingPathComponent("vercelian_debug.log")
-        log("VercelAPI initialized")
     }
 
-    private func log(_ message: String) {
-        let timestamp = ISO8601DateFormatter().string(from: Date())
-        let logMessage = "[\(timestamp)] \(message)\n"
-        print(logMessage, terminator: "")
-
-        if let data = logMessage.data(using: .utf8) {
-            if FileManager.default.fileExists(atPath: logFile.path) {
-                if let handle = try? FileHandle(forWritingTo: logFile) {
-                    handle.seekToEndOfFile()
-                    handle.write(data)
-                    handle.closeFile()
-                }
-            } else {
-                try? data.write(to: logFile)
-            }
-        }
+    /// Debug-only. Response bodies carry account data, so nothing here is
+    /// compiled into release builds.
+    private func log(_ message: @autoclosure () -> String) {
+        #if DEBUG
+        NSLog("[Vercelian.API] %@", message())
+        #endif
     }
 
     private var token: String? {
@@ -130,12 +120,12 @@ final class VercelAPI {
         if let teamId = teamId {
             endpoint += "?teamId=\(teamId)"
         }
-        let _: Deployment = try await request(endpoint: endpoint, method: "PATCH")
+        try await requestVoid(endpoint: endpoint, method: "PATCH")
     }
 
     // MARK: - Redeploy
 
-    func redeployDeployment(id: String) async throws -> Deployment {
+    func redeployDeployment(id: String) async throws {
         var endpoint = "/v13/deployments?forceNew=1"
         if let teamId = teamId {
             endpoint += "&teamId=\(teamId)"
@@ -154,7 +144,10 @@ final class VercelAPI {
             target: deployment.target
         )
 
-        return try await request(endpoint: endpoint, method: "POST", body: body)
+        // Encode here where concrete type is known (avoids Encodable existential issue)
+        let bodyData = try JSONEncoder().encode(body)
+        log("Redeploy request body: \(String(data: bodyData, encoding: .utf8) ?? "nil")")
+        try await requestVoid(endpoint: endpoint, method: "POST", bodyData: bodyData)
     }
 
     // MARK: - Private Request Method
@@ -191,9 +184,8 @@ final class VercelAPI {
         log("Response status: \(httpResponse.statusCode) for \(endpoint)")
 
         if httpResponse.statusCode < 200 || httpResponse.statusCode >= 300 {
-            let errorMessage = String(data: data, encoding: .utf8)
-            log("Error response: \(errorMessage ?? "nil")")
-            throw APIError.httpError(httpResponse.statusCode, errorMessage)
+            log("Error response: \(String(data: data, encoding: .utf8) ?? "nil")")
+            throw httpError(status: httpResponse.statusCode, data: data)
         }
 
         let decoder = JSONDecoder()
@@ -206,6 +198,59 @@ final class VercelAPI {
             log("Raw JSON (first 1000 chars): \(String(rawJson.prefix(1000)))")
             throw APIError.decodingError(error)
         }
+    }
+
+    private func requestVoid(
+        endpoint: String,
+        method: String = "GET",
+        bodyData: Data? = nil
+    ) async throws {
+        guard let token = token else {
+            throw APIError.noToken
+        }
+
+        guard let url = URL(string: baseURL + endpoint) else {
+            throw APIError.invalidURL
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = method
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = bodyData
+
+        let (data, response) = try await session.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw APIError.invalidResponse
+        }
+
+        log("Response status: \(httpResponse.statusCode) for \(endpoint)")
+
+        if httpResponse.statusCode < 200 || httpResponse.statusCode >= 300 {
+            log("Error response: \(String(data: data, encoding: .utf8) ?? "nil")")
+            throw httpError(status: httpResponse.statusCode, data: data)
+        }
+    }
+
+    /// Maps a non-2xx response to an error. Vercel answers a revoked or
+    /// expired token with 403 and `"invalidToken": true` (a 403 without the
+    /// flag means the token lacks access to that team or project), and puts
+    /// a readable reason in `error.message`.
+    private func httpError(status: Int, data: Data) -> APIError {
+        struct Envelope: Decodable {
+            struct Body: Decodable {
+                let message: String?
+                let invalidToken: Bool?
+            }
+            let error: Body?
+        }
+        let body = (try? JSONDecoder().decode(Envelope.self, from: data))?.error
+
+        if status == 401 || body?.invalidToken == true {
+            return .invalidToken
+        }
+        return .httpError(status, body?.message)
     }
 
     // MARK: - Validation
@@ -227,8 +272,7 @@ final class VercelAPI {
         }
 
         if httpResponse.statusCode < 200 || httpResponse.statusCode >= 300 {
-            let errorMessage = String(data: data, encoding: .utf8)
-            throw APIError.httpError(httpResponse.statusCode, errorMessage)
+            throw httpError(status: httpResponse.statusCode, data: data)
         }
 
         let decoder = JSONDecoder()

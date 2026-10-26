@@ -58,6 +58,18 @@ struct LoginView: View {
 
     private var initialView: some View {
         VStack(spacing: GeistSpacing.md) {
+            if let reason = store.signedOutReason {
+                HStack(alignment: .top, spacing: 6) {
+                    Image(systemName: "exclamationmark.circle.fill")
+                        .font(.system(size: 12))
+                    Text(reason)
+                        .font(GeistFont.regular(GeistFont.caption))
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .foregroundColor(GeistColors.error)
+                .padding(.horizontal, GeistSpacing.xxl)
+            }
+
             Button(action: openVercelTokenPage) {
                 HStack(spacing: 10) {
                     SharpTriangle()

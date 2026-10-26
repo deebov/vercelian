@@ -56,8 +56,11 @@ struct DeploymentDetailView: View {
                     if let branch = meta.githubCommitRef {
                         detailSection(title: "Branch") {
                             HStack(spacing: 6) {
-                                Image(systemName: "arrow.triangle.branch")
-                                    .font(.system(size: 12))
+                                Image("BranchIcon")
+                                    .renderingMode(.template)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 12, height: 12)
                                     .foregroundColor(GeistColors.foregroundSecondary(colorScheme))
                                 Text(branch)
                                     .font(GeistFont.regular(GeistFont.body))
