@@ -30,6 +30,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         setupPopover()
         setupEventMonitor()
         setupNotificationObservers()
+        // The store does the polling that drives notifications and the icon.
+        // ContentView's @StateObject only creates it when the popover first
+        // opens, so without this the app sat idle after every launch until
+        // it was clicked. Created after the observers so no icon update is
+        // posted before anyone is listening.
+        _ = DeploymentStore.shared
         requestNotificationPermission()
     }
 
