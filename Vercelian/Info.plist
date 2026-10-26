@@ -28,9 +28,5 @@
 	<string>Copyright © 2025 Vercelian. All rights reserved.</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
-	<key>OAuthClientID</key>
-	<string>$(OAUTH_CLIENT_ID)</string>
-	<key>OAuthClientSecret</key>
-	<string>$(OAUTH_CLIENT_SECRET)</string>
 </dict>
 </plist>
