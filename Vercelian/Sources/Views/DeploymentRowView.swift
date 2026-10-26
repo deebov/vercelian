@@ -160,6 +160,7 @@ struct DeploymentRowView: View {
     private func startTimerIfNeeded() {
         guard deployment.state == .building || deployment.state == .initializing else { return }
 
+        stopTimer()
         updateElapsedTime()
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
             updateElapsedTime()

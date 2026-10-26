@@ -244,7 +244,7 @@ struct SettingsView: View {
                         .font(GeistFont.medium(GeistFont.bodyLarge))
                         .foregroundColor(GeistColors.foreground(colorScheme))
                     Spacer()
-                    Text("v1.0.0")
+                    Text("v\(appVersion)")
                         .font(GeistFont.mono(GeistFont.footnote))
                         .foregroundColor(GeistColors.foregroundTertiary(colorScheme))
                 }
@@ -324,6 +324,10 @@ struct SettingsView: View {
                 .font(GeistFont.regular(GeistFont.caption))
                 .foregroundColor(GeistColors.foregroundTertiary(colorScheme))
         }
+    }
+
+    private var appVersion: String {
+        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "?"
     }
 
     // MARK: - Helper Views
