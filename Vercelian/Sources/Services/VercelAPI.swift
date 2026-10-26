@@ -3,6 +3,7 @@ import Foundation
 enum APIError: LocalizedError {
     case invalidURL
     case noToken
+    case invalidToken
     case invalidResponse
     case httpError(Int, String?)
     case decodingError(Error)
@@ -14,10 +15,15 @@ enum APIError: LocalizedError {
             return "Invalid URL"
         case .noToken:
             return "No access token configured"
+        case .invalidToken:
+            return "Your access token is invalid, expired, or was revoked."
         case .invalidResponse:
             return "Invalid response from server"
         case .httpError(let code, let message):
-            return "HTTP Error \(code): \(message ?? "Unknown error")"
+            if let message = message {
+                return "Vercel returned an error (\(code)): \(message)"
+            }
+            return "Vercel returned an error (\(code))"
         case .decodingError(let error):
             return "Failed to decode response: \(error.localizedDescription)"
         case .networkError(let error):
@@ -114,7 +120,7 @@ final class VercelAPI {
         if let teamId = teamId {
             endpoint += "?teamId=\(teamId)"
         }
-        let _: Deployment = try await request(endpoint: endpoint, method: "PATCH")
+        try await requestVoid(endpoint: endpoint, method: "PATCH")
     }
 
     // MARK: - Redeploy
@@ -178,9 +184,8 @@ final class VercelAPI {
         log("Response status: \(httpResponse.statusCode) for \(endpoint)")
 
         if httpResponse.statusCode < 200 || httpResponse.statusCode >= 300 {
-            let errorMessage = String(data: data, encoding: .utf8)
-            log("Error response: \(errorMessage ?? "nil")")
-            throw APIError.httpError(httpResponse.statusCode, errorMessage)
+            log("Error response: \(String(data: data, encoding: .utf8) ?? "nil")")
+            throw httpError(status: httpResponse.statusCode, data: data)
         }
 
         let decoder = JSONDecoder()
@@ -223,10 +228,29 @@ final class VercelAPI {
         log("Response status: \(httpResponse.statusCode) for \(endpoint)")
 
         if httpResponse.statusCode < 200 || httpResponse.statusCode >= 300 {
-            let errorMessage = String(data: data, encoding: .utf8)
-            log("Error response: \(errorMessage ?? "nil")")
-            throw APIError.httpError(httpResponse.statusCode, errorMessage)
+            log("Error response: \(String(data: data, encoding: .utf8) ?? "nil")")
+            throw httpError(status: httpResponse.statusCode, data: data)
         }
+    }
+
+    /// Maps a non-2xx response to an error. Vercel answers a revoked or
+    /// expired token with 403 and `"invalidToken": true` (a 403 without the
+    /// flag means the token lacks access to that team or project), and puts
+    /// a readable reason in `error.message`.
+    private func httpError(status: Int, data: Data) -> APIError {
+        struct Envelope: Decodable {
+            struct Body: Decodable {
+                let message: String?
+                let invalidToken: Bool?
+            }
+            let error: Body?
+        }
+        let body = (try? JSONDecoder().decode(Envelope.self, from: data))?.error
+
+        if status == 401 || body?.invalidToken == true {
+            return .invalidToken
+        }
+        return .httpError(status, body?.message)
     }
 
     // MARK: - Validation
@@ -248,8 +272,7 @@ final class VercelAPI {
         }
 
         if httpResponse.statusCode < 200 || httpResponse.statusCode >= 300 {
-            let errorMessage = String(data: data, encoding: .utf8)
-            throw APIError.httpError(httpResponse.statusCode, errorMessage)
+            throw httpError(status: httpResponse.statusCode, data: data)
         }
 
         let decoder = JSONDecoder()

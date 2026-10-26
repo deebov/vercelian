@@ -14,6 +14,8 @@ final class DeploymentStore: ObservableObject {
     @Published var deployments: [Deployment] = []
     @Published var isLoading = false
     @Published var error: String?
+    /// Shown on the sign-in screen when the app signed itself out.
+    @Published var signedOutReason: String?
 
     // Set of deployment UIDs that are currently live (one per project)
     @Published var currentProductionDeploymentIds: Set<String> = []
@@ -51,6 +53,7 @@ final class DeploymentStore: ObservableObject {
             _ = keychain.saveToken(token)
             currentUser = user
             isAuthenticated = true
+            signedOutReason = nil
             await loadInitialData()
             isLoading = false
             return true
@@ -71,6 +74,27 @@ final class DeploymentStore: ObservableObject {
         projects = []
         selectedProject = nil
         deployments = []
+        // Otherwise the next account's deployments get diffed against the
+        // previous account's and fire spurious notifications.
+        previousDeploymentStates.removeAll()
+        currentProductionDeploymentIds = []
+        error = nil
+        signedOutReason = nil
+        // Don't leave the icon orange or red for an account that's gone.
+        updateMenuBarIconState()
+    }
+
+    /// Routes a failed request: a dead token signs the user out with an
+    /// explanation, since every later request would fail the same way and
+    /// the list would otherwise sit empty with no hint why. Anything else
+    /// is shown in the list.
+    private func handle(_ error: Error) {
+        if case APIError.invalidToken = error {
+            logout()
+            signedOutReason = "Your access token expired or was revoked. Create a new token to sign back in."
+            return
+        }
+        self.error = error.localizedDescription
     }
 
     // MARK: - Data Loading
@@ -90,27 +114,35 @@ final class DeploymentStore: ObservableObject {
 
             await loadProjects()
             await loadDeployments()
-            startAutoRefresh()
         } catch {
-            self.error = error.localizedDescription
+            handle(error)
         }
 
         isLoading = false
+        if isAuthenticated {
+            startAutoRefresh()
+        }
     }
 
     func loadProjects() async {
+        let team = selectedTeam?.id
         do {
-            projects = try await api.getProjects()
+            let loaded = try await api.getProjects()
+            guard isAuthenticated, selectedTeam?.id == team else { return }
+            projects = loaded
         } catch {
-            self.error = error.localizedDescription
+            handle(error)
         }
     }
 
     func loadDeployments() async {
+        let team = selectedTeam?.id
+        let project = selectedProject?.id
         do {
-            print("[DeploymentStore] Loading deployments...")
-            let newDeployments = try await api.getDeployments(projectId: selectedProject?.id)
-            print("[DeploymentStore] Loaded \(newDeployments.count) deployments")
+            let newDeployments = try await api.getDeployments(projectId: project)
+            // Switching team or project while this was in flight would
+            // otherwise let the older response overwrite the newer one.
+            guard isAuthenticated, selectedTeam?.id == team, selectedProject?.id == project else { return }
 
             // Check for state changes and send notifications
             for deployment in newDeployments {
@@ -137,9 +169,9 @@ final class DeploymentStore: ObservableObject {
 
             // Update menu bar icon based on current states
             updateMenuBarIconState()
+            self.error = nil
         } catch {
-            print("[DeploymentStore] Error loading deployments: \(error)")
-            self.error = error.localizedDescription
+            handle(error)
         }
     }
 
@@ -197,13 +229,24 @@ final class DeploymentStore: ObservableObject {
     }
 
     func refresh() async {
-        await loadDeployments()
+        // If the first load failed there is no account data yet; retry all of it.
+        // Requests can take up to 30s to time out, so skip a tick rather than
+        // stack a second attempt on one still in flight.
+        if currentUser == nil {
+            guard !isLoading else { return }
+            await loadInitialData()
+        } else {
+            await loadDeployments()
+        }
     }
 
     // MARK: - Team Selection
 
     func selectTeam(_ team: Team?) {
         selectedTeam = team
+        // A project belongs to one team; keeping it would filter the new
+        // team's deployments by a project it doesn't have.
+        selectedProject = nil
         if let team = team {
             _ = keychain.saveTeamId(team.id)
         } else {
@@ -232,19 +275,16 @@ final class DeploymentStore: ObservableObject {
             try await api.cancelDeployment(id: deployment.uid)
             await loadDeployments()
         } catch {
-            self.error = error.localizedDescription
+            handle(error)
         }
     }
 
     func redeployDeployment(_ deployment: Deployment) async {
         do {
-            NSLog("[Vercelian] Store: redeploying \(deployment.uid)")
             try await api.redeployDeployment(id: deployment.uid)
-            NSLog("[Vercelian] Store: redeploy succeeded, reloading deployments")
             await loadDeployments()
         } catch {
-            NSLog("[Vercelian] Store: redeploy error: \(error)")
-            self.error = error.localizedDescription
+            handle(error)
         }
     }
 
@@ -255,7 +295,7 @@ final class DeploymentStore: ObservableObject {
 
         refreshTimer = Timer.scheduledTimer(withTimeInterval: 10.0, repeats: true) { [weak self] _ in
             Task { @MainActor [weak self] in
-                await self?.loadDeployments()
+                await self?.refresh()
             }
         }
     }
