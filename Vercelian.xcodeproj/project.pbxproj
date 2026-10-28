@@ -23,6 +23,7 @@
 		E91000012B5A000000000013 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91000002B5A000000000013 /* KeychainManager.swift */; };
 		E91000012B5A000000000014 /* DeploymentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91000002B5A000000000014 /* DeploymentStore.swift */; };
 		E91000012B5A000000000015 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E91000002B5A000000000015 /* Assets.xcassets */; };
+		DE30DA7A2F5A000000000004 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = DE30DA7A2F5A000000000003 /* PrivacyInfo.xcprivacy */; };
 		E91000012B5A000000000016 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91000002B5A000000000016 /* LoginView.swift */; };
 		E91000012B5A000000000017 /* DeploymentDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91000002B5A000000000017 /* DeploymentDetailView.swift */; };
 		E91000012B5A000000000018 /* ProjectSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91000002B5A000000000018 /* ProjectSelectorView.swift */; };
@@ -51,6 +52,7 @@
 		E91000002B5A000000000018 /* ProjectSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectSelectorView.swift; sourceTree = "<group>"; };
 		E91000002B5A000000000019 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E91000002B5A00000000001A /* Vercelian.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Vercelian.entitlements; sourceTree = "<group>"; };
+		DE30DA7A2F5A000000000003 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +81,7 @@
 				E91000002B5A000000000015 /* Assets.xcassets */,
 				E91000002B5A000000000019 /* Info.plist */,
 				E91000002B5A00000000001A /* Vercelian.entitlements */,
+				DE30DA7A2F5A000000000003 /* PrivacyInfo.xcprivacy */,
 			);
 			path = Vercelian;
 			sourceTree = "<group>";
@@ -215,6 +218,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E91000012B5A000000000015 /* Assets.xcassets in Resources */,
+				DE30DA7A2F5A000000000004 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
