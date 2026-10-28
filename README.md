@@ -94,6 +94,8 @@ From the deployment detail view, you can:
 - All network requests use HTTPS
 - No analytics or tracking - completely private
 
+See the [Privacy Policy](PRIVACY.md) for exactly what the app stores and sends.
+
 ## Development
 
 ### Project Structure
