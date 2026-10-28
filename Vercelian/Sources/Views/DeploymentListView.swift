@@ -109,6 +109,18 @@ final class RowSwipeManager: ObservableObject {
         }
     }
 
+    #if DEBUG
+    /// Screenshot tooling (see DemoData): leave a row's actions open, as a
+    /// completed swipe does.
+    func reveal(_ rowId: String, width: CGFloat) {
+        maxReveal = width
+        rawOffset = -width
+        swipeOffset = -width
+        isRevealed = true
+        activeRowId = rowId
+    }
+    #endif
+
     func close() {
         let closingRowId = activeRowId
         rawOffset = 0
@@ -191,6 +203,14 @@ struct SwipeableRow<Content: View>: View {
                 manager.setMaxReveal(CGFloat(actions.count) * maxActionWidth)
             }
         }
+        #if DEBUG
+        .onAppear {
+            // Screenshot tooling (see DemoData).
+            if rowId == DemoData.swipedRowId {
+                manager.reveal(rowId, width: CGFloat(actions.count) * maxActionWidth)
+            }
+        }
+        #endif
     }
 
     private func swipeActionButton(action: SwipeAction, width: CGFloat) -> some View {

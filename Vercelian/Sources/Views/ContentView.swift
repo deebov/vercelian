@@ -225,6 +225,21 @@ struct MainView: View {
                 MainView._isOnListPage
             }
             swipeMonitor.start()
+
+            #if DEBUG
+            // Screenshot tooling (see DemoData): start on a given screen.
+            switch DemoData.initialScreen {
+            case "settings":
+                navigateForward(.settings)
+            case "detail":
+                let building = store.deployments.first { $0.state == .building }
+                if let deployment = building ?? store.deployments.first {
+                    navigateForward(.detail(deployment))
+                }
+            default:
+                break
+            }
+            #endif
         }
         .onDisappear {
             swipeMonitor.stop()

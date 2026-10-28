@@ -19,9 +19,11 @@
 		E91000012B5A000000000010 /* Deployment.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91000002B5A000000000010 /* Deployment.swift */; };
 		E91000012B5A000000000011 /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91000002B5A000000000011 /* Project.swift */; };
 		E91000012B5A000000000012 /* VercelAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91000002B5A000000000012 /* VercelAPI.swift */; };
+		DE30DA7A2F5A000000000002 /* DemoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE30DA7A2F5A000000000001 /* DemoData.swift */; };
 		E91000012B5A000000000013 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91000002B5A000000000013 /* KeychainManager.swift */; };
 		E91000012B5A000000000014 /* DeploymentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91000002B5A000000000014 /* DeploymentStore.swift */; };
 		E91000012B5A000000000015 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E91000002B5A000000000015 /* Assets.xcassets */; };
+		DE30DA7A2F5A000000000004 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = DE30DA7A2F5A000000000003 /* PrivacyInfo.xcprivacy */; };
 		E91000012B5A000000000016 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91000002B5A000000000016 /* LoginView.swift */; };
 		E91000012B5A000000000017 /* DeploymentDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91000002B5A000000000017 /* DeploymentDetailView.swift */; };
 		E91000012B5A000000000018 /* ProjectSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91000002B5A000000000018 /* ProjectSelectorView.swift */; };
@@ -41,6 +43,7 @@
 		E91000002B5A000000000010 /* Deployment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Deployment.swift; sourceTree = "<group>"; };
 		E91000002B5A000000000011 /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
 		E91000002B5A000000000012 /* VercelAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VercelAPI.swift; sourceTree = "<group>"; };
+		DE30DA7A2F5A000000000001 /* DemoData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoData.swift; sourceTree = "<group>"; };
 		E91000002B5A000000000013 /* KeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
 		E91000002B5A000000000014 /* DeploymentStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeploymentStore.swift; sourceTree = "<group>"; };
 		E91000002B5A000000000015 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -49,6 +52,7 @@
 		E91000002B5A000000000018 /* ProjectSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectSelectorView.swift; sourceTree = "<group>"; };
 		E91000002B5A000000000019 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E91000002B5A00000000001A /* Vercelian.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Vercelian.entitlements; sourceTree = "<group>"; };
+		DE30DA7A2F5A000000000003 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +81,7 @@
 				E91000002B5A000000000015 /* Assets.xcassets */,
 				E91000002B5A000000000019 /* Info.plist */,
 				E91000002B5A00000000001A /* Vercelian.entitlements */,
+				DE30DA7A2F5A000000000003 /* PrivacyInfo.xcprivacy */,
 			);
 			path = Vercelian;
 			sourceTree = "<group>";
@@ -137,6 +142,7 @@
 			isa = PBXGroup;
 			children = (
 				E91000002B5A000000000012 /* VercelAPI.swift */,
+				DE30DA7A2F5A000000000001 /* DemoData.swift */,
 				E91000002B5A000000000014 /* DeploymentStore.swift */,
 				D928F7AD2F34CE640080018A /* NotificationManager.swift */,
 				D928F7B32F34CE810080018A /* SettingsManager.swift */,
@@ -212,6 +218,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E91000012B5A000000000015 /* Assets.xcassets in Resources */,
+				DE30DA7A2F5A000000000004 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -233,6 +240,7 @@
 				E91000012B5A000000000010 /* Deployment.swift in Sources */,
 				E91000012B5A000000000011 /* Project.swift in Sources */,
 				E91000012B5A000000000012 /* VercelAPI.swift in Sources */,
+				DE30DA7A2F5A000000000002 /* DemoData.swift in Sources */,
 				E91000012B5A000000000013 /* KeychainManager.swift in Sources */,
 				E91000012B5A000000000014 /* DeploymentStore.swift in Sources */,
 				E91000012B5A000000000016 /* LoginView.swift in Sources */,
@@ -270,7 +278,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.vercelian.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -303,7 +311,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.vercelian.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

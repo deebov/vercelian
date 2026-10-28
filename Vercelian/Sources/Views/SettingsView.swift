@@ -34,6 +34,10 @@ struct SettingsView: View {
             }
             .padding(GeistSpacing.md)
         }
+        #if DEBUG
+        // Screenshot tooling (see DemoData).
+        .defaultScrollAnchor(DemoData.scrollAnchor)
+        #endif
         .alert("Sign out", isPresented: $showLogoutConfirmation) {
             Button("Cancel", role: .cancel) {}
             Button("Sign out", role: .destructive) {

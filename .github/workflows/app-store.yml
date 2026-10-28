@@ -1,0 +1,115 @@
+name: App Store
+
+# Uploads a build to App Store Connect when a version tag is pushed, or when
+# run by hand from the Actions tab. It only uploads: choosing the build and
+# submitting it for review happen in App Store Connect.
+#
+# It needs an App Store Connect API key with the Admin role, which lets Xcode
+# sign with the team's cloud-managed distribution certificate. Create one in
+# App Store Connect under Users and Access → Integrations, then add these
+# repository secrets:
+#
+#   APP_STORE_CONNECT_KEY_ID       the key's ID
+#   APP_STORE_CONNECT_ISSUER_ID    the issuer ID shown above the list of keys
+#   APP_STORE_CONNECT_PRIVATE_KEY  the contents of the downloaded .p8 file
+#
+# Until they're added, the workflow skips the upload with a warning.
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+concurrency:
+  group: app-store
+  cancel-in-progress: false
+
+jobs:
+  upload:
+    runs-on: macos-latest
+    env:
+      KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+      ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+    steps:
+      - name: Check for the API key
+        id: key
+        env:
+          PRIVATE_KEY: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }}
+        run: |
+          if [ -n "$KEY_ID" ] && [ -n "$ISSUER_ID" ] && [ -n "$PRIVATE_KEY" ]; then
+            mkdir -p "$RUNNER_TEMP/keys"
+            printf '%s\n' "$PRIVATE_KEY" > "$RUNNER_TEMP/keys/AuthKey_$KEY_ID.p8"
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::Skipped the upload: the App Store Connect API key secrets aren't set. See the top of app-store.yml."
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.key.outputs.configured == 'true'
+
+      # App Store Connect requires builds made with a recent SDK.
+      - name: Select Xcode
+        if: steps.key.outputs.configured == 'true'
+        run: |
+          xcode=$(ls -d /Applications/Xcode_*.app | grep -v -i -E 'beta|release_candidate|_rc' | sort -V | tail -1)
+          sudo xcode-select -s "$xcode/Contents/Developer"
+          xcodebuild -version
+
+      - name: Check the tag matches the app version
+        if: steps.key.outputs.configured == 'true' && github.ref_type == 'tag'
+        run: |
+          version=$(xcodebuild -project Vercelian.xcodeproj -scheme Vercelian -configuration Release -showBuildSettings \
+            | awk '$1 == "MARKETING_VERSION" { print $3; exit }')
+          if [ "v$version" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME doesn't match the app version ($version). Update MARKETING_VERSION first."
+            exit 1
+          fi
+
+      # The runner has no certificates, so sign ad hoc here. The upload step
+      # re-signs with the team's cloud-managed distribution certificate.
+      - name: Archive
+        if: steps.key.outputs.configured == 'true'
+        run: |
+          xcodebuild archive \
+            -project Vercelian.xcodeproj \
+            -scheme Vercelian \
+            -configuration Release \
+            -destination 'generic/platform=macOS' \
+            -archivePath "$RUNNER_TEMP/Vercelian.xcarchive" \
+            CODE_SIGN_STYLE=Manual \
+            CODE_SIGN_IDENTITY=- \
+            PROVISIONING_PROFILE_SPECIFIER=
+
+      # App Store Connect picks the next free build number.
+      - name: Upload
+        if: steps.key.outputs.configured == 'true'
+        run: |
+          cat > "$RUNNER_TEMP/ExportOptions.plist" <<'PLIST'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>method</key>
+              <string>app-store-connect</string>
+              <key>destination</key>
+              <string>upload</string>
+              <key>teamID</key>
+              <string>WYK4PQWW66</string>
+              <key>signingStyle</key>
+              <string>automatic</string>
+              <key>uploadSymbols</key>
+              <true/>
+              <key>manageAppVersionAndBuildNumber</key>
+              <true/>
+          </dict>
+          </plist>
+          PLIST
+          xcodebuild -exportArchive \
+            -archivePath "$RUNNER_TEMP/Vercelian.xcarchive" \
+            -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist" \
+            -exportPath "$RUNNER_TEMP/export" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$RUNNER_TEMP/keys/AuthKey_$KEY_ID.p8" \
+            -authenticationKeyID "$KEY_ID" \
+            -authenticationKeyIssuerID "$ISSUER_ID"

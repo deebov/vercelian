@@ -63,33 +63,25 @@ final class NotificationManager: ObservableObject {
         switch state {
         case .ready:
             content.title = "Deployment Ready"
-            content.body = "\(projectName) deployed successfully"
             content.sound = .default
         case .error:
             content.title = "Deployment Failed"
-            content.body = "\(projectName) deployment failed"
             content.sound = UNNotificationSound.defaultCritical
         case .canceled:
             content.title = "Deployment Canceled"
-            content.body = "\(projectName) deployment was canceled"
             content.sound = .default
         default:
             return
         }
 
-        if let message = commitMessage {
-            content.subtitle = String(message.prefix(50))
-        }
+        // Two lines: the title, then the commit's first line in the body's
+        // regular weight (a subtitle would be bold). Without a commit message,
+        // the project name.
+        let subject = commitMessage?.split(whereSeparator: \.isNewline).first.map(String.init)
+        content.body = subject ?? projectName
 
         if let url = url {
             content.userInfo = ["url": url]
-        }
-
-        // Attach app icon
-        if let iconURL = writeAppIconToTemp() {
-            if let attachment = try? UNNotificationAttachment(identifier: "appIcon", url: iconURL, options: nil) {
-                content.attachments = [attachment]
-            }
         }
 
         let request = UNNotificationRequest(
@@ -99,15 +91,5 @@ final class NotificationManager: ObservableObject {
         )
 
         UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
-    }
-
-    private func writeAppIconToTemp() -> URL? {
-        guard let icon = NSImage(named: "AppIcon") else { return nil }
-        guard let tiff = icon.tiffRepresentation,
-              let bitmap = NSBitmapImageRep(data: tiff),
-              let png = bitmap.representation(using: .png, properties: [:]) else { return nil }
-        let url = FileManager.default.temporaryDirectory.appendingPathComponent("vercelian_icon.png")
-        try? png.write(to: url)
-        return url
     }
 }
