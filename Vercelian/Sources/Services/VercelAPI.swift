@@ -39,7 +39,9 @@ final class VercelAPI {
     private let session: URLSession
 
     private init() {
-        let config = URLSessionConfiguration.default
+        // Ephemeral: responses carry account data and are re-fetched every
+        // poll, so nothing (cache, cookies) should be written to disk.
+        let config = URLSessionConfiguration.ephemeral
         config.timeoutIntervalForRequest = 30
         config.timeoutIntervalForResource = 60
         self.session = URLSession(configuration: config)
