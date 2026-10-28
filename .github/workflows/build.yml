@@ -6,21 +6,55 @@ on:
   pull_request:
     branches: [main]
 
+# A newer push to the same branch or pull request supersedes a running build.
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
 
+      # The oldest Xcode the README promises. Releases use the newest.
       - name: Select Xcode
         run: sudo xcode-select -s /Applications/Xcode_16.2.app/Contents/Developer
 
-      - name: Build
+      - name: Build Debug
         run: |
           xcodebuild build \
             -project Vercelian.xcodeproj \
             -scheme Vercelian \
             -configuration Debug \
+            -derivedDataPath build \
             -destination 'platform=macOS' \
             CODE_SIGN_IDENTITY="-" \
             CODE_SIGNING_REQUIRED=NO
+
+      - name: Build Release
+        run: |
+          xcodebuild build \
+            -project Vercelian.xcodeproj \
+            -scheme Vercelian \
+            -configuration Release \
+            -derivedDataPath build \
+            -destination 'platform=macOS' \
+            CODE_SIGN_IDENTITY="-" \
+            CODE_SIGNING_REQUIRED=NO
+
+      # Demo mode (DemoData) is for App Store screenshots and must never ship.
+      # Swift stores short strings inside the machine code, so look for long
+      # ones from the demo data, and require a string that must be there, so
+      # the check can't pass by reading nothing.
+      - name: Check that demo mode isn't in the Release build
+        run: |
+          strings build/Build/Products/Release/Vercelian.app/Contents/MacOS/Vercelian > strings.txt
+          if ! grep -q 'Continue with Vercel' strings.txt; then
+            echo "::error::Couldn't read the strings in the Release binary"
+            exit 1
+          fi
+          if grep -E 'alex@example.com|Add express checkout' strings.txt; then
+            echo "::error::The Release build contains demo mode"
+            exit 1
+          fi
