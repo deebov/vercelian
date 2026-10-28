@@ -2,7 +2,7 @@ import SwiftUI
 
 /// A fictional account for App Store screenshots. Launch a Debug build with
 /// `--demo` and the store shows this instead of real data, without touching
-/// the Keychain or the network. Release builds ignore the flag.
+/// the Keychain or the network. Release builds contain none of it.
 enum DemoData {
     #if DEBUG
     static let isEnabled = ProcessInfo.processInfo.arguments.contains("--demo")
@@ -51,9 +51,6 @@ enum DemoData {
         guard let index = arguments.firstIndex(of: flag), index + 1 < arguments.count else { return nil }
         return arguments[index + 1]
     }
-    #else
-    static let isEnabled = false
-    #endif
 
     static let user = User(id: "demo_user", email: "alex@example.com", name: "Alex Rivera", username: "alexrivera")
 
@@ -126,4 +123,7 @@ enum DemoData {
             aliasAssigned: production && state == .ready
         )
     }
+    #else
+    static let isEnabled = false
+    #endif
 }

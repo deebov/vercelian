@@ -30,10 +30,12 @@ final class DeploymentStore: ObservableObject {
     private var previousDeploymentStates: [String: DeploymentState] = [:]
 
     private init() {
+        #if DEBUG
         if DemoData.isEnabled {
             showDemoAccount()
             return
         }
+        #endif
         checkAuthentication()
     }
 
@@ -49,10 +51,12 @@ final class DeploymentStore: ObservableObject {
     }
 
     func login(token: String) async -> Bool {
+        #if DEBUG
         if DemoData.isEnabled {
             showDemoAccount()
             return true
         }
+        #endif
         isLoading = true
         error = nil
 
@@ -110,10 +114,12 @@ final class DeploymentStore: ObservableObject {
     // MARK: - Data Loading
 
     func loadInitialData() async {
+        #if DEBUG
         if DemoData.isEnabled {
             showDemoAccount()
             return
         }
+        #endif
         isLoading = true
         error = nil
 
@@ -151,10 +157,12 @@ final class DeploymentStore: ObservableObject {
     }
 
     func loadDeployments() async {
+        #if DEBUG
         if DemoData.isEnabled {
             showDemoDeployments()
             return
         }
+        #endif
         let team = selectedTeam?.id
         let project = selectedProject?.id
         do {
@@ -313,6 +321,7 @@ final class DeploymentStore: ObservableObject {
 
     // MARK: - Demo
 
+    #if DEBUG
     /// Fills the store from DemoData. Never touches the Keychain or the
     /// network, and starts no refresh timer.
     private func showDemoAccount() {
@@ -330,6 +339,7 @@ final class DeploymentStore: ObservableObject {
         updateCurrentProductionDeployments()
         updateMenuBarIconState()
     }
+    #endif
 
     // MARK: - Auto Refresh
 
