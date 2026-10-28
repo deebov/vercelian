@@ -1,165 +1,93 @@
+<div align="center">
+
+<img src=".github/assets/icon.png" width="128" height="128" alt="">
+
 # Vercelian
 
-A native macOS menu bar app for monitoring Vercel deployments. Built with SwiftUI.
+**Your Vercel deployments, live in the macOS menu bar.**
 
-![macOS](https://img.shields.io/badge/macOS-14.0+-blue)
-![Swift](https://img.shields.io/badge/Swift-5.9-orange)
-![License](https://img.shields.io/badge/License-MIT-green)
+[![macOS 14 or later](https://img.shields.io/badge/macOS-14%2B-000000?logo=apple&logoColor=white)](#install)
+[![Built with SwiftUI](https://img.shields.io/badge/SwiftUI-native-F05138?logo=swift&logoColor=white)](#build-from-source)
+[![MIT license](https://img.shields.io/badge/license-MIT-000000)](LICENSE)
 
-## Download
+[Download](https://github.com/deebov/vercelian/releases/latest) · [Privacy](PRIVACY.md) · [Report an issue](https://github.com/deebov/vercelian/issues)
 
-- **GitHub Releases**: Download the latest `.zip` from [Releases](https://github.com/deebov/vercelian/releases)
-- **App Store**: Coming soon
+</div>
 
-> **Note**: GitHub builds are not notarized, so macOS blocks them on first launch. To open one:
-> 1. Double-click **Vercelian.app** and dismiss the warning
-> 2. Open **System Settings → Privacy & Security**
-> 3. Scroll to the message saying Vercelian was blocked and click **Open Anyway**
->
-> You only need to do this once. (On macOS 15 Sequoia and later, Control-click → Open no longer bypasses this.)
+<br>
+
+<img src=".github/assets/preview.png" alt="Vercelian's popover open under the menu bar, listing queued, building, ready, and failed deployments">
 
 ## Features
 
-- **Menu Bar Access**: Quick access to your deployments from the macOS menu bar
-- **Real-Time Monitoring**: Auto-refreshes every 10 seconds to show latest deployment status
-- **Deployment Status**: Color-coded indicators (green = ready, orange = building, red = error)
-- **Build Time Tracking**: Shows elapsed time for in-progress builds
-- **Team Support**: Switch between personal account and team deployments
-- **Project Filtering**: Filter deployments by specific project
-- **Deployment Details**: View commit info, branch, and repository details
-- **Quick Actions**: Cancel builds, redeploy, or open in browser
-- **Secure Storage**: Access token stored securely in macOS Keychain
-- **Dark Mode**: Automatically matches your macOS appearance
+- **Live status.** Every build, preview, and production deploy across your projects, refreshed every 10 seconds.
+- **An icon that keeps you posted.** The menu bar triangle turns orange while your latest deploy builds and red if it fails.
+- **Failure alerts.** Get a notification as soon as a deploy fails, and optionally when one succeeds.
+- **Teams and projects.** Switch between your personal account and your teams, and filter by project.
+- **Every detail.** See the branch, commit, repository, and environment of any deployment, and copy its URL.
+- **Actions.** Cancel a build, redeploy, open the site, or inspect it on Vercel.
+- **Swipe for shortcuts.** Swipe left on a deployment with two fingers to visit it, open it on Vercel, or jump to its logs.
+- **Native and private.** Built with SwiftUI, follows light and dark mode, keeps your token in the Keychain, and has no analytics.
 
-## Installation
+## Install
 
-### Build from Source
+**Mac App Store:** coming soon.
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/deebov/vercelian.git
-   cd vercelian
-   ```
+**GitHub:** download `Vercelian.zip` from the [latest release](https://github.com/deebov/vercelian/releases/latest), unzip it, and move Vercelian to your Applications folder.
 
-2. Open in Xcode and build:
-   ```bash
-   open Vercelian.xcodeproj
-   ```
+<details>
+<summary>macOS says Vercelian can't be opened</summary>
 
-### Requirements
+<br>
 
-- macOS 14.0 (Sonoma) or later
-- Xcode 15+ (for building from source)
+GitHub builds aren't notarized, so macOS blocks them the first time:
 
-## Setup
+1. Open Vercelian and dismiss the warning.
+2. Go to **System Settings → Privacy & Security**.
+3. Scroll to the message about Vercelian and click **Open Anyway**.
 
-1. Launch Vercelian from your Applications folder
-2. Click the triangle icon in your menu bar
-3. Click **Continue with Vercel**. Your browser opens [vercel.com/account/tokens](https://vercel.com/account/tokens)
-4. Create a token and copy it
-5. Paste it into Vercelian and click **Connect**
+You only need to do this once. On macOS 15 and later, Control-click → Open no longer gets around it.
 
-If the token later expires or is revoked, Vercelian signs out and asks for a new one.
+</details>
 
-### The menu bar icon is missing
+## Get started
 
-On a MacBook with a notch, status icons that don't fit to the right of the notch are hidden, starting with the most recently launched app. That is usually Vercelian, since it's often started after everything else. To get it back:
+1. Click the triangle in your menu bar.
+2. Click **Continue with Vercel**. Your browser opens [vercel.com/account/tokens](https://vercel.com/account/tokens).
+3. Create a token, copy it, paste it into Vercelian, and click **Connect**.
 
-1. Quit another menu bar app (or several) until the triangle reappears
-2. Hold **⌘** and drag the triangle further right, past icons you use less
+If the token expires or is revoked, Vercelian signs out and asks for a new one.
 
-macOS remembers the new position on future launches.
+<details>
+<summary>Can't find the menu bar icon?</summary>
 
-## Usage
+<br>
 
-- **Click the menu bar icon** to open the deployment list
-- **Filter by team** using the team dropdown (if you have team access)
-- **Filter by project** using the project dropdown
-- **Click a deployment** to see details and actions
-- **Click the refresh icon** to manually refresh
-- **Click Settings** (gear icon) to manage your account or sign out
+On a MacBook with a notch, macOS hides status icons that don't fit to the right of the notch, starting with the most recently opened app. To bring Vercelian back, quit another menu bar app or two, then hold <kbd>⌘</kbd> and drag the triangle further right. macOS remembers the new position.
 
-### Deployment Actions
+</details>
 
-From the deployment detail view, you can:
-- **Open in Browser** - View the deployed site
-- **View on Vercel** - Open the deployment in Vercel dashboard
-- **Cancel** - Stop an in-progress build
-- **Redeploy** - Trigger a new deployment
+## Privacy
 
-## Security
+Vercelian has no servers, analytics, or tracking. Your access token is stored in the macOS Keychain and sent only to Vercel's API over HTTPS, and your deployment data is kept in memory, never on disk. The [privacy policy](PRIVACY.md) has the details.
 
-- Your Vercel access token is stored securely in **macOS Keychain**
-- The token never leaves your machine except to communicate with Vercel's official API
-- All network requests use HTTPS
-- No analytics or tracking - completely private
+## Build from source
 
-See the [Privacy Policy](PRIVACY.md) for exactly what the app stores and sends.
+You need macOS 14 or later and Xcode 16 or later.
 
-## Development
-
-### Project Structure
-
-```
-Vercelian/
-├── Sources/
-│   ├── App/
-│   │   ├── VercelianApp.swift
-│   │   └── AppDelegate.swift
-│   ├── Views/
-│   │   ├── ContentView.swift
-│   │   ├── LoginView.swift
-│   │   ├── DeploymentListView.swift
-│   │   ├── DeploymentRowView.swift
-│   │   ├── DeploymentDetailView.swift
-│   │   ├── ProjectSelectorView.swift
-│   │   └── SettingsView.swift
-│   ├── Models/
-│   │   ├── Deployment.swift
-│   │   └── Project.swift
-│   ├── Services/
-│   │   ├── VercelAPI.swift
-│   │   ├── DeploymentStore.swift
-│   │   ├── NotificationManager.swift
-│   │   └── SettingsManager.swift
-│   └── Utils/
-│       ├── GeistTheme.swift
-│       └── KeychainManager.swift
-├── Assets.xcassets
-├── Info.plist
-└── Vercelian.entitlements
+```bash
+git clone https://github.com/deebov/vercelian.git
+open vercelian/Vercelian.xcodeproj
 ```
 
-### Architecture
+Choose your own team under **Signing & Capabilities**, then press <kbd>⌘</kbd><kbd>R</kbd>.
 
-- **SwiftUI** for the UI layer
-- **NSStatusItem** for menu bar integration
-- **NSPopover** for the dropdown panel
-- **Async/await** for API calls
-- **Combine** for reactive state management
-- **Security.framework** for Keychain access
+Every push and pull request is built by [GitHub Actions](.github/workflows), and version tags are released automatically.
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/my-feature`)
-3. Make your changes
-4. Commit and push to your branch
-5. Open a Pull Request
-
-### Ideas for Contribution
-
-- [ ] Keyboard shortcuts
-- [ ] Multiple account support
-- [ ] Deployment logs viewer
-- [ ] Sparkle auto-update integration
+Issues and pull requests are welcome. For anything bigger than a small fix, please open an issue first so we can talk it through.
 
 ## License
 
-MIT License - see [LICENSE](LICENSE) for details.
-
-## Acknowledgments
-
-Inspired by [Deplog](https://apps.apple.com/app/deplog/id6739449266) - a similar commercial app for Vercel deployments.
+Vercelian is available under the [MIT license](LICENSE). It's an independent project and isn't affiliated with or endorsed by Vercel Inc. Inspired by [Deplog](https://apps.apple.com/app/deplog/id6739449266).
