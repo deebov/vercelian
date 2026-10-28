@@ -86,7 +86,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         popover.contentSize = NSSize(width: 380, height: 500)
         popover.behavior = .transient
         popover.animates = true
-        popover.contentViewController = NSHostingController(rootView: ContentView())
+        // Hand the arrow to the content, which paints it the same colour as
+        // the rest of the popover. Otherwise the arrow shows the system
+        // popover material, grey against the content's own background.
+        popover.hasFullSizeContent = true
+        popover.contentViewController = PopoverContentController()
     }
 
     private func setupEventMonitor() {
@@ -139,6 +143,53 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if let eventMonitor = eventMonitor {
             NSEvent.removeMonitor(eventMonitor)
         }
+    }
+}
+
+// MARK: - Popover Content
+
+/// Hosts ContentView over a view that paints the Geist background edge to
+/// edge. With `hasFullSizeContent` the popover leaves its arrow to the
+/// content, but SwiftUI won't draw outside the safe area, so this view does.
+private final class PopoverContentController: NSViewController {
+    override func loadView() {
+        let background = PopoverBackgroundView()
+        let host = NSHostingView(rootView: ContentView())
+        host.translatesAutoresizingMaskIntoConstraints = false
+        background.addSubview(host)
+
+        let safeArea = background.safeAreaLayoutGuide
+        NSLayoutConstraint.activate([
+            host.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            host.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+            host.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            host.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+        ])
+        view = background
+    }
+}
+
+private final class PopoverBackgroundView: NSView {
+    override init(frame: NSRect) {
+        super.init(frame: frame)
+        wantsLayer = true
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        wantsLayer = true
+    }
+
+    override var wantsUpdateLayer: Bool { true }
+
+    override func updateLayer() {
+        let isDark = effectiveAppearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
+        layer?.backgroundColor = NSColor(GeistColors.background(isDark ? .dark : .light)).cgColor
+    }
+
+    override func viewDidChangeEffectiveAppearance() {
+        super.viewDidChangeEffectiveAppearance()
+        needsDisplay = true
     }
 }
 
