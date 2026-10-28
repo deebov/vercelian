@@ -30,6 +30,10 @@ final class DeploymentStore: ObservableObject {
     private var previousDeploymentStates: [String: DeploymentState] = [:]
 
     private init() {
+        if DemoData.isEnabled {
+            showDemoAccount()
+            return
+        }
         checkAuthentication()
     }
 
@@ -45,6 +49,10 @@ final class DeploymentStore: ObservableObject {
     }
 
     func login(token: String) async -> Bool {
+        if DemoData.isEnabled {
+            showDemoAccount()
+            return true
+        }
         isLoading = true
         error = nil
 
@@ -66,7 +74,9 @@ final class DeploymentStore: ObservableObject {
 
     func logout() {
         stopAutoRefresh()
-        keychain.clearAll()
+        if !DemoData.isEnabled {
+            keychain.clearAll()
+        }
         isAuthenticated = false
         currentUser = nil
         teams = []
@@ -100,6 +110,10 @@ final class DeploymentStore: ObservableObject {
     // MARK: - Data Loading
 
     func loadInitialData() async {
+        if DemoData.isEnabled {
+            showDemoAccount()
+            return
+        }
         isLoading = true
         error = nil
 
@@ -125,6 +139,7 @@ final class DeploymentStore: ObservableObject {
     }
 
     func loadProjects() async {
+        guard !DemoData.isEnabled else { return }
         let team = selectedTeam?.id
         do {
             let loaded = try await api.getProjects()
@@ -136,6 +151,10 @@ final class DeploymentStore: ObservableObject {
     }
 
     func loadDeployments() async {
+        if DemoData.isEnabled {
+            showDemoDeployments()
+            return
+        }
         let team = selectedTeam?.id
         let project = selectedProject?.id
         do {
@@ -247,10 +266,12 @@ final class DeploymentStore: ObservableObject {
         // A project belongs to one team; keeping it would filter the new
         // team's deployments by a project it doesn't have.
         selectedProject = nil
-        if let team = team {
-            _ = keychain.saveTeamId(team.id)
-        } else {
-            _ = keychain.deleteTeamId()
+        if !DemoData.isEnabled {
+            if let team = team {
+                _ = keychain.saveTeamId(team.id)
+            } else {
+                _ = keychain.deleteTeamId()
+            }
         }
 
         Task {
@@ -271,6 +292,7 @@ final class DeploymentStore: ObservableObject {
     // MARK: - Deployment Actions
 
     func cancelDeployment(_ deployment: Deployment) async {
+        guard !DemoData.isEnabled else { return }
         do {
             try await api.cancelDeployment(id: deployment.uid)
             await loadDeployments()
@@ -280,12 +302,33 @@ final class DeploymentStore: ObservableObject {
     }
 
     func redeployDeployment(_ deployment: Deployment) async {
+        guard !DemoData.isEnabled else { return }
         do {
             try await api.redeployDeployment(id: deployment.uid)
             await loadDeployments()
         } catch {
             handle(error)
         }
+    }
+
+    // MARK: - Demo
+
+    /// Fills the store from DemoData. Never touches the Keychain or the
+    /// network, and starts no refresh timer.
+    private func showDemoAccount() {
+        isAuthenticated = true
+        currentUser = DemoData.user
+        teams = DemoData.teams
+        selectedTeam = DemoData.teams.first
+        projects = DemoData.projects
+        showDemoDeployments()
+    }
+
+    private func showDemoDeployments() {
+        let all = DemoData.deployments
+        deployments = selectedProject.map { project in all.filter { $0.name == project.name } } ?? all
+        updateCurrentProductionDeployments()
+        updateMenuBarIconState()
     }
 
     // MARK: - Auto Refresh

@@ -139,6 +139,10 @@ struct DeploymentDetailView: View {
             }
             .padding(GeistSpacing.md)
         }
+        #if DEBUG
+        // Screenshot tooling (see DemoData).
+        .defaultScrollAnchor(DemoData.scrollAnchor)
+        #endif
     }
 
     private func detailSection<Content: View>(title: String, @ViewBuilder content: () -> Content) -> some View {
