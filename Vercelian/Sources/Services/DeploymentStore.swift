@@ -7,6 +7,9 @@ final class DeploymentStore: ObservableObject {
 
     @Published var isAuthenticated = false
     @Published var currentUser: User?
+    /// Vercel won't show this token the account, as with a token limited to
+    /// a project, so the app goes by the projects the token can see.
+    @Published var isScopedToken = false
     @Published var teams: [Team] = []
     @Published var selectedTeam: Team?
     @Published var projects: [Project] = []
@@ -64,6 +67,7 @@ final class DeploymentStore: ObservableObject {
             let user = try await api.validateToken(token)
             _ = keychain.saveToken(token)
             currentUser = user
+            isScopedToken = user == nil
             isAuthenticated = true
             signedOutReason = nil
             await loadInitialData()
@@ -83,6 +87,7 @@ final class DeploymentStore: ObservableObject {
         }
         isAuthenticated = false
         currentUser = nil
+        isScopedToken = false
         teams = []
         selectedTeam = nil
         projects = []
@@ -124,8 +129,20 @@ final class DeploymentStore: ObservableObject {
         error = nil
 
         do {
-            currentUser = try await api.getCurrentUser()
-            teams = try await api.getTeams()
+            do {
+                currentUser = try await api.getCurrentUser()
+                isScopedToken = false
+            } catch let error as APIError where error.isOutOfScope {
+                currentUser = nil
+                isScopedToken = true
+            }
+            // A scoped token needs no team picked, as Vercel infers it from
+            // the token, and may be refused the team list.
+            do {
+                teams = isScopedToken ? [] : try await api.getTeams()
+            } catch let error as APIError where error.isOutOfScope {
+                teams = []
+            }
 
             if let savedTeamId = keychain.getTeamId(),
                let team = teams.first(where: { $0.id == savedTeamId }) {
@@ -257,9 +274,10 @@ final class DeploymentStore: ObservableObject {
 
     func refresh() async {
         // If the first load failed there is no account data yet; retry all of it.
+        // (A scoped token never gets the account, so its first load stands.)
         // Requests can take up to 30s to time out, so skip a tick rather than
         // stack a second attempt on one still in flight.
-        if currentUser == nil {
+        if currentUser == nil && !isScopedToken {
             guard !isLoading else { return }
             await loadInitialData()
         } else {
