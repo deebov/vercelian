@@ -107,14 +107,6 @@ final class VercelAPI {
         return response.deployments
     }
 
-    func getDeployment(id: String) async throws -> Deployment {
-        var endpoint = "/v13/deployments/\(id)"
-        if let teamId = teamId {
-            endpoint += "?teamId=\(teamId)"
-        }
-        return try await request(endpoint: endpoint)
-    }
-
     // MARK: - Cancel Deployment
 
     func cancelDeployment(id: String) async throws {
@@ -127,7 +119,7 @@ final class VercelAPI {
 
     // MARK: - Redeploy
 
-    func redeployDeployment(id: String) async throws {
+    func redeployDeployment(_ deployment: Deployment) async throws {
         var endpoint = "/v13/deployments?forceNew=1"
         if let teamId = teamId {
             endpoint += "&teamId=\(teamId)"
@@ -139,9 +131,11 @@ final class VercelAPI {
             let target: String?
         }
 
-        let deployment = try await getDeployment(id: id)
+        // The name and target come from the list. Fetching the deployment
+        // again would get /v13's shape (id, createdAt, readyState), which
+        // Deployment can't decode.
         let body = RedeployRequest(
-            deploymentId: id,
+            deploymentId: deployment.uid,
             name: deployment.name,
             target: deployment.target
         )

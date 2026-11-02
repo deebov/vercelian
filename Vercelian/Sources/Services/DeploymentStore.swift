@@ -312,7 +312,7 @@ final class DeploymentStore: ObservableObject {
     func redeployDeployment(_ deployment: Deployment) async {
         guard !DemoData.isEnabled else { return }
         do {
-            try await api.redeployDeployment(id: deployment.uid)
+            try await api.redeployDeployment(deployment)
             await loadDeployments()
         } catch {
             handle(error)
