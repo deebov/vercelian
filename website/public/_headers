@@ -1,0 +1,35 @@
+# Response headers for the site's files, applied by Cloudflare.
+
+# The site loads everything from itself. The demo needs inline styles for
+# its colors; nothing else is inline.
+/*
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), browsing-topics=()
+
+# The font file never changes, so browsers can keep it for a year.
+/assets/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Cloudflare serves text files without a character set, and many tools then
+# misread anything beyond ASCII. The Markdown copies of the pages also name
+# the HTML pages as the originals, so search engines list those instead.
+/index.md
+  Content-Type: text/markdown; charset=utf-8
+  Link: <https://vercelian.co/>; rel="canonical"
+
+/privacy.md
+  Content-Type: text/markdown; charset=utf-8
+  Link: <https://vercelian.co/privacy>; rel="canonical"
+
+/llms.txt
+  Content-Type: text/plain; charset=utf-8
+
+/robots.txt
+  Content-Type: text/plain; charset=utf-8
+
+# The first address the site had serves the same pages. Keep it out of search.
+https://vercelian.deebov.workers.dev/*
+  X-Robots-Tag: noindex

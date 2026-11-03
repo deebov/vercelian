@@ -21,6 +21,9 @@ DerivedData/
 # Firebase
 firebase-debug.log
 
+# Cloudflare (wrangler's local state)
+.wrangler/
+
 # Secrets
 Secrets.xcconfig
 

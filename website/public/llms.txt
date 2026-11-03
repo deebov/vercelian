@@ -1,0 +1,16 @@
+# Vercelian
+
+> Vercelian is a native Mac app that shows your Vercel deployments live in the menu bar and alerts you the moment a build fails. It's open source under the MIT license, has no accounts, analytics, or tracking, and keeps your Vercel access token in the macOS Keychain.
+
+Vercelian is an independent project, not affiliated with or endorsed by Vercel Inc.
+
+- Platform: macOS 14 Sonoma or later
+- License: MIT
+- Install: download Vercelian.zip from the latest GitHub release; a Mac App Store version is coming soon
+- Sign-in: paste a Vercel access token created at https://vercel.com/account/tokens
+- Network: the app talks only to Vercel's API (api.vercel.com); it has no server of its own
+
+## Pages
+
+- [Vercelian](https://vercelian.co/index.md): what the app does, its features, and how to set it up
+- [Privacy Policy](https://vercelian.co/privacy.md): what the app keeps on your Mac and what it sends to Vercel

@@ -1,0 +1,1544 @@
+/*
+ * Vercelian's popover, rebuilt for the web. Sizes are the app's own, in
+ * points (1 CSS px each), and so are its line heights: SwiftUI sets 10 pt
+ * text 13 pt tall, 11 pt text 14, 12 pt 15, 13 pt 16, and 14 pt 17. Colors
+ * come from its GeistColors, and the timings from its SwiftUI animations.
+ */
+
+.demo {
+  --d-bg: #ffffff;
+  --d-bg-2: #fafafa;
+  --d-fg: #111111;
+  --d-fg-2: #666666;
+  --d-fg-3: #888888;
+  --d-border: #eaeaea;
+  /* SwiftUI's Divider: the system separator over the border color */
+  --d-divider: #d3d3d3;
+  --d-success: #17b169;
+  --d-error: #ee0000;
+  --d-warning: #f5a623;
+  --d-queued: #888888;
+  --d-blue: #0070f3;
+  --d-accent: #007aff;
+  --d-desk: #f3f3f4;
+  --d-bar: rgba(255, 255, 255, 0.78);
+  --d-bar-fg: rgba(0, 0, 0, 0.85);
+  --d-bar-hl: rgba(0, 0, 0, 0.1);
+  --d-orange: #ff9500;
+  --d-red: #ff3b30;
+  --d-label: rgba(0, 0, 0, 0.85);
+  --d-switch-off: rgba(0, 0, 0, 0.1);
+  --d-knob: #ffffff;
+  --d-knob-on: #ffffff;
+  --d-popup: rgba(0, 0, 0, 0.075);
+  --d-menu: rgba(252, 252, 252, 0.86);
+  --d-menu-line: rgba(0, 0, 0, 0.105);
+  --d-menu-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.3), 0 8px 26px rgba(0, 0, 0, 0.16), 0 2px 6px rgba(0, 0, 0, 0.06);
+  --d-frame-shadow: drop-shadow(0 0 1.4px rgba(0, 0, 0, 0.6)) drop-shadow(0 4px 18px rgba(0, 0, 0, 0.2));
+  position: relative;
+  height: 584px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--d-desk);
+  color: var(--d-fg);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  line-height: 16px;
+  -webkit-user-select: none;
+  user-select: none;
+  overscroll-behavior: contain;
+  isolation: isolate;
+}
+
+.demo[data-theme="dark"] {
+  --d-bg: #111111;
+  --d-bg-2: #1a1a1a;
+  --d-fg: #fafafa;
+  --d-fg-2: #888888;
+  --d-fg-3: #666666;
+  --d-border: #1a1a1a;
+  --d-divider: #303030;
+  --d-accent: #0a84ff;
+  --d-desk: #19191b;
+  --d-bar: rgba(36, 36, 38, 0.8);
+  --d-bar-fg: rgba(255, 255, 255, 0.92);
+  --d-bar-hl: rgba(255, 255, 255, 0.2);
+  --d-orange: #ff9f0a;
+  --d-red: #ff453a;
+  --d-label: rgba(255, 255, 255, 0.85);
+  --d-switch-off: rgba(255, 255, 255, 0.1);
+  --d-knob: #e0e0e0;
+  --d-knob-on: #e1ebfe;
+  --d-popup: rgba(255, 255, 255, 0.08);
+  --d-menu: rgba(40, 40, 42, 0.86);
+  --d-menu-line: rgba(255, 255, 255, 0.12);
+  --d-menu-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.9), inset 0 0 0 0.5px rgba(255, 255, 255, 0.14), 0 8px 26px rgba(0, 0, 0, 0.45);
+  --d-frame-shadow: drop-shadow(0 0 0.5px #000000) drop-shadow(0 0 0.5px #000000) drop-shadow(0 4px 18px rgba(0, 0, 0, 0.32));
+}
+
+:where(.demo button) {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+:where(.demo svg) {
+  display: block;
+  flex: none;
+}
+
+/* Author display rules would otherwise override the hidden attribute. */
+.demo [hidden] {
+  display: none !important;
+}
+
+.demo-fallback {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top left;
+}
+
+/* Menu bar */
+
+.d-menubar {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  height: 30px;
+  padding: 0 10px;
+  background: var(--d-bar);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+  color: var(--d-bar-fg);
+  font-weight: 500;
+}
+
+.d-mb-item {
+  display: grid;
+  place-items: center;
+  height: 24px;
+  padding: 0 7px;
+  border-radius: 999px;
+}
+
+.d-mb-app {
+  width: 36px;
+  padding: 0;
+}
+
+.d-mb-app.is-open {
+  background: var(--d-bar-hl);
+}
+
+.d-mb-app svg {
+  width: 15px;
+  height: 13px;
+  color: var(--d-bar-fg);
+  transition: color 0.3s;
+}
+
+.d-mb-app[data-state="building"] svg {
+  color: var(--d-orange);
+}
+
+.d-mb-app[data-state="error"] svg {
+  color: var(--d-red);
+}
+
+.d-mb-clock {
+  padding: 0 4px 0 8px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.d-hint {
+  position: absolute;
+  inset: 30px 0 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  text-align: center;
+  color: var(--d-fg-3);
+  font-size: 14px;
+  line-height: 20px;
+}
+
+/* Popover: its outline is drawn by demo.js, arrow included. The arrow's tip
+   meets the bottom of the menu bar, and the popover lies over the bar, as
+   macOS layers it, so the bar never clips the tip or its shadow. */
+
+.d-popover {
+  position: absolute;
+  top: 41px;
+  z-index: 4;
+  width: 380px;
+  height: 500px;
+}
+
+.d-popover.is-closed {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.d-frame,
+.d-frame-edge {
+  position: absolute;
+  top: -12px;
+  left: 0;
+  width: 100%;
+  height: calc(100% + 12px);
+  overflow: visible;
+  pointer-events: none;
+}
+
+.d-frame {
+  fill: var(--d-bg);
+  filter: var(--d-frame-shadow);
+}
+
+/* In dark mode macOS lines the popover with a faint highlight. */
+.d-frame-edge {
+  z-index: 1;
+  display: none;
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.1);
+  stroke-width: 2;
+}
+
+.demo[data-theme="dark"] .d-frame-edge {
+  display: block;
+}
+
+.d-body {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 20px;
+  background: var(--d-bg);
+}
+
+.d-app {
+  --page: 0;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.d-divider {
+  flex: none;
+  height: 1px;
+  background: var(--d-divider);
+}
+
+/* Header */
+
+.d-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 52px;
+  padding: 0 16px;
+  flex: none;
+}
+
+.d-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.d-wordmark {
+  display: block;
+  width: 95.25px;
+  height: 14px;
+  color: var(--d-fg);
+}
+
+.d-wordmark svg,
+.d-login-logo svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* ProgressView().controlSize(.small).scaleEffect(0.62) in a 10 × 14 frame */
+.d-spinner {
+  display: grid;
+  place-items: center;
+  width: 10px;
+  height: 14px;
+  transform: translateY(0.5px);
+  color: var(--d-fg-3);
+}
+
+.d-spinner svg {
+  width: 9.92px;
+  height: 9.92px;
+}
+
+.d-spinner svg,
+.d-btn-spinner svg {
+  animation: d-spin 0.8s steps(8) infinite;
+}
+
+.d-spacer {
+  flex: 1;
+}
+
+.d-icon-btn {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  color: var(--d-fg-2);
+  transition: background-color 0.15s cubic-bezier(0.42, 0, 0.58, 1);
+}
+
+.d-icon-btn:hover {
+  background: var(--d-bg-2);
+}
+
+/* Stage: settings sit beside the list and a deployment's page beside its
+   empty margin, in sideways scrollers that settle on each (see demo.js). */
+
+.d-stage {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  overscroll-behavior-x: none;
+  scrollbar-width: none;
+}
+
+.d-app.is-settings .d-stage {
+  overflow-x: auto;
+}
+
+.d-stage-track,
+.d-pager {
+  display: flex;
+  width: 200%;
+  height: 100%;
+}
+
+.d-main,
+.d-settings,
+.d-pager-gap,
+.d-pager-page {
+  position: relative;
+  flex: 0 0 50%;
+  min-width: 0;
+  height: 100%;
+}
+
+.d-main {
+  display: flex;
+  flex-direction: column;
+}
+
+.d-settings,
+.d-pager-page {
+  background: var(--d-bg);
+}
+
+.d-content {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+}
+
+.d-list-layer,
+.d-detail-layer {
+  position: absolute;
+  inset: 0;
+}
+
+.d-detail-layer {
+  visibility: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: none;
+  scrollbar-width: none;
+}
+
+/* Inherit, not visible: a closed popover hides everything in it, and
+   "visible" here would leave a deployment's page showing on its own. */
+.d-app[data-page="detail"] .d-detail-layer {
+  visibility: inherit;
+}
+
+.d-app[data-page="detail"] .d-list-layer {
+  transform: translateX(calc(var(--page) * -100% / 3));
+}
+
+.d-stage::-webkit-scrollbar,
+.d-detail-layer::-webkit-scrollbar,
+.d-row-wrap::-webkit-scrollbar {
+  display: none;
+}
+
+/* Sub-header: the pickers, or Back and the status on a deployment's page */
+
+.d-sub {
+  position: relative;
+  flex: none;
+  height: 40px;
+}
+
+.d-sub-list,
+.d-sub-detail {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+}
+
+.d-sub-list {
+  gap: 12px;
+}
+
+.d-sub-detail {
+  justify-content: space-between;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.d-app[data-page="detail"] .d-sub-list {
+  opacity: calc(1 - var(--page));
+}
+
+.d-app[data-page="detail"] .d-sub-detail {
+  opacity: var(--page);
+}
+
+.d-app.is-detail .d-sub-list {
+  pointer-events: none;
+}
+
+.d-app.is-detail .d-sub-detail {
+  pointer-events: auto;
+}
+
+.d-picker {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  height: 27px;
+  padding: 0 12px;
+  border-radius: 6px;
+  background: var(--d-bg-2);
+  box-shadow: 0 0 0 0.5px var(--d-border), inset 0 0 0 0.5px var(--d-border);
+  font-size: 12px;
+  line-height: 15px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.d-picker span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.d-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+}
+
+.d-badge-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 24px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--c) 10%, transparent);
+  font-size: 11px;
+  line-height: 14px;
+  font-weight: 500;
+}
+
+.d-badge-status i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--c);
+}
+
+.d-badge-status.is-live i {
+  animation: d-breathe 1s cubic-bezier(0.42, 0, 0.58, 1) infinite alternate;
+}
+
+/* List */
+
+.d-list {
+  height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 8px 0;
+  scrollbar-width: none;
+}
+
+.d-list::-webkit-scrollbar,
+.d-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Each row is a sideways scroller: 216 pt of actions, then room to pull past
+   them. Its stage stays put while it scrolls, and demo.js slides the row and
+   fans out the actions on it. */
+.d-row-wrap {
+  position: relative;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: none;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  container-type: inline-size;
+}
+
+/* SwiftUI's Divider between rows, inset to the text, holding still while a
+   row slides */
+.d-row-wrap + .d-row-wrap {
+  padding-top: 1px;
+  background: linear-gradient(var(--d-divider), var(--d-divider)) 48px 0 / calc(100% - 48px) 1px no-repeat;
+}
+
+/* Room to keep pulling: 900 pt past the actions, where the rubber band
+   gives so little (0.06 pt per pt pulled) that its end can't be felt, and
+   momentum can't carry a row out of sight. */
+.d-row-track {
+  position: relative;
+  width: calc(100cqw + 1116px);
+}
+
+/* Where a row comes to rest: shut, or open on its actions. Browsers snap
+   only once the fingers lift, so a pull still gives, and the momentum after
+   it lands here instead of carrying the row away. Snapping goes to the
+   nearest mark, so the middle one, at 70% of the actions, puts the line
+   between shut and open at 35%, the app's rule; a row snapped there springs
+   on open. The marks are tiny on purpose: browsers let a scroller rest
+   anywhere inside a snap area wider than itself, so snapping the track
+   would strand a row pulled past its actions. */
+.d-row-snap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  scroll-snap-align: start;
+}
+
+.d-row-snap:nth-of-type(2) {
+  left: 151px;
+}
+
+.d-row-snap:nth-of-type(3) {
+  left: 216px;
+}
+
+.d-row-stage {
+  position: sticky;
+  left: 0;
+  width: 100cqw;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.d-row {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--d-bg);
+  cursor: default;
+  outline: none;
+}
+
+.d-row::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--d-bg-2);
+  opacity: 0;
+  transition: opacity 0.15s cubic-bezier(0.42, 0, 0.58, 1);
+}
+
+.d-row:hover::before,
+.d-row:focus-visible::before {
+  opacity: 1;
+}
+
+.d-status {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  flex: none;
+}
+
+.d-status i {
+  grid-area: 1 / 1;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--c);
+}
+
+.d-status i:first-child:not(:last-child) {
+  animation: d-ping 1.2s cubic-bezier(0, 0, 0.58, 1) infinite;
+}
+
+/* SwiftUI's Spacer keeps 8 pt, plus its 12 pt of spacing, after the text. */
+.d-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  flex: 1;
+  margin-right: 20px;
+}
+
+.d-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.d-name {
+  font-weight: 500;
+}
+
+.d-branch {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  color: var(--d-fg-3);
+  font-size: 11px;
+  line-height: 14px;
+}
+
+.d-branch span,
+.d-msg {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.d-branch svg {
+  width: 10px;
+  height: 10px;
+}
+
+.d-msg {
+  color: var(--d-fg-2);
+  font-size: 11px;
+  line-height: 14px;
+  white-space: nowrap;
+}
+
+.d-meta {
+  font-size: 10px;
+  line-height: 13px;
+  color: var(--d-fg-3);
+}
+
+.d-meta .d-dot {
+  font-size: 8px;
+  line-height: 10px;
+}
+
+.d-meta .d-state {
+  font-weight: 500;
+  color: var(--c);
+}
+
+.d-elapsed {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--d-warning);
+  font-family: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.d-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  line-height: 13px;
+  font-weight: 500;
+  color: var(--c);
+  background: color-mix(in srgb, var(--c) 10%, transparent);
+}
+
+.d-tag i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.d-chevron {
+  flex: none;
+  color: var(--d-fg-3);
+}
+
+.d-empty {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 12px;
+  height: 100%;
+}
+
+.d-empty-icon {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--d-bg-2);
+  color: var(--d-fg-3);
+}
+
+.d-empty strong {
+  font-weight: 500;
+}
+
+.d-empty span:last-child:not(.d-empty-icon) {
+  font-size: 11px;
+  line-height: 14px;
+  color: var(--d-fg-3);
+}
+
+/* Swipe actions, waiting just past the row's right edge */
+
+.d-swipe-btn {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 72px;
+  color: #ffffff;
+  font-size: 10px;
+  line-height: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.d-swipe-btn[data-action="visit"] {
+  background: #0070f3;
+  z-index: 0;
+}
+
+.d-swipe-btn[data-action="inspect"] {
+  background: #555555;
+  z-index: 1;
+}
+
+.d-swipe-btn[data-action="logs"] {
+  background: #6e56cf;
+  z-index: 2;
+}
+
+/* Details */
+
+/* Contained only up and down, so a sideways swipe on a page reaches the
+   scroller beneath and drags the page back. */
+.d-scroll {
+  height: 100%;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  padding: 16px;
+  scrollbar-width: none;
+}
+
+.d-detail-layer .d-scroll,
+.d-settings-scroll {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.d-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  min-width: 0;
+}
+
+.d-label {
+  font-size: 10px;
+  line-height: 13px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--d-fg-3);
+}
+
+.d-value {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.d-value-lg {
+  font-size: 14px;
+  line-height: 17px;
+  font-weight: 500;
+}
+
+.d-url {
+  gap: 8px;
+  align-self: stretch;
+}
+
+.d-env {
+  gap: 8px;
+}
+
+.d-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  color: var(--d-blue);
+  text-align: left;
+}
+
+.d-link span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.d-copy {
+  display: grid;
+  margin-left: auto;
+}
+
+.d-copy > span {
+  grid-area: 1 / 1;
+  display: grid;
+  place-items: center;
+  transition: opacity 0.3s cubic-bezier(0.42, 0, 0.58, 1);
+}
+
+.d-copy-idle {
+  color: var(--d-fg-2);
+}
+
+.d-copy-done {
+  opacity: 0;
+  color: var(--d-success);
+}
+
+.d-copy.is-copied .d-copy-idle {
+  opacity: 0;
+}
+
+.d-copy.is-copied .d-copy-done {
+  opacity: 1;
+}
+
+.d-branch-icon {
+  display: block;
+  width: 12px;
+  height: 12px;
+  color: var(--d-fg-2);
+}
+
+.d-branch-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.d-commit {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.d-sha {
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--d-bg-2);
+  color: var(--d-fg-3);
+  font-family: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px;
+  line-height: 14px;
+}
+
+.d-env-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--c);
+}
+
+.d-live {
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--d-success) 10%, transparent);
+  color: var(--d-success);
+  font-size: 10px;
+  line-height: 13px;
+  font-weight: 500;
+}
+
+/* A Divider padded 8 pt above and below, then the buttons 12 pt apart */
+.d-actions-block {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 8px;
+}
+
+.d-actions-block::before {
+  content: "";
+  height: 1px;
+  margin-bottom: 8px;
+  background: var(--d-divider);
+}
+
+/* Buttons: 8 pt of padding around 16 pt of label, and a 1 pt stroke that
+   straddles the edge, as SwiftUI draws it */
+
+.d-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 32px;
+  padding: 0 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.d-btn-secondary,
+.d-btn-quiet {
+  background: var(--d-bg-2);
+  box-shadow: 0 0 0 0.5px var(--d-border), inset 0 0 0 0.5px var(--d-border);
+}
+
+.d-btn-quiet {
+  color: var(--d-fg-2);
+}
+
+.d-btn-row {
+  display: flex;
+  gap: 12px;
+}
+
+.d-btn-danger {
+  background: color-mix(in srgb, var(--d-error) 10%, transparent);
+  color: var(--d-error);
+}
+
+.d-btn-primary {
+  background: var(--d-fg);
+  color: var(--d-bg);
+}
+
+.d-btn:disabled {
+  cursor: default;
+}
+
+/* ProgressView().scaleEffect(0.5) in a 14 × 14 frame */
+.d-btn-spinner {
+  display: grid;
+  place-items: center;
+  width: 14px;
+  height: 14px;
+}
+
+.d-btn-spinner svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Settings */
+
+.d-set {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.d-card {
+  overflow: hidden;
+  border-radius: 8px;
+  background: var(--d-bg-2);
+  box-shadow: 0 0 0 0.5px var(--d-border), inset 0 0 0 0.5px var(--d-border);
+}
+
+.d-card hr {
+  height: 1px;
+  margin: 0 12px;
+  border: 0;
+  background: var(--d-divider);
+}
+
+/* The notification options fold away with SwiftUI's default spring. */
+.d-collapse {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows var(--d-smooth), opacity 0.25s ease;
+}
+
+.d-collapse.is-open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.d-collapse > div {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.d-card-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+}
+
+.demo button.d-card-row {
+  width: 100%;
+  text-align: left;
+}
+
+.d-card-row > svg {
+  color: var(--d-fg-2);
+}
+
+.d-card-row .d-grow {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.d-account {
+  gap: 12px;
+}
+
+.d-avatar {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--d-fg);
+  color: var(--d-bg);
+  font-size: 16px;
+  line-height: 19px;
+  font-weight: 600;
+}
+
+.d-account-name,
+.d-about-name {
+  font-size: 14px;
+  line-height: 17px;
+  font-weight: 500;
+}
+
+.d-account-email {
+  font-size: 12px;
+  line-height: 15px;
+  color: var(--d-fg-2);
+}
+
+.d-about-name {
+  flex: 1;
+}
+
+.d-card-pad {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+}
+
+.d-note {
+  margin: 0;
+  font-size: 12px;
+  line-height: 15px;
+  color: var(--d-fg-2);
+}
+
+.d-team-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* The pop-up button macOS draws for Picker(.menu), sized by its longest item */
+.d-popup {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 152px;
+  height: 24px;
+  margin-right: 20px;
+  padding: 0 9px 0 12.5px;
+  border-radius: 7px;
+  background: var(--d-popup);
+  color: var(--d-label);
+}
+
+.d-card-sub {
+  font-size: 11px;
+  line-height: 14px;
+  color: var(--d-fg-3);
+}
+
+.d-dot-8 {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--c);
+  flex: none;
+}
+
+.d-version {
+  font-family: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  line-height: 15px;
+  color: var(--d-fg-3);
+}
+
+.d-ext {
+  color: var(--d-fg-3);
+}
+
+/* The macOS 26 switch: a 54 × 24 track and a lozenge knob that stretches
+   while held */
+.d-switch {
+  position: relative;
+  flex: none;
+  width: 54px;
+  height: 24px;
+  border-radius: 12px;
+  background: var(--d-switch-off);
+  transition: background-color 0.25s cubic-bezier(0.42, 0, 0.58, 1);
+}
+
+.d-switch::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 32px;
+  height: 20px;
+  border-radius: 10px;
+  background: var(--d-knob);
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.16);
+  transition: transform 0.32s cubic-bezier(0.3, 1.35, 0.5, 1), width 0.18s ease-out, background-color 0.25s;
+}
+
+.d-switch[aria-checked="true"] {
+  background: var(--d-accent);
+}
+
+.d-switch[aria-checked="true"]::after {
+  background: var(--d-knob-on);
+  transform: translateX(18px);
+}
+
+.d-switch:active::after {
+  width: 36px;
+}
+
+.d-switch[aria-checked="true"]:active::after {
+  transform: translateX(14px);
+}
+
+.d-fine {
+  margin: 0;
+  font-size: 11px;
+  line-height: 14px;
+  color: var(--d-fg-3);
+}
+
+/* Sign in */
+
+.d-login {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 16px;
+  text-align: center;
+}
+
+.d-fill {
+  flex: 1;
+}
+
+.d-login-top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.d-login-logo {
+  display: block;
+  width: 48px;
+  height: 42px;
+  color: var(--d-fg);
+}
+
+.d-login-title {
+  font-size: 24px;
+  line-height: 28px;
+  font-weight: 700;
+}
+
+/* lineSpacing(4): 4 pt between the lines and none outside them */
+.d-login-sub {
+  margin: -2px 0;
+  color: var(--d-fg-2);
+  line-height: 20px;
+}
+
+.d-login-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-top: 32px;
+}
+
+.d-login-start {
+  gap: 16px;
+}
+
+.d-login-token {
+  gap: 20px;
+}
+
+.d-continue {
+  width: calc(100% - 64px);
+  height: 40px;
+  gap: 10px;
+  background: var(--d-fg);
+  color: var(--d-bg);
+}
+
+.d-continue svg {
+  width: 14px;
+  height: 12.25px;
+}
+
+.d-caption {
+  font-size: 11px;
+  line-height: 14px;
+  color: var(--d-fg-3);
+}
+
+.d-token-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.d-key {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--d-bg-2);
+  color: var(--d-fg-2);
+}
+
+.d-token-title {
+  font-size: 14px;
+  line-height: 17px;
+  font-weight: 600;
+}
+
+.d-token {
+  width: calc(100% - 64px);
+  height: 40px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 6px;
+  outline: none;
+  background: var(--d-bg-2);
+  box-shadow: 0 0 0 0.5px var(--d-border), inset 0 0 0 0.5px var(--d-border);
+  color: var(--d-fg);
+  font-family: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 13px;
+  line-height: 16px;
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+.d-token::placeholder {
+  color: var(--d-fg-3);
+}
+
+.d-login .d-btn-row {
+  width: calc(100% - 64px);
+}
+
+.d-login .d-btn-primary:disabled {
+  background: var(--d-fg-3);
+}
+
+.d-text-link {
+  color: var(--d-blue);
+  font-size: 11px;
+  line-height: 14px;
+}
+
+.d-login-foot {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  line-height: 13px;
+  color: var(--d-fg-3);
+}
+
+/* Menus, as macOS 26 draws them */
+
+.d-menu {
+  position: absolute;
+  z-index: 10;
+  min-width: 140px;
+  padding: 5px 0;
+  border-radius: 11px;
+  background: var(--d-menu);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  backdrop-filter: blur(30px) saturate(180%);
+  box-shadow: var(--d-menu-shadow);
+  color: var(--d-label);
+}
+
+.d-menu button {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 24px;
+  padding: 0 18px 0 17px;
+  color: inherit;
+  text-align: left;
+  white-space: nowrap;
+  cursor: default;
+}
+
+.d-menu button::before {
+  content: "";
+  position: absolute;
+  inset: 0 5px;
+  z-index: -1;
+  border-radius: 7px;
+}
+
+.d-menu button.is-hl {
+  color: #ffffff;
+}
+
+.d-menu button.is-hl::before {
+  background: var(--d-accent);
+}
+
+.d-menu:has(.d-menu-check) button {
+  padding-left: 24px;
+}
+
+.d-menu-check {
+  position: absolute;
+  top: 6px;
+  left: 9px;
+}
+
+.d-menu-check svg {
+  width: 11px;
+  height: 10px;
+}
+
+.d-menu-sep {
+  height: 11px;
+  margin: 0 16px;
+  background: linear-gradient(var(--d-menu-line), var(--d-menu-line)) center / 100% 1px no-repeat;
+}
+
+/* Alert */
+
+.d-alert-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 9;
+  display: grid;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.12);
+}
+
+.d-alert {
+  width: 260px;
+  padding: 20px 16px 16px;
+  border-radius: 18px;
+  background: var(--d-menu);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  backdrop-filter: blur(30px) saturate(180%);
+  box-shadow: var(--d-menu-shadow);
+  color: var(--d-label);
+  text-align: center;
+}
+
+.d-alert img {
+  width: 48px;
+  height: 48px;
+}
+
+.d-alert h3 {
+  margin: 8px 0 6px;
+  font-size: 13px;
+  line-height: 16px;
+  font-weight: 700;
+}
+
+.d-alert p {
+  margin: 0 0 16px;
+  font-size: 11px;
+  line-height: 14px;
+}
+
+.d-alert-btn {
+  display: block;
+  width: 100%;
+  height: 28px;
+  border-radius: 14px;
+  background: var(--d-popup);
+  font-weight: 500;
+}
+
+.d-alert-btn + .d-alert-btn {
+  margin-top: 8px;
+}
+
+.demo .d-alert-destructive {
+  background: var(--d-accent);
+  color: #ffffff;
+}
+
+/* Toast */
+
+.d-toast {
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  z-index: 5;
+  max-width: calc(100% - 28px);
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: var(--d-fg);
+  color: var(--d-bg);
+  font-size: 12px;
+  line-height: 15px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transform: translate(-50%, 0);
+  transition: transform 0.25s, opacity 0.25s;
+}
+
+.d-toast.is-hidden {
+  opacity: 0;
+  transform: translate(-50%, 8px);
+  pointer-events: none;
+}
+
+@keyframes d-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes d-ping {
+  from {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  to {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+@keyframes d-breathe {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(1.3);
+    opacity: 0.6;
+  }
+}
+
+@media (max-width: 520px) {
+  .demo {
+    height: 568px;
+  }
+
+  .d-mb-optional {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .demo *,
+  .demo *::before,
+  .demo *::after {
+    animation: none;
+    transition: none !important;
+  }
+}
