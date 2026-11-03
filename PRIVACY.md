@@ -1,6 +1,6 @@
 # Privacy Policy
 
-**Effective date:** October 26, 2026
+**Effective date:** October 28, 2026
 
 Vercelian is a macOS menu bar app that shows your Vercel deployments. This policy explains what the app does with your information.
 
@@ -20,7 +20,7 @@ Nothing. Vercelian has no accounts of its own, no analytics, no advertising, no 
 
 To show your deployments, the app requests your name, username, and email address, your teams and projects, and your recent deployments. Deployment details include URLs, branch names, commit messages, repository names, and who created the deployment. This data is held in memory while the app runs, is not written to disk, and is not sent anywhere else.
 
-If you turn on notifications, the app creates them on your Mac and macOS shows them in Notification Center. A notification contains the project name, the deployment status, and the start of the commit message.
+If you turn on notifications, the app creates them on your Mac and macOS shows them in Notification Center. A notification contains the deployment status and the first line of the commit message, or the project name if there is no commit message.
 
 ## Where data is sent
 
