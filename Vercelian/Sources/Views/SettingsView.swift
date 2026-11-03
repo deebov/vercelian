@@ -15,10 +15,14 @@ struct SettingsView: View {
                 // User info section
                 if let user = store.currentUser {
                     userSection(user: user)
+                } else if store.isScopedToken {
+                    scopedTokenSection
                 }
 
-                // Team selection
-                teamSection
+                // Team selection; Vercel infers a scoped token's team
+                if !store.isScopedToken {
+                    teamSection
+                }
 
                 // Notifications section
                 notificationsSection
@@ -71,6 +75,47 @@ struct SettingsView: View {
                     Text(user.email)
                         .font(GeistFont.regular(GeistFont.footnote))
                         .foregroundColor(GeistColors.foregroundSecondary(colorScheme))
+                }
+
+                Spacer()
+            }
+            .padding(GeistSpacing.sm)
+            .background(GeistColors.backgroundSecondary(colorScheme))
+            .cornerRadius(GeistRadius.md)
+            .overlay(
+                RoundedRectangle(cornerRadius: GeistRadius.md)
+                    .stroke(GeistColors.border(colorScheme), lineWidth: 1)
+            )
+        }
+    }
+
+    /// Stands in for the account, which Vercel won't show a scoped token:
+    /// names the projects the token can see instead.
+    private var scopedTokenSection: some View {
+        VStack(alignment: .leading, spacing: GeistSpacing.sm) {
+            sectionHeader("Account")
+
+            HStack(spacing: GeistSpacing.sm) {
+                ZStack {
+                    Circle()
+                        .fill(GeistColors.foreground(colorScheme))
+                        .frame(width: 40, height: 40)
+
+                    Image(systemName: "key.fill")
+                        .font(.system(size: 15, weight: .semibold))
+                        .foregroundColor(GeistColors.background(colorScheme))
+                }
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Limited access token")
+                        .font(GeistFont.medium(GeistFont.bodyLarge))
+                        .foregroundColor(GeistColors.foreground(colorScheme))
+                    Text(store.projects.isEmpty
+                         ? "Limited to a team or project"
+                         : store.projects.map(\.name).joined(separator: ", "))
+                        .font(GeistFont.regular(GeistFont.footnote))
+                        .foregroundColor(GeistColors.foregroundSecondary(colorScheme))
+                        .lineLimit(1)
                 }
 
                 Spacer()

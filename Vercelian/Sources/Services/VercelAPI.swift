@@ -30,6 +30,15 @@ enum APIError: LocalizedError {
             return "Network error: \(error.localizedDescription)"
         }
     }
+
+    /// How Vercel refuses a request beyond a token's scope. A token limited
+    /// to a project gets a 404 for the user and a 403 for the team list.
+    var isOutOfScope: Bool {
+        if case .httpError(let code, _) = self {
+            return code == 403 || code == 404
+        }
+        return false
+    }
 }
 
 final class VercelAPI {
@@ -107,14 +116,6 @@ final class VercelAPI {
         return response.deployments
     }
 
-    func getDeployment(id: String) async throws -> Deployment {
-        var endpoint = "/v13/deployments/\(id)"
-        if let teamId = teamId {
-            endpoint += "?teamId=\(teamId)"
-        }
-        return try await request(endpoint: endpoint)
-    }
-
     // MARK: - Cancel Deployment
 
     func cancelDeployment(id: String) async throws {
@@ -127,7 +128,7 @@ final class VercelAPI {
 
     // MARK: - Redeploy
 
-    func redeployDeployment(id: String) async throws {
+    func redeployDeployment(_ deployment: Deployment) async throws {
         var endpoint = "/v13/deployments?forceNew=1"
         if let teamId = teamId {
             endpoint += "&teamId=\(teamId)"
@@ -139,9 +140,11 @@ final class VercelAPI {
             let target: String?
         }
 
-        let deployment = try await getDeployment(id: id)
+        // The name and target come from the list. Fetching the deployment
+        // again would get /v13's shape (id, createdAt, readyState), which
+        // Deployment can't decode.
         let body = RedeployRequest(
-            deploymentId: id,
+            deploymentId: deployment.uid,
             name: deployment.name,
             target: deployment.target
         )
@@ -157,9 +160,10 @@ final class VercelAPI {
     private func request<T: Decodable>(
         endpoint: String,
         method: String = "GET",
-        body: Encodable? = nil
+        body: Encodable? = nil,
+        token explicitToken: String? = nil
     ) async throws -> T {
-        guard let token = token else {
+        guard let token = explicitToken ?? token else {
             throw APIError.noToken
         }
 
@@ -257,28 +261,16 @@ final class VercelAPI {
 
     // MARK: - Validation
 
-    func validateToken(_ token: String) async throws -> User {
-        guard let url = URL(string: baseURL + "/v2/user") else {
-            throw APIError.invalidURL
+    /// Checks a token before it's saved, and returns its account. A token
+    /// Vercel won't show the account, such as one limited to a project,
+    /// passes if it can list projects, and returns nil.
+    func validateToken(_ token: String) async throws -> User? {
+        do {
+            let response: UserResponse = try await request(endpoint: "/v2/user", token: token)
+            return response.user
+        } catch let error as APIError where error.isOutOfScope {
+            let _: ProjectsResponse = try await request(endpoint: "/v9/projects?limit=1", token: token)
+            return nil
         }
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
-        let (data, response) = try await session.data(for: request)
-
-        guard let httpResponse = response as? HTTPURLResponse else {
-            throw APIError.invalidResponse
-        }
-
-        if httpResponse.statusCode < 200 || httpResponse.statusCode >= 300 {
-            throw httpError(status: httpResponse.statusCode, data: data)
-        }
-
-        let decoder = JSONDecoder()
-        let userResponse = try decoder.decode(UserResponse.self, from: data)
-        return userResponse.user
     }
 }
