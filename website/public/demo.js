@@ -237,7 +237,7 @@
       <span class="d-mb-item d-mb-optional">${ICON.controls}</span>
       <span class="d-mb-clock"></span>
     </div>
-    <div class="d-hint" hidden>Vercelian lives in your menu bar. Click the triangle to open it.</div>
+    <div class="d-hint is-hidden">Vercelian lives in your menu bar. Click the triangle to open it.</div>
     <div class="d-popover" role="dialog" aria-label="Vercelian">
       <svg class="d-frame" aria-hidden="true"><path/></svg>
       <div class="d-body"><div class="d-app"></div></div>
@@ -318,7 +318,7 @@
     state.open = open;
     appButton.classList.toggle("is-open", open);
     appButton.setAttribute("aria-expanded", String(open));
-    hint.hidden = open;
+    hint.classList.toggle("is-hidden", open);
     if (!open) {
       closeMenu(true);
       closeSwipe();
