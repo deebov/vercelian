@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vercelian · Vercel deployments in your Mac menu bar</title>
+  <meta name="description" content="Vercelian is a native Mac app that shows your Vercel deployments live in the menu bar and alerts you the moment a build fails. Open source, no tracking.">
+  <link rel="canonical" href="https://vercelian.co/">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <!-- The same page as Markdown, for AI agents. See also /llms.txt. -->
+  <link rel="alternate" type="text/markdown" href="/index.md" title="Vercelian (Markdown)">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Vercelian">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:url" content="https://vercelian.co/">
+  <meta property="og:title" content="Vercelian · Vercel deployments in your Mac menu bar">
+  <meta property="og:description" content="A native Mac app that shows your Vercel deployments live in the menu bar and alerts you the moment a build fails.">
+  <meta property="og:image" content="https://vercelian.co/assets/og.jpg?v=6">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Vercelian's popover open under a MacBook's menu bar, listing queued, building, and ready deployments, beside the headline “Vercel Deploys, Right in Your Menu Bar” and badges for macOS, privacy, and open source">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
+  <link rel="icon" type="image/png" href="/assets/favicon.png?v=2">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="preload" href="/assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/demo.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://vercelian.co/#website",
+        "url": "https://vercelian.co/",
+        "name": "Vercelian",
+        "description": "A native Mac app that shows your Vercel deployments live in the menu bar.",
+        "inLanguage": "en",
+        "publisher": { "@id": "https://vercelian.co/#organization" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://vercelian.co/#organization",
+        "name": "Vercelian",
+        "url": "https://vercelian.co/",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://vercelian.co/assets/icon.png",
+          "width": 256,
+          "height": 256
+        }
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://vercelian.co/#app",
+        "name": "Vercelian",
+        "url": "https://vercelian.co/",
+        "description": "Vercelian is a native Mac app that shows your Vercel deployments live in the menu bar and alerts you the moment a build fails.",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "macOS 14 or later",
+        "softwareRequirements": "A Vercel account",
+        "image": "https://vercelian.co/assets/icon.png",
+        "screenshot": "https://vercelian.co/assets/preview.png",
+        "license": "https://opensource.org/licenses/MIT",
+        "featureList": [
+          "Menu bar icon turns orange while your latest deploy builds and red when it fails",
+          "Notifications that name the commit that broke the build",
+          "Branch, commit, repository, and environment of every deployment",
+          "Cancel or redeploy a build, and open its site, Vercel page, or logs",
+          "Personal account and teams, filterable by project",
+          "Access token kept in the macOS Keychain, with no analytics or tracking"
+        ],
+        "publisher": { "@id": "https://vercelian.co/#organization" }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <div class="wrap">
+    <header class="site-header">
+      <a class="brand" href="/">
+        <img src="/assets/icon.png" width="28" height="28" alt="">
+        <span>Vercelian</span>
+      </a>
+      <nav>
+        <a href="https://github.com/deebov/vercelian">GitHub</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <h1>Your Vercel deployments, live in the menu bar.</h1>
+        <p class="lede">Vercelian is a small, native Mac app that shows every build at a glance and tells you the moment one fails. No dashboard tabs, no refreshing.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="https://github.com/deebov/vercelian/releases/latest/download/Vercelian.zip">Download for Mac</a>
+          <a class="btn btn-secondary" href="https://github.com/deebov/vercelian">View on GitHub</a>
+        </div>
+        <p class="meta">Open source · macOS 14 or later · Mac App Store coming soon</p>
+      </section>
+
+      <section class="demo-section" aria-labelledby="demo-title">
+        <h2 id="demo-title" class="visually-hidden">Try Vercelian</h2>
+        <div class="demo" id="demo">
+          <noscript><img class="demo-fallback" src="/assets/preview.png" width="1920" height="1200" alt="Vercelian's popover listing queued, building, ready, and failed deployments"></noscript>
+        </div>
+        <div class="demo-caption">
+          <p>A working demo with sample data. Click a deployment, swipe one to the left, or open settings.</p>
+          <label class="theme-toggle">
+            <input type="checkbox" id="demo-dark">
+            <span>Dark mode</span>
+          </label>
+        </div>
+      </section>
+
+      <section class="features" aria-labelledby="features-title">
+        <h2 id="features-title">What it does</h2>
+        <ul>
+          <li>
+            <strong>Know the moment a build fails.</strong>
+            <span>The triangle in your menu bar turns orange while your latest deploy builds and red when it fails, and a notification tells you which commit broke it.</span>
+          </li>
+          <li>
+            <strong>Every detail, one click away.</strong>
+            <span>See the branch, commit, repository, and environment of any deployment, and copy its URL.</span>
+          </li>
+          <li>
+            <strong>Act without opening a browser.</strong>
+            <span>Cancel a build or redeploy from its details, or swipe left for shortcuts to the site, its Vercel page, and its logs.</span>
+          </li>
+          <li>
+            <strong>All your teams and projects.</strong>
+            <span>Switch between your personal account and your teams, and filter by project.</span>
+          </li>
+          <li>
+            <strong>Private by design.</strong>
+            <span>Your access token stays in the macOS Keychain and is sent only to Vercel's API. No accounts, no analytics, no tracking.</span>
+          </li>
+        </ul>
+      </section>
+
+      <section class="steps" aria-labelledby="steps-title">
+        <h2 id="steps-title">Set up in a minute</h2>
+        <ol>
+          <li>
+            <strong>Download Vercelian and open it.</strong>
+            <span>A triangle appears in your menu bar. GitHub builds aren't notarized, so the first time, allow it in System Settings → Privacy &amp; Security.</span>
+          </li>
+          <li>
+            <strong>Create an access token.</strong>
+            <span>Click the triangle, then <em>Continue with Vercel</em>. Your browser opens your Vercel token page.</span>
+          </li>
+          <li>
+            <strong>Paste it and click Connect.</strong>
+            <span>Your deployments appear right away and stay up to date.</span>
+          </li>
+        </ol>
+      </section>
+
+      <section class="cta">
+        <a class="btn btn-primary" href="https://github.com/deebov/vercelian/releases/latest/download/Vercelian.zip">Download for Mac</a>
+        <p class="meta">Requires macOS 14 Sonoma or later.</p>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>
+        <a href="/privacy">Privacy</a>
+        <span aria-hidden="true">·</span>
+        <a href="https://github.com/deebov/vercelian">GitHub</a>
+        <span aria-hidden="true">·</span>
+        <span>© 2026 Vercelian</span>
+      </p>
+      <p>Vercelian is an independent project, not affiliated with or endorsed by Vercel Inc.</p>
+    </footer>
+  </div>
+
+  <script src="/demo.js" defer></script>
+</body>
+</html>

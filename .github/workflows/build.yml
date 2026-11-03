@@ -3,6 +3,10 @@ name: Build
 on:
   push:
     branches: [main]
+    paths-ignore: ['website/**']
+  # Every pull request, website-only ones too: main requires this check, and a
+  # check that never runs would block the merge. The build itself is skipped
+  # below when only the website changed.
   pull_request:
     branches: [main]
 
@@ -16,12 +20,29 @@ jobs:
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
+        with:
+          # A pull request's merge commit and the main it merges into.
+          fetch-depth: 2
+
+      - name: Look for app changes
+        id: changes
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = pull_request ]; then
+            changed=$(git diff --name-only HEAD^1 HEAD)
+            if ! grep -qv '^website/' <<< "$changed"; then
+              echo "Only the website changed, so there's no app to build."
+              exit 0
+            fi
+          fi
+          echo "app=true" >> "$GITHUB_OUTPUT"
 
       # The oldest Xcode the README promises. Releases use the newest.
       - name: Select Xcode
+        if: steps.changes.outputs.app == 'true'
         run: sudo xcode-select -s /Applications/Xcode_16.2.app/Contents/Developer
 
       - name: Build Debug
+        if: steps.changes.outputs.app == 'true'
         run: |
           xcodebuild build \
             -project Vercelian.xcodeproj \
@@ -33,6 +54,7 @@ jobs:
             CODE_SIGNING_REQUIRED=NO
 
       - name: Build Release
+        if: steps.changes.outputs.app == 'true'
         run: |
           xcodebuild build \
             -project Vercelian.xcodeproj \
@@ -48,6 +70,7 @@ jobs:
       # ones from the demo data, and require a string that must be there, so
       # the check can't pass by reading nothing.
       - name: Check that demo mode isn't in the Release build
+        if: steps.changes.outputs.app == 'true'
         run: |
           strings build/Build/Products/Release/Vercelian.app/Contents/MacOS/Vercelian > strings.txt
           if ! grep -q 'Continue with Vercel' strings.txt; then

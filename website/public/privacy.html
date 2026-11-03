@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Privacy Policy · Vercelian</title>
+  <meta name="description" content="What Vercelian keeps on your Mac and sends to Vercel. In short: it collects nothing.">
+  <link rel="canonical" href="https://vercelian.co/privacy">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <!-- The same page as Markdown, for AI agents. See also /llms.txt. -->
+  <link rel="alternate" type="text/markdown" href="/privacy.md" title="Privacy Policy (Markdown)">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Vercelian">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:url" content="https://vercelian.co/privacy">
+  <meta property="og:title" content="Privacy Policy · Vercelian">
+  <meta property="og:description" content="What Vercelian keeps on your Mac and sends to Vercel. In short: it collects nothing.">
+  <meta property="og:image" content="https://vercelian.co/assets/og.jpg?v=6">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Vercelian's popover open under a MacBook's menu bar, listing queued, building, and ready deployments, beside the headline “Vercel Deploys, Right in Your Menu Bar” and badges for macOS, privacy, and open source">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
+  <link rel="icon" type="image/png" href="/assets/favicon.png?v=2">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="preload" href="/assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebPage",
+        "@id": "https://vercelian.co/privacy#webpage",
+        "url": "https://vercelian.co/privacy",
+        "name": "Privacy Policy",
+        "description": "What Vercelian keeps on your Mac and sends to Vercel. In short: it collects nothing.",
+        "inLanguage": "en",
+        "dateModified": "2026-10-28",
+        "isPartOf": {
+          "@type": "WebSite",
+          "@id": "https://vercelian.co/#website",
+          "url": "https://vercelian.co/",
+          "name": "Vercelian"
+        },
+        "breadcrumb": { "@id": "https://vercelian.co/privacy#breadcrumb" }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://vercelian.co/privacy#breadcrumb",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Vercelian", "item": "https://vercelian.co/" },
+          { "@type": "ListItem", "position": 2, "name": "Privacy Policy", "item": "https://vercelian.co/privacy" }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <!-- Keep in step with PRIVACY.md at the root of the repository (this page
+       adds a section on the website) and with privacy.md, this page as Markdown. -->
+  <div class="wrap">
+    <header class="site-header">
+      <a class="brand" href="/">
+        <img src="/assets/icon.png" width="28" height="28" alt="">
+        <span>Vercelian</span>
+      </a>
+      <nav>
+        <a href="https://github.com/deebov/vercelian">GitHub</a>
+      </nav>
+    </header>
+
+    <main class="doc">
+      <h1>Privacy Policy</h1>
+      <p><strong>Effective date:</strong> October 28, 2026</p>
+      <p>Vercelian is a macOS menu bar app that shows your Vercel deployments. This policy explains what the app does with your information.</p>
+      <p><strong>In short:</strong> Vercelian does not collect your data. It has no server of its own, and everything stays on your Mac except the requests it makes to Vercel on your behalf.</p>
+
+      <h2>What we collect</h2>
+      <p>Nothing. Vercelian has no accounts of its own, no analytics, no advertising, no tracking, and no third-party SDKs. We never receive your access token, your Vercel data, or your usage of the app.</p>
+
+      <h2>What the app keeps on your Mac</h2>
+      <ul>
+        <li><strong>Your Vercel access token.</strong> You create it on vercel.com and paste it into the app. It is stored in your macOS login Keychain and sent only to Vercel's API (<code>api.vercel.com</code>) over HTTPS.</li>
+        <li><strong>Your selected team.</strong> The ID of the team you are viewing is stored in your Keychain so the app remembers it.</li>
+        <li><strong>Preferences.</strong> Your notification and menu bar icon settings are stored in the app's preferences.</li>
+      </ul>
+
+      <h2>What the app reads from Vercel</h2>
+      <p>To show your deployments, the app requests your name, username, and email address, your teams and projects, and your recent deployments. Deployment details include URLs, branch names, commit messages, repository names, and who created the deployment. This data is held in memory while the app runs, is not written to disk, and is not sent anywhere else.</p>
+      <p>If you turn on notifications, the app creates them on your Mac and macOS shows them in Notification Center. A notification contains the deployment status and the first line of the commit message, or the project name if there is no commit message.</p>
+
+      <h2>Where data is sent</h2>
+      <p>Only to Vercel, to load your deployments and to cancel or redeploy them when you ask. Vercel's handling of your data is covered by <a href="https://vercel.com/legal/privacy-policy">Vercel's Privacy Policy</a>.</p>
+      <p>Links you open from the app, such as a deployment URL, the Vercel dashboard, or GitHub, open in your web browser and are subject to those sites' own policies.</p>
+      <p>If you have chosen in macOS settings to share analytics with app developers, Apple may provide us with anonymous crash reports. Apple controls this, not the app.</p>
+
+      <h2>This website</h2>
+      <p>This site has no analytics, cookies, or tracking, and it loads no fonts, scripts, or images from other companies' servers. Its demo runs entirely in your browser on sample data. Like any website, its host receives standard request data, such as your IP address, to serve the pages.</p>
+
+      <h2>Removing your data</h2>
+      <ul>
+        <li><strong>Sign out</strong> in Vercelian's settings to remove your access token and selected team from your Keychain. The app also signs you out automatically if Vercel reports that your token has expired or been revoked.</li>
+        <li><strong>Revoke the token</strong> at any time at <a href="https://vercel.com/account/tokens">vercel.com/account/tokens</a>. This immediately ends the app's access to your account.</li>
+        <li><strong>To remove everything,</strong> sign out, delete the app, and delete its folder at <code>~/Library/Containers/com.vercelian.app</code>. If you deleted the app without signing out first, remove the <code>com.vercelian.app</code> item in Keychain Access.</li>
+      </ul>
+
+      <h2>Children</h2>
+      <p>Vercelian is a tool for developers and is not directed at children.</p>
+
+      <h2>Changes</h2>
+      <p>If this policy changes, the new version will be posted here with a new effective date.</p>
+
+      <h2>Contact</h2>
+      <p>Questions about this policy: open an issue at <a href="https://github.com/deebov/vercelian/issues">github.com/deebov/vercelian/issues</a>.</p>
+      <p>Vercelian is an independent project and is not affiliated with, endorsed by, or sponsored by Vercel Inc.</p>
+    </main>
+
+    <footer class="site-footer">
+      <p>
+        <a href="/">Home</a>
+        <span aria-hidden="true">·</span>
+        <a href="https://github.com/deebov/vercelian">GitHub</a>
+        <span aria-hidden="true">·</span>
+        <span>© 2026 Vercelian</span>
+      </p>
+    </footer>
+  </div>
+</body>
+</html>
