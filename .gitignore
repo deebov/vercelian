@@ -21,8 +21,8 @@ DerivedData/
 # Firebase
 firebase-debug.log
 
-# Cloudflare (wrangler's local state)
-.wrangler/
+# Vercel (the CLI's link to the project)
+.vercel/
 
 # Secrets
 Secrets.xcconfig
