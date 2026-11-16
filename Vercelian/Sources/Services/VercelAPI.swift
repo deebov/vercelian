@@ -99,11 +99,17 @@ final class VercelAPI {
 
     // MARK: - Deployments
 
-    func getDeployments(projectId: String? = nil, limit: Int = 20) async throws -> [Deployment] {
+    /// A page of deployments, newest first. Pass a page's `pagination.next`
+    /// as `until` for the page after it.
+    func getDeployments(projectId: String? = nil, until: Int? = nil, limit: Int = 20) async throws -> DeploymentsResponse {
         var endpoint = "/v6/deployments?limit=\(limit)"
 
         if let projectId = projectId {
             endpoint += "&projectId=\(projectId)"
+        }
+
+        if let until = until {
+            endpoint += "&until=\(until)"
         }
 
         if let teamId = teamId {
@@ -113,7 +119,7 @@ final class VercelAPI {
         log("Fetching deployments: \(endpoint)")
         let response: DeploymentsResponse = try await request(endpoint: endpoint)
         log("Got \(response.deployments.count) deployments")
-        return response.deployments
+        return response
     }
 
     // MARK: - Cancel Deployment

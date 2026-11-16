@@ -342,6 +342,30 @@ struct DeploymentListView: View {
         .background(GeistColors.error.opacity(0.08))
     }
 
+    /// Loads the next page when the end of the list comes into view, and
+    /// again after each page while it stays in view. A failed load waits
+    /// for a click rather than retrying on every scroll.
+    private var loadMoreFooter: some View {
+        Group {
+            if store.loadMoreFailed && !store.isLoadingMore {
+                Button("Load more") {
+                    Task { await store.loadMoreDeployments() }
+                }
+                .buttonStyle(GeistButtonStyle(variant: .secondary))
+            } else {
+                ProgressView()
+                    .controlSize(.small)
+                    .task(id: store.deployments.count) {
+                        // A task of its own, so scrolling away doesn't cancel
+                        // the request and report it as failed.
+                        await Task { await store.loadMoreDeployments() }.value
+                    }
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, GeistSpacing.sm)
+    }
+
     private func swipeActions(for deployment: Deployment) -> [SwipeAction] {
         var actions: [SwipeAction] = []
 
@@ -404,15 +428,22 @@ struct DeploymentListView: View {
                             }
 
                             if deployment.id != store.deployments.last?.id {
-                                Divider()
-                                    .background(GeistColors.border(colorScheme))
-                                    .padding(.leading, GeistSpacing.md + 20 + GeistSpacing.sm)
+                                GeistDivider()
+                                    .padding(.leading, GeistSpacing.md + 10 + GeistSpacing.md)
                             }
                         }
+                    }
+
+                    if store.hasMoreDeployments {
+                        loadMoreFooter
                     }
                 }
                 .padding(.vertical, GeistSpacing.xs)
             }
+            #if DEBUG
+            // Screenshot tooling (see DemoData).
+            .defaultScrollAnchor(DemoData.scrollAnchor)
+            #endif
         }
     }
 }

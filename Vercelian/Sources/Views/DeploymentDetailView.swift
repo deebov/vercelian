@@ -26,7 +26,7 @@ struct DeploymentDetailView: View {
                             Text(deployment.displayUrl)
                                 .font(GeistFont.regular(GeistFont.body))
                                 .lineLimit(1)
-                                .foregroundColor(GeistColors.vercelBlue)
+                                .foregroundColor(GeistColors.link)
                         }
 
                         Spacer()
@@ -46,6 +46,11 @@ struct DeploymentDetailView: View {
                             Image(systemName: copiedURL ? "checkmark" : "doc.on.doc")
                                 .font(.system(size: 12))
                                 .foregroundColor(copiedURL ? GeistColors.success : GeistColors.foregroundSecondary(colorScheme))
+                                .contentTransition(.symbolEffect(.replace))
+                                // One box for both symbols: the checkmark is
+                                // shorter, and swapping sizes moved the page.
+                                .frame(width: 16, height: 16)
+                                .contentShape(Rectangle())
                         }
                         .buttonStyle(.plain)
                     }
@@ -56,11 +61,8 @@ struct DeploymentDetailView: View {
                     if let branch = meta.githubCommitRef {
                         detailSection(title: "Branch") {
                             HStack(spacing: 6) {
-                                Image("BranchIcon")
-                                    .renderingMode(.template)
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: 12, height: 12)
+                                Image(systemName: "arrow.triangle.branch")
+                                    .font(.system(size: 11, weight: .medium))
                                     .foregroundColor(GeistColors.foregroundSecondary(colorScheme))
                                 Text(branch)
                                     .font(GeistFont.regular(GeistFont.body))
@@ -99,7 +101,7 @@ struct DeploymentDetailView: View {
                                     Text("\(org)/\(repo)")
                                         .font(GeistFont.regular(GeistFont.body))
                                 }
-                                .foregroundColor(GeistColors.vercelBlue)
+                                .foregroundColor(GeistColors.link)
                             }
                         }
                     }
@@ -116,13 +118,7 @@ struct DeploymentDetailView: View {
                             .foregroundColor(GeistColors.foreground(colorScheme))
 
                         if deployment.isCurrentProduction {
-                            Text("Live")
-                                .font(GeistFont.medium(GeistFont.caption2))
-                                .padding(.horizontal, 6)
-                                .padding(.vertical, 2)
-                                .background(GeistColors.success.opacity(0.1))
-                                .foregroundColor(GeistColors.success)
-                                .cornerRadius(GeistRadius.xs)
+                            GeistBadge("Live", .greenSubtle, size: .xs)
                         }
                     }
                 }
@@ -157,8 +153,7 @@ struct DeploymentDetailView: View {
 
     private var actionsSection: some View {
         VStack(spacing: GeistSpacing.sm) {
-            Divider()
-                .background(GeistColors.border(colorScheme))
+            GeistDivider()
                 .padding(.vertical, GeistSpacing.xs)
 
             // Open in browser

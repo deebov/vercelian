@@ -72,6 +72,9 @@ enum DeploymentState: String, Codable {
     case queued = "QUEUED"
     case ready = "READY"
     case canceled = "CANCELED"
+    /// Vercel wouldn't build it, such as when it can't match the commit's
+    /// author to a member of the team.
+    case blocked = "BLOCKED"
 
     var displayName: String {
         switch self {
@@ -81,13 +84,14 @@ enum DeploymentState: String, Codable {
         case .queued: return "Queued"
         case .ready: return "Ready"
         case .canceled: return "Canceled"
+        case .blocked: return "Blocked"
         }
     }
 
     var color: String {
         switch self {
         case .building, .initializing, .queued: return "yellow"
-        case .error: return "red"
+        case .error, .blocked: return "red"
         case .ready: return "green"
         case .canceled: return "gray"
         }

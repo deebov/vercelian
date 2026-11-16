@@ -29,9 +29,10 @@ struct ProjectSelectorView: View {
                             .lineLimit(1)
                         Image(systemName: "chevron.down")
                             .font(.system(size: 8, weight: .semibold))
+                            .padding(.leading, GeistSpacing.xxs)
                     }
                     .foregroundColor(GeistColors.foreground(colorScheme))
-                    .padding(.horizontal, GeistSpacing.sm)
+                    .padding(.horizontal, 10)
                     .padding(.vertical, 6)
                     .background(GeistColors.backgroundSecondary(colorScheme))
                     .cornerRadius(GeistRadius.sm)
@@ -67,9 +68,10 @@ struct ProjectSelectorView: View {
                         .lineLimit(1)
                     Image(systemName: "chevron.down")
                         .font(.system(size: 8, weight: .semibold))
+                        .padding(.leading, GeistSpacing.xxs)
                 }
                 .foregroundColor(GeistColors.foreground(colorScheme))
-                .padding(.horizontal, GeistSpacing.sm)
+                .padding(.horizontal, 10)
                 .padding(.vertical, 6)
                 .background(GeistColors.backgroundSecondary(colorScheme))
                 .cornerRadius(GeistRadius.sm)

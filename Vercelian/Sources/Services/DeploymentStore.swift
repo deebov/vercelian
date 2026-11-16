@@ -15,6 +15,15 @@ final class DeploymentStore: ObservableObject {
     @Published var projects: [Project] = []
     @Published var selectedProject: Project?
     @Published var deployments: [Deployment] = []
+    /// Where Vercel's next page of older deployments starts, or nil when
+    /// there are no more.
+    @Published private var nextPage: Int?
+    @Published private(set) var isLoadingMore = false
+    /// The last attempt to load more failed, so the list offers a retry.
+    @Published private(set) var loadMoreFailed = false
+    /// The list has grown past the newest page, so refreshes keep the
+    /// pages below it.
+    private var hasOlderPages = false
     @Published var isLoading = false
     @Published var error: String?
     /// Shown on the sign-in screen when the app signed itself out.
@@ -93,6 +102,7 @@ final class DeploymentStore: ObservableObject {
         projects = []
         selectedProject = nil
         deployments = []
+        resetPages()
         // Otherwise the next account's deployments get diffed against the
         // previous account's and fire spurious notifications.
         previousDeploymentStates.removeAll()
@@ -183,7 +193,8 @@ final class DeploymentStore: ObservableObject {
         let team = selectedTeam?.id
         let project = selectedProject?.id
         do {
-            let newDeployments = try await api.getDeployments(projectId: project)
+            let page = try await api.getDeployments(projectId: project)
+            let newDeployments = page.deployments
             // Switching team or project while this was in flight would
             // otherwise let the older response overwrite the newer one.
             guard isAuthenticated, selectedTeam?.id == team, selectedProject?.id == project else { return }
@@ -205,7 +216,15 @@ final class DeploymentStore: ObservableObject {
                 previousDeploymentStates[deployment.uid] = deployment.state
             }
 
-            deployments = newDeployments
+            if hasOlderPages {
+                // A refresh loads only the newest page; keep the ones below it.
+                let ids = Set(newDeployments.map(\.uid))
+                let oldest = newDeployments.last?.created ?? .max
+                deployments = newDeployments + deployments.filter { !ids.contains($0.uid) && $0.created <= oldest }
+            } else {
+                deployments = newDeployments
+                nextPage = page.pagination?.next
+            }
 
             // Compute current production deployment IDs (one per project)
             // The current deployment is the most recent ready production deployment with aliases assigned
@@ -217,6 +236,40 @@ final class DeploymentStore: ObservableObject {
         } catch {
             handle(error)
         }
+    }
+
+    var hasMoreDeployments: Bool {
+        nextPage != nil
+    }
+
+    /// Adds the next page of older deployments, as the list reaches its end.
+    func loadMoreDeployments() async {
+        guard let until = nextPage, !isLoadingMore else { return }
+        let team = selectedTeam?.id
+        let project = selectedProject?.id
+        isLoadingMore = true
+        defer { isLoadingMore = false }
+        do {
+            let page = try await api.getDeployments(projectId: project, until: until)
+            // The team, project or account changed while this was in flight.
+            guard isAuthenticated, selectedTeam?.id == team, selectedProject?.id == project, nextPage == until else { return }
+            let ids = Set(deployments.map(\.uid))
+            deployments += page.deployments.filter { !ids.contains($0.uid) }
+            nextPage = page.pagination?.next
+            hasOlderPages = true
+            loadMoreFailed = false
+            updateCurrentProductionDeployments()
+        } catch {
+            loadMoreFailed = true
+            handle(error)
+        }
+    }
+
+    /// Back to the newest page alone, for another team, project or account.
+    private func resetPages() {
+        nextPage = nil
+        hasOlderPages = false
+        loadMoreFailed = false
     }
 
     private func updateCurrentProductionDeployments() {
@@ -250,7 +303,7 @@ final class DeploymentStore: ObservableObject {
         switch latestState {
         case .building, .initializing, .queued:
             iconState = "building"
-        case .error:
+        case .error, .blocked:
             iconState = "error"
         default:
             iconState = "normal"
@@ -292,6 +345,7 @@ final class DeploymentStore: ObservableObject {
         // A project belongs to one team; keeping it would filter the new
         // team's deployments by a project it doesn't have.
         selectedProject = nil
+        resetPages()
         if !DemoData.isEnabled {
             if let team = team {
                 _ = keychain.saveTeamId(team.id)
@@ -310,6 +364,7 @@ final class DeploymentStore: ObservableObject {
 
     func selectProject(_ project: Project?) {
         selectedProject = project
+        resetPages()
         Task {
             await loadDeployments()
         }

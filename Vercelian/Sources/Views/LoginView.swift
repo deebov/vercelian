@@ -196,7 +196,7 @@ struct LoginView: View {
             }) {
                 Text("Open Vercel token page")
                     .font(GeistFont.regular(GeistFont.caption))
-                    .foregroundColor(GeistColors.vercelBlue)
+                    .foregroundColor(GeistColors.link)
             }
             .buttonStyle(.plain)
         }

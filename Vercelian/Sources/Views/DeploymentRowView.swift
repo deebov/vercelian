@@ -10,8 +10,9 @@ struct DeploymentRowView: View {
 
     var body: some View {
         HStack(spacing: GeistSpacing.sm) {
-            // Status indicator
-            statusIndicator
+            StatusDot(state: deployment.state)
+                // As far from the text as from the edge.
+                .padding(.trailing, GeistSpacing.md - GeistSpacing.sm)
 
             // Deployment info
             VStack(alignment: .leading, spacing: 4) {
@@ -24,11 +25,8 @@ struct DeploymentRowView: View {
 
                     if let branch = deployment.meta?.githubCommitRef {
                         HStack(spacing: 4) {
-                            Image("BranchIcon")
-                                .renderingMode(.template)
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 10, height: 10)
+                            Image(systemName: "arrow.triangle.branch")
+                                .font(.system(size: 9, weight: .medium))
                             Text(branch)
                                 .font(GeistFont.regular(GeistFont.caption))
                         }
@@ -65,37 +63,20 @@ struct DeploymentRowView: View {
                         .foregroundColor(GeistColors.foregroundTertiary(colorScheme))
                         .font(.system(size: 8))
 
+                    // The dot carries the state's color, as Geist's labels do.
                     Text(deployment.state.displayName)
                         .font(GeistFont.medium(GeistFont.caption2))
-                        .foregroundColor(stateColor)
+                        .foregroundColor(GeistColors.foregroundSecondary(colorScheme))
                 }
             }
 
             Spacer()
 
-            // Current production badge (Live)
+            // The live production deployment, or another production one
             if isCurrentProduction {
-                HStack(spacing: 4) {
-                    Circle()
-                        .fill(GeistColors.success)
-                        .frame(width: 6, height: 6)
-                    Text("Current")
-                        .font(GeistFont.medium(GeistFont.caption2))
-                }
-                .padding(.horizontal, 8)
-                .padding(.vertical, 4)
-                .background(GeistColors.success.opacity(0.1))
-                .foregroundColor(GeistColors.success)
-                .cornerRadius(GeistRadius.xs)
+                GeistBadge("Current", .greenSubtle)
             } else if deployment.target == "production" {
-                // Production but not current
-                Text("Production")
-                    .font(GeistFont.medium(GeistFont.caption2))
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(GeistColors.vercelBlue.opacity(0.1))
-                    .foregroundColor(GeistColors.vercelBlue)
-                    .cornerRadius(GeistRadius.xs)
+                GeistBadge("Production", .blueSubtle)
             }
 
             // Chevron
@@ -123,37 +104,6 @@ struct DeploymentRowView: View {
             } else {
                 stopTimer()
             }
-        }
-    }
-
-    private var statusIndicator: some View {
-        ZStack {
-            if deployment.state == .building || deployment.state == .initializing || deployment.state == .queued {
-                Circle()
-                    .fill(stateColor)
-                    .frame(width: 8, height: 8)
-                    .modifier(ExpandingPulse())
-            }
-
-            Circle()
-                .fill(stateColor)
-                .frame(width: 8, height: 8)
-        }
-        .frame(width: 20, height: 20)
-    }
-
-    private var stateColor: Color {
-        switch deployment.state {
-        case .ready:
-            return GeistColors.success // Green
-        case .error:
-            return GeistColors.error // Red
-        case .building, .initializing:
-            return GeistColors.warning // Yellow/Amber
-        case .queued:
-            return GeistColors.queued // Gray
-        case .canceled:
-            return GeistColors.queued // Gray
         }
     }
 

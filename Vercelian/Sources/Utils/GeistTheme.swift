@@ -1,107 +1,68 @@
 import SwiftUI
+import AppKit
 
 // MARK: - Geist Design System Colors
-// Based on Vercel's Geist Design System: https://vercel.com/geist/colors
+// Vercel's Geist colors: https://vercel.com/geist/colors. Hex values are the
+// sRGB ones Vercel ships alongside its P3 colors, light | dark.
 
 struct GeistColors {
-    // MARK: - Gray Scale (Light Theme)
-    static let gray0 = Color(hex: "FFFFFF")
-    static let gray1 = Color(hex: "FAFAFA")
-    static let gray2 = Color(hex: "EAEAEA")
-    static let gray3 = Color(hex: "999999")
-    static let gray4 = Color(hex: "888888")
-    static let gray5 = Color(hex: "666666")
-    static let gray6 = Color(hex: "444444")
-    static let gray7 = Color(hex: "333333")
-    static let gray8 = Color(hex: "111111")
+    // MARK: - Grays
+    // Geist's steps: Background 1 for surfaces, Gray 100–200 for component
+    // fills (default or hover, then active), Gray 400–500 for borders, and
+    // Gray 900–1000 for text and icons.
 
-    // MARK: - Gray Scale (Dark Theme)
-    static let grayDark0 = Color(hex: "000000")
-    static let grayDark1 = Color(hex: "111111")
-    static let grayDark2 = Color(hex: "1A1A1A")
-    static let grayDark3 = Color(hex: "333333")
-    static let grayDark4 = Color(hex: "444444")
-    static let grayDark5 = Color(hex: "666666")
-    static let grayDark6 = Color(hex: "888888")
-    static let grayDark7 = Color(hex: "999999")
-    static let grayDark8 = Color(hex: "FAFAFA")
-
-    // MARK: - Brand Colors
-    static let vercelBlue = Color(hex: "0070F3")
-    static let vercelBlueDark = Color(hex: "0761D1")
-    static let vercelBlueLight = Color(hex: "3291FF")
-    static let vercelBlueLighter = Color(hex: "D3E5FF")
-
-    // MARK: - Status Colors - Ready (Green - Vercel green)
-    static let successLighter = Color(hex: "D3F9D8")
-    static let successLight = Color(hex: "52C41A")
-    static let success = Color(hex: "17B169")
-    static let successDark = Color(hex: "0A7E00")
-
-    // MARK: - Status Colors - Error (Red)
-    static let errorLighter = Color(hex: "F7D4D6")
-    static let errorLight = Color(hex: "FF1A1A")
-    static let error = Color(hex: "EE0000")
-    static let errorDark = Color(hex: "C50000")
-
-    // MARK: - Status Colors - Building (Yellow/Amber - Vercel uses this for BUILDING state)
-    static let warningLighter = Color(hex: "FFF5CC")
-    static let warningLight = Color(hex: "FFD633")
-    static let warning = Color(hex: "F5A623")
-    static let warningDark = Color(hex: "AB570A")
-
-    // MARK: - Status Colors - Queued (Gray)
-    static let queued = Color(hex: "888888")
-
-    // MARK: - Status Colors - Cyan
-    static let cyanLighter = Color(hex: "AAFFEC")
-    static let cyanLight = Color(hex: "79FFE1")
-    static let cyan = Color(hex: "50E3C2")
-    static let cyanDark = Color(hex: "29BC9B")
-
-    // MARK: - Status Colors - Violet/Purple
-    static let violetLighter = Color(hex: "E3D7FC")
-    static let violetLight = Color(hex: "8A63D2")
-    static let violet = Color(hex: "7928CA")
-    static let violetDark = Color(hex: "4C2889")
-
-    // MARK: - Highlight Colors
-    static let pink = Color(hex: "FF0080")
-    static let purple = Color(hex: "F81CE5")
-    static let magenta = Color(hex: "EB367F")
-
-    // MARK: - Semantic Colors (adapts to color scheme)
     static func background(_ colorScheme: ColorScheme) -> Color {
-        colorScheme == .dark ? grayDark1 : gray0
+        colorScheme == .dark ? Color(hex: "0A0A0A") : Color(hex: "FFFFFF")
     }
 
     static func backgroundSecondary(_ colorScheme: ColorScheme) -> Color {
-        colorScheme == .dark ? grayDark2 : gray1
+        colorScheme == .dark ? Color(hex: "1A1A1A") : Color(hex: "F2F2F2")
     }
 
     static func backgroundTertiary(_ colorScheme: ColorScheme) -> Color {
-        colorScheme == .dark ? grayDark3 : gray2
+        colorScheme == .dark ? Color(hex: "1F1F1F") : Color(hex: "EBEBEB")
     }
 
     static func foreground(_ colorScheme: ColorScheme) -> Color {
-        colorScheme == .dark ? grayDark8 : gray8
+        colorScheme == .dark ? Color(hex: "EDEDED") : Color(hex: "171717")
     }
 
     static func foregroundSecondary(_ colorScheme: ColorScheme) -> Color {
-        colorScheme == .dark ? grayDark6 : gray5
+        colorScheme == .dark ? Color(hex: "A1A1A1") : Color(hex: "4D4D4D")
     }
 
+    /// Gray 700. Geist names two text colors; this quieter one is for
+    /// times, hints and chevrons.
     static func foregroundTertiary(_ colorScheme: ColorScheme) -> Color {
-        colorScheme == .dark ? grayDark5 : gray4
+        Color(hex: "8F8F8F")
     }
 
     static func border(_ colorScheme: ColorScheme) -> Color {
-        colorScheme == .dark ? grayDark2 : gray2
+        colorScheme == .dark ? Color(hex: "2E2E2E") : Color(hex: "EBEBEB")
     }
 
     static func borderSecondary(_ colorScheme: ColorScheme) -> Color {
-        colorScheme == .dark ? grayDark4 : gray3
+        colorScheme == .dark ? Color(hex: "454545") : Color(hex: "C9C9C9")
     }
+
+    /// Rules between rows and sections, between the Gray 400 and Gray 500
+    /// borders in weight.
+    static func divider(_ colorScheme: ColorScheme) -> Color {
+        colorScheme == .dark ? Color(hex: "383838") : Color(hex: "E0E0E0")
+    }
+
+    // MARK: - Accents
+
+    /// Blue 700, for fills.
+    static let vercelBlue = Color(light: "0070F7", dark: "0071F6")
+    /// Blue 900, for links and other blue text.
+    static let link = Color(light: "0064E2", dark: "50A8FF")
+    /// Green 700.
+    static let success = Color(light: "28A948", dark: "00AB3E")
+    /// Red 900, for text and icons.
+    static let error = Color(light: "D60020", dark: "FF5E63")
+    /// Amber 900, for text and icons.
+    static let warning = Color(light: "A64F00", dark: "FF9900")
 }
 
 // MARK: - Geist Typography
@@ -191,6 +152,17 @@ extension Color {
     }
 }
 
+extension Color {
+    /// Resolves to `light` or `dark` with the view's appearance.
+    init(light: String, dark: String) {
+        let light = NSColor(Color(hex: light))
+        let dark = NSColor(Color(hex: dark))
+        self.init(nsColor: NSColor(name: nil) { appearance in
+            appearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua ? dark : light
+        })
+    }
+}
+
 // MARK: - Geist Button Style
 
 struct GeistButtonStyle: ButtonStyle {
@@ -221,20 +193,20 @@ struct GeistButtonStyle: ButtonStyle {
     private func backgroundColor(isPressed: Bool) -> Color {
         switch variant {
         case .primary:
-            return isPressed ? GeistColors.grayDark1 : GeistColors.gray8
+            return GeistColors.foreground(colorScheme).opacity(isPressed ? 0.85 : 1)
         case .secondary:
             return isPressed ? GeistColors.backgroundTertiary(colorScheme) : GeistColors.backgroundSecondary(colorScheme)
         case .ghost:
             return isPressed ? GeistColors.backgroundTertiary(colorScheme) : .clear
         case .error:
-            return isPressed ? GeistColors.errorDark : GeistColors.error
+            return GeistColors.error.opacity(isPressed ? 0.85 : 1)
         }
     }
 
     private func foregroundColor(isPressed: Bool) -> Color {
         switch variant {
         case .primary:
-            return .white
+            return GeistColors.background(colorScheme)
         case .secondary, .ghost:
             return GeistColors.foreground(colorScheme)
         case .error:
@@ -282,65 +254,131 @@ struct VercelLogo: View {
     }
 }
 
-// MARK: - Status Badge View
+// MARK: - Divider
 
-struct GeistStatusBadge: View {
+/// A one-point rule in the divider color. SwiftUI's `Divider` draws the
+/// system separator on top of any color it's given, which darkens it.
+struct GeistDivider: View {
+    @Environment(\.colorScheme) var colorScheme
+
+    var body: some View {
+        Rectangle()
+            .fill(GeistColors.divider(colorScheme))
+            .frame(height: 1)
+    }
+}
+
+// MARK: - Status Dot
+
+/// Geist's Status Dot (https://vercel.com/geist/status-dot): ten points
+/// unless set smaller, colored by the deployment's state, pulsing while it's
+/// queued or building.
+struct StatusDot: View {
+    let state: DeploymentState
+    var size: CGFloat = 10
+
+    var body: some View {
+        ZStack {
+            if state.isInProgress {
+                Circle()
+                    .fill(color)
+                    .modifier(ExpandingPulse())
+            }
+            Circle()
+                .fill(color)
+        }
+        .frame(width: size, height: size)
+    }
+
+    /// Ready takes the green the rest of the app uses for success; the other
+    /// states keep Vercel's original status colors, unlike the scales above.
+    private var color: Color {
+        switch state {
+        case .ready: return GeistColors.success
+        case .building, .initializing: return Color(hex: "F5A623")
+        case .error, .blocked: return Color(light: "EE0000", dark: "FF0000")
+        case .queued, .canceled: return Color(light: "EAEAEA", dark: "333333")
+        }
+    }
+}
+
+/// A status dot with the state's name beside it, as Geist labels a dot that
+/// stands on its own. The name stays in the text color: the dot carries the
+/// state's color. A step below body text, so it reads as a badge.
+struct StatusLabel: View {
     let state: DeploymentState
     @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
         HStack(spacing: 6) {
-            Circle()
-                .fill(statusColor)
-                .frame(width: 8, height: 8)
-                .modifier(state.isInProgress ? PulseAnimation() : PulseAnimation(enabled: false))
-
+            StatusDot(state: state, size: 8)
             Text(state.displayName)
-                .font(GeistFont.medium(GeistFont.caption))
+                .font(GeistFont.regular(GeistFont.footnote))
+                .foregroundColor(GeistColors.foreground(colorScheme))
         }
-        .padding(.horizontal, 10)
-        .padding(.vertical, 5)
-        .background(statusColor.opacity(0.1))
-        .cornerRadius(GeistRadius.full)
+    }
+}
+
+// MARK: - Badge
+
+/// Geist's Badge (https://vercel.com/geist/badge), in its small size or a
+/// step below it.
+struct GeistBadge: View {
+    enum Variant {
+        case greenSubtle
+        case blueSubtle
+
+        /// Geist mixes these from Green 200 and Blue 200; these are its
+        /// results in sRGB.
+        var fill: Color {
+            switch self {
+            case .greenSubtle: return Color(light: "D7F5D9", dark: "003011")
+            case .blueSubtle: return Color(light: "DFEDFC", dark: "002552")
+            }
+        }
+
+        /// Green 900 and Blue 900.
+        var text: Color {
+            switch self {
+            case .greenSubtle: return Color(light: "107D32", dark: "00CA52")
+            case .blueSubtle: return GeistColors.link
+            }
+        }
     }
 
-    private var statusColor: Color {
-        switch state {
-        case .ready:
-            return GeistColors.success // Green
-        case .error:
-            return GeistColors.error // Red
-        case .building, .initializing:
-            return GeistColors.warning // Yellow/Amber
-        case .queued:
-            return GeistColors.queued // Gray
-        case .canceled:
-            return GeistColors.queued // Gray
-        }
+    enum Size {
+        /// A step below Geist's smallest, to sit beside body text.
+        case xs
+        /// Geist's small size.
+        case sm
+
+        var fontSize: CGFloat { self == .xs ? GeistFont.caption2 : GeistFont.caption }
+        var height: CGFloat { self == .xs ? 18 : 20 }
+        var padding: CGFloat { self == .xs ? 7 : 8 }
+    }
+
+    let title: String
+    let variant: Variant
+    let size: Size
+
+    init(_ title: String, _ variant: Variant, size: Size = .sm) {
+        self.title = title
+        self.variant = variant
+        self.size = size
+    }
+
+    var body: some View {
+        Text(title)
+            .font(GeistFont.medium(size.fontSize))
+            .foregroundColor(variant.text)
+            .lineLimit(1)
+            .padding(.horizontal, size.padding)
+            .frame(height: size.height)
+            .background(variant.fill, in: Capsule())
     }
 }
 
 // MARK: - Pulse Animation
-
-struct PulseAnimation: ViewModifier {
-    var enabled: Bool = true
-    @State private var isPulsing = false
-
-    func body(content: Content) -> some View {
-        content
-            .scaleEffect(enabled && isPulsing ? 1.3 : 1.0)
-            .opacity(enabled && isPulsing ? 0.6 : 1.0)
-            .animation(
-                enabled ? Animation.easeInOut(duration: 1.0).repeatForever(autoreverses: true) : .default,
-                value: isPulsing
-            )
-            .onAppear {
-                if enabled {
-                    isPulsing = true
-                }
-            }
-    }
-}
 
 struct ExpandingPulse: ViewModifier {
     @State private var animate = false

@@ -162,8 +162,7 @@ struct MainView: View {
                 }
             )
 
-            Divider()
-                .background(GeistColors.border(colorScheme))
+            GeistDivider()
 
             if currentDestination == .settings {
                 // Settings transition: move list sub-header + list content as one stack.
@@ -171,8 +170,7 @@ struct MainView: View {
                     ZStack {
                         VStack(spacing: 0) {
                             subHeader
-                            Divider()
-                                .background(GeistColors.border(colorScheme))
+                            GeistDivider()
                             listContent
                         }
                         .frame(width: geo.size.width, height: geo.size.height)
@@ -191,8 +189,7 @@ struct MainView: View {
             } else {
                 subHeader
 
-                Divider()
-                    .background(GeistColors.border(colorScheme))
+                GeistDivider()
 
                 GeometryReader { geo in
                     ZStack {
@@ -311,7 +308,7 @@ struct MainView: View {
                 Spacer()
 
                 if let deployment = activeDeployment {
-                    GeistStatusBadge(state: deployment.state)
+                    StatusLabel(state: deployment.state)
                 }
             }
             .padding(.horizontal, GeistSpacing.md)
@@ -477,9 +474,16 @@ struct HeaderView: View {
                 }
             }
         }
-        .padding(.horizontal, GeistSpacing.md)
+        .padding(.leading, GeistSpacing.md)
+        // The gear's glyph, not its button, lines up with the edge of the
+        // content below.
+        .padding(.trailing, GeistSpacing.md - Self.glyphInset)
         .padding(.vertical, GeistSpacing.sm)
     }
+
+    /// How far the gear's glyph sits inside its 28-point button, less the
+    /// rows' chevron margin, so the two right edges meet.
+    static let glyphInset: CGFloat = 6
 }
 
 #Preview {

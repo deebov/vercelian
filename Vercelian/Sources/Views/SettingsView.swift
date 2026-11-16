@@ -9,6 +9,10 @@ struct SettingsView: View {
     @Binding var showSettings: Bool
     @State private var showLogoutConfirmation = false
 
+    /// Row icons and dots sit centered in a column this wide, so the titles
+    /// beside them line up.
+    private static let iconColumnWidth: CGFloat = 16
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: GeistSpacing.lg) {
@@ -134,38 +138,21 @@ struct SettingsView: View {
         VStack(alignment: .leading, spacing: GeistSpacing.sm) {
             sectionHeader("Team")
 
-            VStack(alignment: .leading, spacing: GeistSpacing.xs) {
-                Text("Select the team to monitor deployments from:")
-                    .font(GeistFont.regular(GeistFont.footnote))
+            // The card is the menu: the header names it, the card shows the
+            // team, and the menu checks it.
+            HStack(spacing: 8) {
+                Image(systemName: "person.2.fill")
+                    .font(.system(size: 12))
                     .foregroundColor(GeistColors.foregroundSecondary(colorScheme))
-
-                HStack {
-                    Text("Team")
-                        .font(GeistFont.regular(GeistFont.body))
-                        .foregroundColor(GeistColors.foreground(colorScheme))
-                    Spacer()
-                    Picker("", selection: Binding(
-                        get: { store.selectedTeam?.id ?? "personal" },
-                        set: { newValue in
-                            if newValue == "personal" {
-                                store.selectTeam(nil)
-                            } else if let team = store.teams.first(where: { $0.id == newValue }) {
-                                store.selectTeam(team)
-                            }
-                        }
-                    )) {
-                        Text("Personal account").tag("personal")
-
-                        if !store.teams.isEmpty {
-                            Divider()
-                            ForEach(store.teams) { team in
-                                Text(team.displayName).tag(team.id)
-                            }
-                        }
-                    }
-                    .pickerStyle(.menu)
-                    .frame(maxWidth: 200)
-                }
+                    .frame(width: Self.iconColumnWidth)
+                Text(store.selectedTeam?.displayName ?? "Personal account")
+                    .font(GeistFont.regular(GeistFont.body))
+                    .foregroundColor(GeistColors.foreground(colorScheme))
+                    .lineLimit(1)
+                Spacer()
+                Image(systemName: "chevron.up.chevron.down")
+                    .font(.system(size: 10, weight: .medium))
+                    .foregroundColor(GeistColors.foregroundTertiary(colorScheme))
             }
             .padding(GeistSpacing.sm)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -174,6 +161,19 @@ struct SettingsView: View {
             .overlay(
                 RoundedRectangle(cornerRadius: GeistRadius.md)
                     .stroke(GeistColors.border(colorScheme), lineWidth: 1)
+            )
+            .accessibilityHidden(true)
+            .overlay(
+                DropdownMenu(label: "Team", sections: [
+                    [DropdownMenu.Item(title: "Personal account", isChecked: store.selectedTeam == nil) {
+                        store.selectTeam(nil)
+                    }],
+                    store.teams.map { team in
+                        DropdownMenu.Item(title: team.displayName, isChecked: team.id == store.selectedTeam?.id) {
+                            store.selectTeam(team)
+                        }
+                    },
+                ])
             )
         }
     }
@@ -190,8 +190,7 @@ struct SettingsView: View {
                 )
 
                 if settings.notificationsEnabled {
-                    Divider()
-                        .background(GeistColors.border(colorScheme))
+                    GeistDivider()
                         .padding(.horizontal, GeistSpacing.sm)
 
                     settingsToggle(
@@ -201,8 +200,7 @@ struct SettingsView: View {
                         iconColor: GeistColors.error
                     )
 
-                    Divider()
-                        .background(GeistColors.border(colorScheme))
+                    GeistDivider()
                         .padding(.horizontal, GeistSpacing.sm)
 
                     settingsToggle(
@@ -214,8 +212,7 @@ struct SettingsView: View {
                 }
 
                 if !notificationManager.isAuthorized {
-                    Divider()
-                        .background(GeistColors.border(colorScheme))
+                    GeistDivider()
                         .padding(.horizontal, GeistSpacing.sm)
 
                     Button(action: {
@@ -227,6 +224,7 @@ struct SettingsView: View {
                             Image(systemName: "exclamationmark.circle")
                                 .font(.system(size: 12))
                                 .foregroundColor(GeistColors.warning)
+                                .frame(width: Self.iconColumnWidth)
                             Text("Grant notification permission")
                                 .font(GeistFont.regular(GeistFont.footnote))
                                 .foregroundColor(GeistColors.foreground(colorScheme))
@@ -253,10 +251,12 @@ struct SettingsView: View {
 
             VStack(alignment: .leading, spacing: 0) {
                 HStack(alignment: .center) {
-                    HStack(spacing: 8) {
+                    // The icon sits on the title's line, not between its two.
+                    HStack(alignment: .firstTextBaseline, spacing: 8) {
                         Image(systemName: "menubar.rectangle")
                             .font(.system(size: 12))
                             .foregroundColor(GeistColors.foregroundSecondary(colorScheme))
+                            .frame(width: Self.iconColumnWidth)
                         VStack(alignment: .leading, spacing: 2) {
                             Text("Dynamic menu bar icon")
                                 .font(GeistFont.regular(GeistFont.body))
@@ -299,8 +299,7 @@ struct SettingsView: View {
                 }
                 .padding(GeistSpacing.sm)
 
-                Divider()
-                    .background(GeistColors.border(colorScheme))
+                GeistDivider()
                     .padding(.horizontal, GeistSpacing.sm)
 
                 linkRow(
@@ -309,8 +308,7 @@ struct SettingsView: View {
                     url: "https://github.com/deebov/vercelian"
                 )
 
-                Divider()
-                    .background(GeistColors.border(colorScheme))
+                GeistDivider()
                     .padding(.horizontal, GeistSpacing.sm)
 
                 linkRow(
@@ -334,7 +332,7 @@ struct SettingsView: View {
             Button(action: {
                 showLogoutConfirmation = true
             }) {
-                HStack {
+                HStack(spacing: 6) {
                     Image(systemName: "rectangle.portrait.and.arrow.right")
                         .font(.system(size: 13))
                     Text("Sign out")
@@ -351,10 +349,10 @@ struct SettingsView: View {
             Button(action: {
                 NSApplication.shared.terminate(nil)
             }) {
-                HStack {
+                HStack(spacing: 6) {
                     Image(systemName: "power")
                         .font(.system(size: 12, weight: .medium))
-                    Text("Quit Vercelian")
+                    Text("Quit")
                         .font(GeistFont.medium(GeistFont.body))
                 }
                 .frame(maxWidth: .infinity)
@@ -372,6 +370,8 @@ struct SettingsView: View {
             Text("Your access token is stored securely in macOS Keychain and will be removed when you sign out.")
                 .font(GeistFont.regular(GeistFont.caption))
                 .foregroundColor(GeistColors.foregroundTertiary(colorScheme))
+                .multilineTextAlignment(.center)
+                .frame(maxWidth: .infinity)
         }
     }
 
@@ -400,10 +400,12 @@ struct SettingsView: View {
                     Image(systemName: icon)
                         .font(.system(size: 12))
                         .foregroundColor(GeistColors.foregroundSecondary(colorScheme))
+                        .frame(width: Self.iconColumnWidth)
                 } else if let color = iconColor {
                     Circle()
                         .fill(color)
                         .frame(width: 8, height: 8)
+                        .frame(width: Self.iconColumnWidth)
                 }
                 Text(title)
                     .font(GeistFont.regular(GeistFont.body))
@@ -423,6 +425,7 @@ struct SettingsView: View {
                 Image(systemName: icon)
                     .font(.system(size: 12))
                     .foregroundColor(GeistColors.foregroundSecondary(colorScheme))
+                    .frame(width: Self.iconColumnWidth)
                 Text(title)
                     .font(GeistFont.regular(GeistFont.body))
                     .foregroundColor(GeistColors.foreground(colorScheme))
@@ -432,6 +435,112 @@ struct SettingsView: View {
                     .foregroundColor(GeistColors.foregroundTertiary(colorScheme))
             }
             .padding(GeistSpacing.sm)
+        }
+    }
+}
+
+// MARK: - Dropdown Menu
+
+/// Covers a view and opens a menu right below it, as wide as it. SwiftUI's
+/// `Menu` places its menu by its own rules, a few points off the edges of a
+/// custom label.
+private struct DropdownMenu: NSViewRepresentable {
+    struct Item {
+        let title: String
+        let isChecked: Bool
+        let action: () -> Void
+    }
+
+    /// What VoiceOver calls the menu's button.
+    let label: String
+    /// Groups of items, with a separator between groups.
+    let sections: [[Item]]
+
+    func makeNSView(context: Context) -> TriggerView {
+        TriggerView()
+    }
+
+    func updateNSView(_ view: TriggerView, context: Context) {
+        view.label = label
+        view.sections = sections
+    }
+
+    final class TriggerView: NSView {
+        var label = ""
+        var sections: [[Item]] = []
+
+        override func mouseDown(with event: NSEvent) {
+            showMenu()
+        }
+
+        private func showMenu() {
+            let menu = NSMenu()
+            for section in sections where !section.isEmpty {
+                if !menu.items.isEmpty {
+                    menu.addItem(.separator())
+                }
+                for item in section {
+                    let menuItem = NSMenuItem(title: item.title, action: #selector(choose(_:)), keyEquivalent: "")
+                    menuItem.target = self
+                    menuItem.state = item.isChecked ? .on : .off
+                    menuItem.representedObject = item.action
+                    menu.addItem(menuItem)
+                }
+            }
+            menu.minimumWidth = bounds.width
+            menu.appearance = effectiveAppearance
+            // AppKit puts the first item at the point, below the menu's own
+            // top padding, so aim that much lower for the menu's edge to sit
+            // just below this view's bottom-left corner.
+            let topPadding: CGFloat = 5
+            menu.popUp(positioning: nil, at: NSPoint(x: 0, y: -(GeistSpacing.xxs + topPadding)), in: self)
+        }
+
+        @objc private func choose(_ sender: NSMenuItem) {
+            (sender.representedObject as? () -> Void)?()
+        }
+
+        // Keyboard and VoiceOver users open the same menu.
+
+        override var acceptsFirstResponder: Bool {
+            NSApp.isFullKeyboardAccessEnabled
+        }
+
+        override func keyDown(with event: NSEvent) {
+            if event.charactersIgnoringModifiers == " " || event.charactersIgnoringModifiers == "\r" {
+                showMenu()
+            } else {
+                super.keyDown(with: event)
+            }
+        }
+
+        override var focusRingMaskBounds: NSRect {
+            bounds
+        }
+
+        override func drawFocusRingMask() {
+            NSBezierPath(roundedRect: bounds, xRadius: GeistRadius.md, yRadius: GeistRadius.md).fill()
+        }
+
+        override func isAccessibilityElement() -> Bool {
+            true
+        }
+
+        override func accessibilityRole() -> NSAccessibility.Role? {
+            .popUpButton
+        }
+
+        override func accessibilityLabel() -> String? {
+            label
+        }
+
+        override func accessibilityValue() -> Any? {
+            sections.joined().first(where: \.isChecked)?.title
+        }
+
+        override func accessibilityPerformPress() -> Bool {
+            showMenu()
+            return true
         }
     }
 }

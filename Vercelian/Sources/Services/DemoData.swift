@@ -25,7 +25,7 @@ enum DemoData {
         argument(after: "--screen")
     }
 
-    /// `--scroll <0…1>`: how far down the detail and settings screens open
+    /// `--scroll <0…1>`: how far down the list, detail and settings screens open
     /// scrolled, from 0 (the top) to 1 (the bottom).
     static var scrollAnchor: UnitPoint? {
         argument(after: "--scroll").flatMap(Double.init).map { UnitPoint(x: 0.5, y: $0) }
