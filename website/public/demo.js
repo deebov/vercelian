@@ -1475,15 +1475,16 @@
 
   // MARK: - Appearance, clock, and timers
 
+  // The page's theme, from the button in its header, or else the system's.
   const media = window.matchMedia("(prefers-color-scheme: dark)");
-  const darkToggle = document.getElementById("demo-dark");
-  const setTheme = (dark) => {
-    demo.dataset.theme = dark ? "dark" : "light";
-    if (darkToggle) darkToggle.checked = dark;
+  const page = document.documentElement;
+  const setTheme = () => {
+    const picked = page.dataset.theme;
+    demo.dataset.theme = picked === "dark" || (!picked && media.matches) ? "dark" : "light";
   };
-  setTheme(media.matches);
-  media.addEventListener("change", (e) => setTheme(e.matches));
-  if (darkToggle) darkToggle.addEventListener("change", () => setTheme(darkToggle.checked));
+  setTheme();
+  media.addEventListener("change", setTheme);
+  new MutationObserver(setTheme).observe(page, { attributes: true, attributeFilter: ["data-theme"] });
 
   const tickClock = () => (clock.textContent = clockFormat.format(Date.now()));
   tickClock();
