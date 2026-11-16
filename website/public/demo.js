@@ -3,8 +3,8 @@
  * It runs on sample data and never talks to Vercel. Sizes, colors, and
  * timings are the app's own. SF Symbols may only be used in apps on Apple
  * platforms, so the icons here, the menu bar's included, are drawn for this
- * page at the sizes of the symbols the app and macOS show; the wordmark and
- * branch icon are the app's own.
+ * page at the sizes of the symbols the app and macOS show; the wordmark is
+ * the app's own.
  */
 (() => {
   "use strict";
@@ -15,7 +15,13 @@
   // MARK: - Icons
 
   const WORDMARK = `<svg viewBox="0 0 347 51" fill="currentColor" aria-hidden="true"><path d="M58.65 51L29.325 0L0 51H58.65ZM88.2274 48.6783L112.735 2.3182H102.134L85.2287 35.9865L68.3231 2.3182H57.7227L82.2299 48.6783H88.2274ZM255.243 2.3182V48.6784H246.467V2.3182H255.243ZM206.393 31.3748C206.393 27.7618 207.147 24.5841 208.656 21.8416C210.164 19.0992 212.267 16.9879 214.964 15.5079C217.66 14.0278 220.814 13.2879 224.426 13.2879C227.625 13.2879 230.504 13.9843 233.064 15.3773C235.623 16.7703 237.657 18.838 239.166 21.5805C240.674 24.3229 241.451 27.6748 241.497 31.6361V33.6602H215.65C215.832 36.5333 216.678 38.7969 218.186 40.451C219.74 42.0617 221.82 42.867 224.426 42.867C226.07 42.867 227.579 42.4317 228.95 41.5611C230.321 40.6904 231.35 39.5151 232.035 38.035L241.017 38.688C239.92 41.9528 237.863 44.5647 234.846 46.5236C231.829 48.4825 228.356 49.4619 224.426 49.4619C220.814 49.4619 217.66 48.7219 214.964 47.2418C212.267 45.7618 210.164 43.6505 208.656 40.9081C207.147 38.1657 206.393 34.9879 206.393 31.3748ZM232.446 28.11C232.127 25.2805 231.235 23.2128 229.773 21.907C228.31 20.5575 226.527 19.8827 224.426 19.8827C222.003 19.8827 220.038 20.601 218.529 22.0375C217.021 23.474 216.083 25.4982 215.718 28.11H232.446ZM191.588 21.907C193.051 23.0822 193.965 24.7147 194.331 26.8041L203.381 26.3471C203.061 23.6917 202.124 21.3846 200.57 19.4257C199.016 17.4668 197.004 15.965 194.537 14.9202C192.114 13.832 189.441 13.2879 186.515 13.2879C182.904 13.2879 179.751 14.0278 177.053 15.5079C174.356 16.9879 172.255 19.0992 170.746 21.8416C169.238 24.5841 168.483 27.7618 168.483 31.3748C168.483 34.9879 169.238 38.1657 170.746 40.9081C172.255 43.6505 174.356 45.7618 177.053 47.2418C179.751 48.7219 182.904 49.4619 186.515 49.4619C189.532 49.4619 192.274 48.9177 194.743 47.8295C197.21 46.6977 199.222 45.1088 200.775 43.0628C202.33 41.0169 203.266 38.6227 203.586 35.8803L194.468 35.4885C194.148 37.7956 193.257 39.5804 191.794 40.8428C190.331 42.0617 188.572 42.6711 186.515 42.6711C183.681 42.6711 181.488 41.6916 179.933 39.7327C178.379 37.7738 177.602 34.9879 177.602 31.3748C177.602 27.7618 178.379 24.9759 179.933 23.017C181.488 21.0581 183.681 20.0786 186.515 20.0786C188.48 20.0786 190.171 20.6881 191.588 21.907ZM147.069 14.0698H155.235L155.472 20.7304C156.051 18.8451 156.857 17.381 157.89 16.3381C159.387 14.8259 161.474 14.0698 164.15 14.0698H167.485V21.1989H164.083C162.177 21.1989 160.612 21.4582 159.387 21.9766C158.207 22.4951 157.3 23.316 156.665 24.4394C156.075 25.5628 155.781 26.9886 155.781 28.7168V48.6783H147.069V14.0698ZM109.401 21.8416C107.893 24.5841 107.138 27.7618 107.138 31.3748C107.138 34.9879 107.893 38.1657 109.401 40.9081C110.909 43.6505 113.011 45.7618 115.708 47.2418C118.405 48.7219 121.559 49.4619 125.17 49.4619C129.101 49.4619 132.575 48.4825 135.591 46.5236C138.607 44.5647 140.665 41.9528 141.761 38.688L132.78 38.035C132.094 39.5151 131.066 40.6904 129.695 41.5611C128.324 42.4317 126.816 42.867 125.17 42.867C122.565 42.867 120.485 42.0617 118.931 40.451C117.423 38.7969 116.577 36.5333 116.394 33.6602H142.241V31.6361C142.196 27.6748 141.419 24.3229 139.911 21.5805C138.402 18.838 136.368 16.7703 133.808 15.3773C131.249 13.9843 128.369 13.2879 125.17 13.2879C121.559 13.2879 118.405 14.0278 115.708 15.5079C113.011 16.9879 110.909 19.0992 109.401 21.8416ZM130.518 21.907C131.98 23.2128 132.872 25.2805 133.191 28.11H116.463C116.828 25.4982 117.765 23.474 119.273 22.0375C120.782 20.601 122.747 19.8827 125.17 19.8827C127.273 19.8827 129.055 20.5575 130.518 21.907Z"/><path d="M316.106 49.0014V13.6346H323.788L323.987 19.6615C325.908 14.8267 329.882 12.8398 334.584 12.8398C342.399 12.8398 346.638 18.3369 346.638 26.2845V49.0014H338.16V28.9999C338.16 23.0392 336.571 19.7278 332.001 19.7278C327.431 19.7278 324.583 23.0392 324.583 28.9999V49.0014H316.106Z"/><path d="M288.081 49.7961C280.663 49.7961 275.762 46.2859 275.762 40.1266C275.762 34.0334 279.537 30.7881 287.286 29.2649L299.009 26.9468C299.009 21.9796 296.691 19.3966 292.187 19.3966C288.081 19.3966 285.763 21.3173 284.968 24.8937L276.358 24.4963C277.749 17.0786 283.445 12.8398 292.187 12.8398C302.254 12.8398 307.486 18.1382 307.486 27.5429V40.3915C307.486 42.3121 308.148 42.842 309.473 42.842H310.599V49.0014C310.003 49.1338 308.678 49.2663 307.486 49.2663C303.645 49.2663 300.797 47.8755 300.135 43.5705C298.346 47.3456 293.843 49.7961 288.081 49.7961ZM289.803 43.6367C295.432 43.6367 299.009 40.0603 299.009 34.6957V32.7088L289.869 34.5632C286.094 35.2918 284.571 36.8813 284.571 39.3318C284.571 42.1135 286.425 43.6367 289.803 43.6367Z"/><path d="M261.544 8.92911V1.37891H270.352V8.92911H261.544ZM261.676 48.9982V13.6314H270.153V48.9982H261.676Z"/></svg>`;
-  const BRANCH = `<svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.75 1.75V1H3.25V1.75V9.09451C1.95608 9.42754 1 10.6021 1 12C1 13.6569 2.34315 15 4 15C5.42051 15 6.61042 14.0127 6.921 12.6869C8.37102 12.4872 9.7262 11.8197 10.773 10.773C11.8197 9.7262 12.4872 8.37102 12.6869 6.921C14.0127 6.61042 15 5.42051 15 4C15 2.34315 13.6569 1 12 1C10.3431 1 9 2.34315 9 4C9 5.37069 9.91924 6.52667 11.1749 6.8851C10.9929 7.94904 10.4857 8.9389 9.71231 9.71231C8.9389 10.4857 7.94904 10.9929 6.8851 11.1749C6.59439 10.1565 5.77903 9.35937 4.75 9.09451V1.75ZM13.5 4C13.5 4.82843 12.8284 5.5 12 5.5C11.1716 5.5 10.5 4.82843 10.5 4C10.5 3.17157 11.1716 2.5 12 2.5C12.8284 2.5 13.5 3.17157 13.5 4ZM4 13.5C4.82843 13.5 5.5 12.8284 5.5 12C5.5 11.1716 4.82843 10.5 4 10.5C3.17157 10.5 2.5 11.1716 2.5 12C2.5 12.8284 3.17157 13.5 4 13.5Z"/></svg>`;
+  // A branch: a stem forking into two arrows, drawn on a grid of quarter
+  // points at 11 pt. Each use frames it in its symbol's box, with the glyph
+  // resting on the text's baseline.
+  const fork = (viewBox) =>
+    `<svg viewBox="${viewBox}" fill="none" stroke="currentColor" stroke-width="4.4" stroke-linecap="round" aria-hidden="true"><path d="M21.5 40 V21 C21.5 15.5 17.5 11.5 9.5 6.5 M21.5 21 C21.5 15.5 25.5 11.5 33.5 6.5"/><path d="M1.2 1 H12.8 L4.4 10.8 Z M41.8 1 H30.2 L38.6 10.8 Z" fill="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>`;
+  const BRANCH = fork("-5 -8.5 53.8 64");
+  const BRANCH_SMALL = fork("-4.9 -13.8 51.3 68.5");
 
   // Each at the size of the SF Symbol shown in that spot, so the layout
   // matches point for point.
@@ -25,6 +31,8 @@
     gear: `<svg viewBox="0 0 17 17" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.17 2.54 L8.48 2.55 L8.78 2.61 L9.06 2.81 L9.25 3.42 L9.37 4.03 L9.56 4.26 L9.77 4.36 L9.99 4.45 L10.2 4.54 L10.43 4.62 L10.72 4.59 L11.24 4.25 L11.8 3.94 L12.14 4 L12.4 4.18 L12.62 4.39 L12.83 4.61 L13.01 4.87 L13.07 5.21 L12.76 5.77 L12.42 6.29 L12.39 6.58 L12.47 6.81 L12.56 7.02 L12.65 7.24 L12.75 7.45 L12.98 7.64 L13.59 7.76 L14.2 7.95 L14.4 8.23 L14.46 8.53 L14.47 8.84 L14.46 9.15 L14.4 9.45 L14.2 9.73 L13.59 9.92 L12.98 10.04 L12.75 10.23 L12.65 10.44 L12.56 10.66 L12.47 10.87 L12.39 11.1 L12.42 11.39 L12.76 11.91 L13.07 12.47 L13.01 12.81 L12.83 13.07 L12.62 13.29 L12.4 13.5 L12.14 13.68 L11.8 13.74 L11.24 13.43 L10.72 13.09 L10.43 13.06 L10.2 13.14 L9.99 13.23 L9.77 13.32 L9.56 13.42 L9.37 13.65 L9.25 14.26 L9.06 14.87 L8.78 15.07 L8.48 15.13 L8.17 15.14 L7.86 15.13 L7.56 15.07 L7.28 14.87 L7.09 14.26 L6.97 13.65 L6.78 13.42 L6.57 13.32 L6.35 13.23 L6.14 13.14 L5.91 13.06 L5.62 13.09 L5.1 13.43 L4.54 13.74 L4.2 13.68 L3.94 13.5 L3.72 13.29 L3.51 13.07 L3.33 12.81 L3.27 12.47 L3.58 11.91 L3.92 11.39 L3.95 11.1 L3.87 10.87 L3.78 10.66 L3.69 10.44 L3.59 10.23 L3.36 10.04 L2.75 9.92 L2.14 9.73 L1.94 9.45 L1.88 9.15 L1.87 8.84 L1.88 8.53 L1.94 8.23 L2.14 7.95 L2.75 7.76 L3.36 7.64 L3.59 7.45 L3.69 7.24 L3.78 7.02 L3.87 6.81 L3.95 6.58 L3.92 6.29 L3.58 5.77 L3.27 5.21 L3.33 4.87 L3.51 4.61 L3.72 4.39 L3.94 4.18 L4.2 4 L4.54 3.94 L5.1 4.25 L5.62 4.59 L5.91 4.62 L6.14 4.54 L6.35 4.45 L6.57 4.36 L6.78 4.26 L6.97 4.03 L7.09 3.42 L7.28 2.81 L7.56 2.61 L7.86 2.55 Z"/><circle cx="8.17" cy="8.84" r="1.87"/></svg>`,
     close: `<svg viewBox="0 0 15 14" width="15" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.68 2.49 L11.98 11.79 M11.98 2.49 L2.68 11.79"/></svg>`,
     people: `<svg viewBox="0 0 18 13" width="18" height="13" fill="currentColor" aria-hidden="true"><ellipse cx="5.4" cy="4.38" rx="1.85" ry="2.07"/><path d="M1.5 10.5 A4.42 3.25 0 0 1 7.95 7.61 A5.28 4 0 0 0 6.32 10.5 V11.25 H2.15 Q1.5 11.25 1.5 10.6 Z"/><ellipse cx="11.63" cy="3.94" rx="2.13" ry="2.32"/><path d="M7.07 10.5 A4.53 3.25 0 0 1 16.13 10.5 V10.6 Q16.13 11.25 15.48 11.25 H7.72 Q7.07 11.25 7.07 10.6 Z"/></svg>`,
+    // The same at 12 pt, for the team card in settings
+    peopleLarge: `<svg viewBox="0 0 18 13" width="19.64" height="14.18" fill="currentColor" aria-hidden="true"><ellipse cx="5.4" cy="4.38" rx="1.85" ry="2.07"/><path d="M1.5 10.5 A4.42 3.25 0 0 1 7.95 7.61 A5.28 4 0 0 0 6.32 10.5 V11.25 H2.15 Q1.5 11.25 1.5 10.6 Z"/><ellipse cx="11.63" cy="3.94" rx="2.13" ry="2.32"/><path d="M7.07 10.5 A4.53 3.25 0 0 1 16.13 10.5 V10.6 Q16.13 11.25 15.48 11.25 H7.72 Q7.07 11.25 7.07 10.6 Z"/></svg>`,
     folder: `<svg viewBox="0 0 16 12" width="16" height="12" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M1.5 2.4 Q1.5 1.19 2.7 1.19 H4.75 Q5.05 1.19 5.3 1.42 L6.05 2 Q6.3 2.19 6.6 2.19 H12.8 Q13.94 2.19 13.94 3.35 V9.85 Q13.94 11 12.8 11 H2.65 Q1.5 11 1.5 9.85 Z M2.5 4.12 V3.7 Q2.5 3.25 2.95 3.25 H12.49 Q12.94 3.25 12.94 3.7 V4.12 Z"/></svg>`,
     chevronDown: `<svg viewBox="0 0 10 6" width="10" height="6" fill="none" stroke="currentColor" stroke-width="1.05" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.55 1.77 L4.49 4.7 L7.42 1.77"/></svg>`,
     chevronRight: `<svg viewBox="0 0 8 11" width="8" height="11" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 2.1 L6.35 5.85 L2.6 9.6"/></svg>`,
@@ -50,7 +58,8 @@
     key: `<svg viewBox="0 0 18 28" width="18" height="28" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M6.5 14.18 A6.25 6.25 0 1 1 10.44 14.37 V14.54 L12.98 17.08 Q13.23 17.33 12.98 17.58 L10.44 20.12 V20.47 L12.27 22.3 Q12.52 22.55 12.27 22.8 L8.75 26.31 L6.5 24.06 Z M7.1 6.25 a1.65 1.65 0 1 0 3.3 0 a1.65 1.65 0 1 0 -3.3 0 Z"/></svg>`,
     box: `<svg viewBox="0 0 30 30" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.56 3.67 Q14.88 2.95 16.19 3.67 L24.56 8.28 Q25.88 9 25.88 10.5 L25.88 19.4 Q25.88 20.9 24.58 21.65 L16.17 26.5 Q14.88 27.25 13.58 26.5 L5.17 21.65 Q3.88 20.9 3.88 19.4 L3.88 10.5 Q3.88 9 5.19 8.28 Z"/><path d="M3.875 9 L14.875 15.05 L25.875 9 M14.875 15.05 V26.9 M9.375 5.975 L20.375 12.025"/></svg>`,
     triangle: `<svg viewBox="0 0 16 14" width="16" height="14" fill="currentColor" aria-hidden="true"><path d="M8 0 L16 14 H0 Z"/></svg>`,
-    upDown: `<svg viewBox="0 0 9 11" width="9" height="11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.25 3.9 L4.5 1 L7.75 3.9 M1.25 7.1 L4.5 10 L7.75 7.1"/></svg>`,
+    // 10 pt, medium, in its line: the team card's.
+    upDown: `<svg viewBox="0 -3 7.5 16" width="7.5" height="16" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M0.92 3.45 L3.75 0.8 L6.58 3.45 M0.92 6.8 L3.75 9.45 L6.58 6.8"/></svg>`,
     battery: `<svg viewBox="0 0 26 13" width="26" height="13" fill="currentColor" aria-hidden="true"><rect x="2.37" y="2.38" width="18.13" height="8.75" rx="2.48" fill="none" stroke="currentColor" stroke-width="1.2"/><rect x="3.78" y="3.85" width="15.25" height="5.87" rx="0.96"/><path d="M22.03 4.97 H22.2 A1.2 1.81 0 0 1 22.2 8.6 H22.03 Z"/></svg>`,
     wifi: `<svg viewBox="0 0 20 16" width="20" height="16" fill="currentColor" aria-hidden="true"><path d="M2.75 5.74 A10.56 11.46 0 0 1 16.81 5.74" fill="none" stroke="currentColor" stroke-width="2.34" stroke-linecap="round"/><path d="M5.77 8.99 A6.4 6.81 0 0 1 13.79 8.99" fill="none" stroke="currentColor" stroke-width="2.43" stroke-linecap="round"/><path d="M9.78 14.34 L7.81 12.19 A2.91 2.91 0 0 1 11.75 12.19 Z" stroke="currentColor" stroke-width="0.91" stroke-linejoin="round"/></svg>`,
     search: `<svg viewBox="0 0 18 18" width="18" height="18" fill="none" stroke="currentColor" aria-hidden="true"><ellipse cx="7.6" cy="7.55" rx="5.22" ry="5.59" stroke-width="1.3"/><path d="M11.48 11.83 L15.19 15.84" stroke-width="1.8" stroke-linecap="round"/></svg>`,
@@ -159,12 +168,13 @@
   add("personal", "blog", "ready", true, "main", "Write up the move to edge functions", "7c2d8e4f1", 25 * MINUTE);
   add("personal", "portfolio", "ready", true, "main", "Update the projects page", "2b6f9a0c3", 2 * DAY);
 
+  // Each state's status dot color.
   const STATES = {
-    queued: { label: "Queued", color: "var(--d-queued)", inProgress: true },
-    building: { label: "Building", color: "var(--d-warning)", inProgress: true },
+    queued: { label: "Queued", color: "var(--d-dot-queued)", inProgress: true },
+    building: { label: "Building", color: "var(--d-dot-building)", inProgress: true },
     ready: { label: "Ready", color: "var(--d-success)" },
-    error: { label: "Error", color: "var(--d-error)" },
-    canceled: { label: "Canceled", color: "var(--d-queued)" },
+    error: { label: "Error", color: "var(--d-dot-error)" },
+    canceled: { label: "Canceled", color: "var(--d-dot-queued)" },
   };
 
   const state = {
@@ -384,7 +394,7 @@
               </div>
               <div class="d-sub-detail">
                 <button class="d-back" data-action="back">${ICON.chevronLeft}<span>Back</span></button>
-                <span class="d-badge-status"></span>
+                <span class="d-status-label"></span>
               </div>
             </div>
             <div class="d-divider"></div>
@@ -402,7 +412,7 @@
     stage = app.querySelector(".d-stage");
     pager = app.querySelector(".d-detail-layer");
     detail = pager.querySelector(".d-scroll");
-    badge = app.querySelector(".d-badge-status");
+    badge = app.querySelector(".d-status-label");
     settingsPane = app.querySelector(".d-settings .d-scroll");
     settingsButton = app.querySelector('[data-action="settings"]');
     teamLabel = app.querySelector("[data-team]");
@@ -487,9 +497,9 @@
         ? `<span class="d-elapsed">${ICON.clock}<span data-elapsed="${d.created}">${elapsed(d.created)}</span></span>`
         : `<span class="d-ago" data-ago="${d.created}">${ago(d.created)}</span>`;
     const tag = isCurrent
-      ? '<span class="d-tag" style="--c: var(--d-success)"><i></i>Current</span>'
+      ? '<span class="d-badge d-badge-green">Current</span>'
       : d.production
-        ? '<span class="d-tag" style="--c: var(--d-blue)">Production</span>'
+        ? '<span class="d-badge d-badge-blue">Production</span>'
         : "";
     const key = `${d.state}|${isCurrent}|${d.created}`;
     if (wrap.key === key) return;
@@ -499,9 +509,9 @@
     wrap.row.innerHTML = `
       <span class="d-status" style="--c: ${s.color}">${s.inProgress ? "<i></i>" : ""}<i></i></span>
       <span class="d-info">
-        <span class="d-line"><span class="d-name">${esc(d.project)}</span><span class="d-branch">${BRANCH}<span>${esc(d.branch)}</span></span></span>
+        <span class="d-line"><span class="d-name">${esc(d.project)}</span><span class="d-branch">${BRANCH_SMALL}<span>${esc(d.branch)}</span></span></span>
         <span class="d-msg">${esc(d.message)}</span>
-        <span class="d-line d-meta">${timing}<span class="d-dot">•</span><span class="d-state" style="--c: ${s.color}">${s.label}</span></span>
+        <span class="d-line d-meta">${timing}<span class="d-dot">•</span><span class="d-state">${s.label}</span></span>
       </span>
       ${tag}
       <span class="d-chevron">${ICON.chevronRight}</span>`;
@@ -514,9 +524,7 @@
     const current = currentIds().has(d.id);
     const env = current ? "var(--d-success)" : d.production ? "var(--d-blue)" : "var(--d-fg-3)";
     const busy = state.busy ? `<span class="d-btn-spinner">${SPINNER}</span>` : "";
-    badge.style.setProperty("--c", s.color);
-    badge.classList.toggle("is-live", Boolean(s.inProgress));
-    badge.innerHTML = `<i></i>${s.label}`;
+    badge.innerHTML = `<span class="d-status" style="--c: ${s.color}">${s.inProgress ? "<i></i>" : ""}<i></i></span><span>${s.label}</span>`;
     detail.innerHTML = `
       <div class="d-section"><div class="d-label">Project</div><div class="d-value d-value-lg">${esc(d.project)}</div></div>
       <div class="d-section">
@@ -529,7 +537,7 @@
       <div class="d-section"><div class="d-label">Branch</div><div class="d-value"><span class="d-branch-icon">${BRANCH}</span>${esc(d.branch)}</div></div>
       <div class="d-section"><div class="d-label">Commit</div><div class="d-commit">${esc(d.message)}</div><span class="d-sha">${d.hash.slice(0, 7)}</span></div>
       <div class="d-section"><div class="d-label">Repository</div><div class="d-value"><button class="d-link" data-action="repo">${ICON.link}<span>${ORG[d.team]}/${esc(d.project)}</span></button></div></div>
-      <div class="d-section"><div class="d-label">Environment</div><div class="d-value d-env"><i class="d-env-dot" style="--c: ${env}"></i>${d.production ? "Production" : "Preview"}${current ? '<span class="d-live">Live</span>' : ""}</div></div>
+      <div class="d-section"><div class="d-label">Environment</div><div class="d-value d-env"><i class="d-env-dot" style="--c: ${env}"></i>${d.production ? "Production" : "Preview"}${current ? '<span class="d-badge d-badge-green d-badge-xs">Live</span>' : ""}</div></div>
       <div class="d-section"><div class="d-label">Created</div><div class="d-value">${esc(createdText(d.created))}</div></div>
       <div class="d-actions-block">
         <button class="d-btn d-btn-secondary" data-action="visit">${ICON.compass}<span>Open in Browser</span></button>
@@ -545,7 +553,7 @@
     const st = state.settings;
     const toggle = (key, label) =>
       `<button class="d-switch" role="switch" aria-checked="${st[key]}" aria-label="${label}" data-action="setting" data-key="${key}"></button>`;
-    const row = (key, lead, title) => `<div class="d-card-row">${lead}<span class="d-grow">${title}</span>${toggle(key, title)}</div>`;
+    const row = (key, lead, title) => `<div class="d-card-row"><span class="d-ico">${lead}</span><span class="d-grow">${title}</span>${toggle(key, title)}</div>`;
     const dot = (color) => `<i class="d-dot-8" style="--c: ${color}"></i>`;
     settingsPane.innerHTML = `
       <section class="d-set">
@@ -559,13 +567,7 @@
       </section>
       <section class="d-set">
         <div class="d-label">Team</div>
-        <div class="d-card d-card-pad">
-          <p class="d-note">Select the team to monitor deployments from:</p>
-          <div class="d-team-row">
-            <span>Team</span>
-            <button class="d-popup" data-action="settings-team-menu" aria-haspopup="menu"><span>${state.team === "personal" ? "Personal account" : teamName()}</span>${ICON.upDown}</button>
-          </div>
-        </div>
+        <button class="d-card d-card-row d-team" data-action="settings-team-menu" aria-haspopup="menu" aria-label="Team"><span class="d-ico">${ICON.peopleLarge}</span><span class="d-grow">${state.team === "personal" ? "Personal account" : teamName()}</span>${ICON.upDown}</button>
       </section>
       <section class="d-set">
         <div class="d-label">Notifications</div>
@@ -582,7 +584,7 @@
       <section class="d-set">
         <div class="d-label">Appearance</div>
         <div class="d-card">
-          <div class="d-card-row">${ICON.menubar}<span class="d-grow"><span class="d-row-title">Dynamic menu bar icon</span><span class="d-card-sub">Icon changes color when building or on error</span></span>${toggle("dynamicIcon", "Dynamic menu bar icon")}</div>
+          <div class="d-card-row"><span class="d-ico d-ico-top">${ICON.menubar}</span><span class="d-grow"><span class="d-row-title">Dynamic menu bar icon</span><span class="d-card-sub">Icon changes color when building or on error</span></span>${toggle("dynamicIcon", "Dynamic menu bar icon")}</div>
         </div>
       </section>
       <section class="d-set">
@@ -590,14 +592,14 @@
         <div class="d-card">
           <div class="d-card-row"><span class="d-about-name">Vercelian</span><span class="d-version">v1.1.0</span></div>
           <hr>
-          <button class="d-card-row" data-action="github">${ICON.star}<span class="d-grow">Star on GitHub</span><span class="d-ext">${ICON.arrowUpRight}</span></button>
+          <button class="d-card-row" data-action="github"><span class="d-ico">${ICON.star}</span><span class="d-grow">Star on GitHub</span><span class="d-ext">${ICON.arrowUpRight}</span></button>
           <hr>
-          <button class="d-card-row" data-action="issues">${ICON.bubble}<span class="d-grow">Report an issue</span><span class="d-ext">${ICON.arrowUpRight}</span></button>
+          <button class="d-card-row" data-action="issues"><span class="d-ico">${ICON.bubble}</span><span class="d-grow">Report an issue</span><span class="d-ext">${ICON.arrowUpRight}</span></button>
         </div>
       </section>
       <section class="d-set">
         <button class="d-btn d-btn-danger" data-action="sign-out">${ICON.logOut}<span>Sign out</span></button>
-        <button class="d-btn d-btn-quiet" data-action="quit">${ICON.power}<span>Quit Vercelian</span></button>
+        <button class="d-btn d-btn-quiet" data-action="quit">${ICON.power}<span>Quit</span></button>
         <p class="d-fine">Your access token is stored securely in macOS Keychain and will be removed when you sign out.</p>
       </section>`;
   }
@@ -731,11 +733,13 @@
   // The app ignores a swipe's momentum and settles from wherever the fingers
   // lifted. Browsers carry on scrolling, so a scroller that moves after a
   // touch lifts, or after a pause in a swipe's events, has been let go: stop
-  // it where it is and settle it. (Trackpads keep reporting momentum as if
-  // fingers were on them; snapping and the rubber band's limit keep that in
-  // check.)
+  // it where it is and settle it.
   function letGo(scroller, settle) {
     if (glides.has(scroller) || scroller.touching || performance.now() - (scroller.fingersAt || 0) < 100) return;
+    stopAndSettle(scroller, settle);
+  }
+
+  function stopAndSettle(scroller, settle) {
     scroller.style.overflowX = "hidden";
     settle(scroller);
     if (!glides.has(scroller)) scroller.style.overflowX = "";
@@ -1008,12 +1012,33 @@
       },
       true,
     );
-    // A sideways swipe takes a row over from any glide it's in.
+    // A sideways swipe takes a row over from any glide it's in. Browsers that
+    // mark the events a trackpad sends once the fingers lift, as momentum
+    // (WheelEvent.momentum), tell the moment they lift: there, as in the
+    // app, the row settles then, and the momentum doesn't carry it on, out
+    // past its actions. Elsewhere it settles once the browser has snapped
+    // it, after the fingers lift. Either way, fingers resting on the
+    // trackpad hold it where it is.
     list.addEventListener(
       "wheel",
       (e) => {
-        const wrap = noteInput(e);
-        if (wrap && Math.abs(e.deltaX) > Math.abs(e.deltaY)) takeOver(wrap, settleRow);
+        const wrap = e.target.closest(".d-row-wrap");
+        const sideways = Math.abs(e.deltaX) > Math.abs(e.deltaY);
+        if (wrap && sideways && e.momentum) {
+          // Held still until the momentum runs out.
+          wrap.classList.add("is-coasting");
+          clearTimeout(wrap.coastTimer);
+          wrap.coastTimer = setTimeout(() => wrap.classList.remove("is-coasting"), 120);
+          if (!glides.has(wrap) && wrap.scrollLeft > 0) stopAndSettle(wrap, settleRow);
+          return;
+        }
+        if (wrap) {
+          // The fingers are back, so any momentum is over.
+          clearTimeout(wrap.coastTimer);
+          wrap.classList.remove("is-coasting");
+        }
+        noteInput(e);
+        if (wrap && sideways) takeOver(wrap, settleRow);
       },
       { passive: true },
     );
@@ -1098,14 +1123,13 @@
 
   // MARK: - Menus
   //
-  // Like macOS menus: the pickers' menus drop down below them, and the pop-up
-  // button in settings opens its menu over itself with the chosen item where
-  // the button's title was. Choosing an item makes it blink before the menu
-  // fades away.
+  // Like macOS menus: the pickers' menus drop down below them, and the team
+  // card's lines up with the card's edges just below it. Choosing an item
+  // makes it blink before the menu fades away.
 
   let menu = null;
 
-  function openMenu(anchor, items, onSelect, { popUp = false } = {}) {
+  function openMenu(anchor, items, onSelect, { edgeToEdge = false } = {}) {
     closeMenu(true);
     const el = document.createElement("div");
     el.className = "d-menu";
@@ -1126,18 +1150,11 @@
     const originX = frame.left + demo.clientLeft;
     const originY = frame.top + demo.clientTop;
     let left = a.left - originX;
-    let top = a.bottom - originY + 4;
-    if (popUp) {
-      // The chosen item's title lands on the button's title.
-      const chosen = el.querySelector(`[data-value="${CSS.escape(String(items.find((i) => i.checked)?.value ?? ""))}"]`);
-      left = a.left - originX - 5;
-      el.style.minWidth = `${Math.round(a.width + 10)}px`;
-      if (chosen) top = a.top - originY + a.height / 2 - (chosen.offsetTop + chosen.offsetHeight / 2);
-    }
+    const top = a.bottom - originY + 4;
+    if (edgeToEdge) el.style.minWidth = `${a.width}px`;
     left = Math.max(6, Math.min(demo.clientWidth - el.offsetWidth - 6, left));
-    top = Math.max(34, Math.min(demo.clientHeight - el.offsetHeight - 6, top));
     el.style.left = `${Math.round(left)}px`;
-    el.style.top = `${Math.round(top)}px`;
+    el.style.top = `${Math.round(Math.max(34, Math.min(demo.clientHeight - el.offsetHeight - 6, top)))}px`;
 
     el.addEventListener("pointermove", (e) => {
       const item = e.target.closest("button[role=menuitem]");
@@ -1327,7 +1344,7 @@
     settings: toggleSettings,
     back: () => back(),
     "team-menu": (el) => openMenu(el, teamItems(false), selectTeam),
-    "settings-team-menu": (el) => openMenu(el, teamItems(true), selectTeam, { popUp: true }),
+    "settings-team-menu": (el) => openMenu(el, teamItems(true), selectTeam, { edgeToEdge: true }),
     "project-menu": (el) =>
       openMenu(el, [{ label: "All Projects", value: "" }, "-", ...projects().map((p) => ({ label: p, value: p }))], (value) => {
         state.project = value || null;
@@ -1448,15 +1465,16 @@
 
   // MARK: - Appearance, clock, and timers
 
+  // The page's theme, from the button in its header, or else the system's.
   const media = window.matchMedia("(prefers-color-scheme: dark)");
-  const darkToggle = document.getElementById("demo-dark");
-  const setTheme = (dark) => {
-    demo.dataset.theme = dark ? "dark" : "light";
-    if (darkToggle) darkToggle.checked = dark;
+  const page = document.documentElement;
+  const setTheme = () => {
+    const picked = page.dataset.theme;
+    demo.dataset.theme = picked === "dark" || (!picked && media.matches) ? "dark" : "light";
   };
-  setTheme(media.matches);
-  media.addEventListener("change", (e) => setTheme(e.matches));
-  if (darkToggle) darkToggle.addEventListener("change", () => setTheme(darkToggle.checked));
+  setTheme();
+  media.addEventListener("change", setTheme);
+  new MutationObserver(setTheme).observe(page, { attributes: true, attributeFilter: ["data-theme"] });
 
   const tickClock = () => (clock.textContent = clockFormat.format(Date.now()));
   tickClock();

@@ -7,18 +7,27 @@
 
 .demo {
   --d-bg: #ffffff;
-  --d-bg-2: #fafafa;
-  --d-fg: #111111;
-  --d-fg-2: #666666;
-  --d-fg-3: #888888;
-  --d-border: #eaeaea;
-  /* SwiftUI's Divider: the system separator over the border color */
-  --d-divider: #d3d3d3;
-  --d-success: #17b169;
-  --d-error: #ee0000;
-  --d-warning: #f5a623;
-  --d-queued: #888888;
-  --d-blue: #0070f3;
+  --d-bg-2: #f2f2f2;
+  --d-fg: #171717;
+  --d-fg-2: #4d4d4d;
+  --d-fg-3: #8f8f8f;
+  --d-border: #ebebeb;
+  /* Rules between rows and sections, between Geist's two border grays */
+  --d-divider: #e0e0e0;
+  /* Green 700, Red 900, Amber 900, Blue 700 for fills and 900 for links */
+  --d-success: #28a948;
+  --d-error: #d60020;
+  --d-warning: #a64f00;
+  --d-blue: #0070f7;
+  --d-link: #0064e2;
+  /* The status dot keeps Vercel's original colors, except Ready's green. */
+  --d-dot-building: #f5a623;
+  --d-dot-error: #ee0000;
+  --d-dot-queued: #eaeaea;
+  /* Geist's subtle badges */
+  --d-badge-green: #d7f5d9;
+  --d-badge-green-fg: #107d32;
+  --d-badge-blue: #dfedfc;
   --d-accent: #007aff;
   --d-desk: #f3f3f4;
   --d-bar: rgba(255, 255, 255, 0.78);
@@ -55,13 +64,22 @@
 }
 
 .demo[data-theme="dark"] {
-  --d-bg: #111111;
+  --d-bg: #0a0a0a;
   --d-bg-2: #1a1a1a;
-  --d-fg: #fafafa;
-  --d-fg-2: #888888;
-  --d-fg-3: #666666;
-  --d-border: #1a1a1a;
-  --d-divider: #303030;
+  --d-fg: #ededed;
+  --d-fg-2: #a1a1a1;
+  --d-border: #2e2e2e;
+  --d-divider: #383838;
+  --d-success: #00ab3e;
+  --d-error: #ff5e63;
+  --d-warning: #ff9900;
+  --d-blue: #0071f6;
+  --d-link: #50a8ff;
+  --d-dot-error: #ff0000;
+  --d-dot-queued: #333333;
+  --d-badge-green: #003011;
+  --d-badge-green-fg: #00ca52;
+  --d-badge-blue: #002552;
   --d-accent: #0a84ff;
   --d-desk: #19191b;
   --d-bar: rgba(36, 36, 38, 0.8);
@@ -255,12 +273,14 @@
 
 /* Header */
 
+/* The gear's glyph, not its 28 pt button, lines up with the chevrons below:
+   6 pt less padding on the right. */
 .d-header {
   display: flex;
   align-items: center;
   gap: 8px;
   height: 52px;
-  padding: 0 16px;
+  padding: 0 10px 0 16px;
   flex: none;
 }
 
@@ -448,7 +468,7 @@
   gap: 6px;
   min-width: 0;
   height: 27px;
-  padding: 0 12px;
+  padding: 0 10px;
   border-radius: 6px;
   background: var(--d-bg-2);
   box-shadow: 0 0 0 0.5px var(--d-border), inset 0 0 0 0.5px var(--d-border);
@@ -463,6 +483,11 @@
   text-overflow: ellipsis;
 }
 
+/* The chevron sits 4 pt further from the name, toward the edge. */
+.d-picker svg:last-child {
+  margin-left: 4px;
+}
+
 .d-back {
   display: inline-flex;
   align-items: center;
@@ -470,28 +495,14 @@
   font-weight: 500;
 }
 
-.d-badge-status {
+/* The state on a deployment's page: an 8 pt dot and its name, a step below
+   body text */
+.d-status-label {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  height: 24px;
-  padding: 0 10px;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--c) 10%, transparent);
-  font-size: 11px;
-  line-height: 14px;
-  font-weight: 500;
-}
-
-.d-badge-status i {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--c);
-}
-
-.d-badge-status.is-live i {
-  animation: d-breathe 1s cubic-bezier(0.42, 0, 0.58, 1) infinite alternate;
+  font-size: 12px;
+  line-height: 15px;
 }
 
 /* List */
@@ -522,11 +533,16 @@
   container-type: inline-size;
 }
 
-/* SwiftUI's Divider between rows, inset to the text, holding still while a
-   row slides */
+/* The rule between rows, inset to the text, holding still while a row
+   slides */
 .d-row-wrap + .d-row-wrap {
   padding-top: 1px;
-  background: linear-gradient(var(--d-divider), var(--d-divider)) 48px 0 / calc(100% - 48px) 1px no-repeat;
+  background: linear-gradient(var(--d-divider), var(--d-divider)) 42px 0 / calc(100% - 42px) 1px no-repeat;
+}
+
+/* Momentum after a swipe doesn't move a row (see demo.js). */
+.d-row-wrap.is-coasting {
+  overflow-x: hidden;
 }
 
 /* Room to keep pulling: 900 pt past the actions, where the rubber band
@@ -597,18 +613,26 @@
   opacity: 1;
 }
 
+/* Geist's status dot: 10 pt, as far from the text as from the edge, and
+   pulsing while a deployment is queued or building */
 .d-status {
   display: grid;
-  place-items: center;
-  width: 20px;
-  height: 20px;
+  width: 10px;
+  height: 10px;
   flex: none;
+}
+
+.d-row .d-status {
+  margin-right: 4px;
+}
+
+.d-status-label .d-status {
+  width: 8px;
+  height: 8px;
 }
 
 .d-status i {
   grid-area: 1 / 1;
-  width: 8px;
-  height: 8px;
   border-radius: 50%;
   background: var(--c);
 }
@@ -655,9 +679,10 @@
   text-overflow: ellipsis;
 }
 
+/* The branch symbol's 9 pt box, its glyph sitting on the text's baseline */
 .d-branch svg {
-  width: 10px;
-  height: 10px;
+  width: 10.5px;
+  height: 14px;
 }
 
 .d-msg {
@@ -678,9 +703,10 @@
   line-height: 10px;
 }
 
+/* The dot carries the state's color, as Geist's labels do. */
 .d-meta .d-state {
   font-weight: 500;
-  color: var(--c);
+  color: var(--d-fg-2);
 }
 
 .d-elapsed {
@@ -691,25 +717,35 @@
   font-family: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
 }
 
-.d-tag {
+/* Geist's badge in its small size, or a step below it beside body text */
+.d-badge {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
   flex: none;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 10px;
-  line-height: 13px;
+  height: 20px;
+  padding: 0 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  line-height: 14px;
   font-weight: 500;
-  color: var(--c);
-  background: color-mix(in srgb, var(--c) 10%, transparent);
+  white-space: nowrap;
 }
 
-.d-tag i {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: currentColor;
+.d-badge-xs {
+  height: 18px;
+  padding: 0 7px;
+  font-size: 10px;
+  line-height: 13px;
+}
+
+.d-badge-green {
+  background: var(--d-badge-green);
+  color: var(--d-badge-green-fg);
+}
+
+.d-badge-blue {
+  background: var(--d-badge-blue);
+  color: var(--d-link);
 }
 
 .d-chevron {
@@ -766,7 +802,7 @@
 }
 
 .d-swipe-btn[data-action="visit"] {
-  background: #0070f3;
+  background: var(--d-blue);
   z-index: 0;
 }
 
@@ -844,7 +880,7 @@
   align-items: center;
   gap: 6px;
   min-width: 0;
-  color: var(--d-blue);
+  color: var(--d-link);
   text-align: left;
 }
 
@@ -854,8 +890,12 @@
   white-space: nowrap;
 }
 
+/* One 16 pt box for both symbols: the checkmark is shorter, and swapping
+   sizes would move the page. */
 .d-copy {
   display: grid;
+  width: 16px;
+  height: 16px;
   margin-left: auto;
 }
 
@@ -883,10 +923,11 @@
   opacity: 1;
 }
 
+/* The branch symbol's 11 pt box, its glyph sitting on the text's baseline */
 .d-branch-icon {
   display: block;
-  width: 12px;
-  height: 12px;
+  width: 13.45px;
+  height: 16px;
   color: var(--d-fg-2);
 }
 
@@ -917,16 +958,6 @@
   height: 8px;
   border-radius: 50%;
   background: var(--c);
-}
-
-.d-live {
-  padding: 2px 6px;
-  border-radius: 4px;
-  background: color-mix(in srgb, var(--d-success) 10%, transparent);
-  color: var(--d-success);
-  font-size: 10px;
-  line-height: 13px;
-  font-weight: 500;
 }
 
 /* A Divider padded 8 pt above and below, then the buttons 12 pt apart */
@@ -1054,8 +1085,22 @@
   text-align: left;
 }
 
-.d-card-row > svg {
+/* Icons and dots sit centered in a 16 pt column, so the titles beside them
+   line up. Flex, unlike grid, keeps a wider icon centered too. */
+.d-ico {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  flex: none;
   color: var(--d-fg-2);
+}
+
+/* On the title's line, not between its two */
+.d-ico-top {
+  align-self: flex-start;
+  height: 16px;
+  margin-top: 1px;
 }
 
 .d-card-row .d-grow {
@@ -1101,38 +1146,15 @@
   flex: 1;
 }
 
-.d-card-pad {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 12px;
+/* The team card is the menu's button: the header names it, the card shows
+   the team, and the menu checks it. */
+.d-team > svg {
+  margin-right: 1.15px;
+  color: var(--d-fg-3);
 }
 
-.d-note {
-  margin: 0;
-  font-size: 12px;
-  line-height: 15px;
-  color: var(--d-fg-2);
-}
-
-.d-team-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-/* The pop-up button macOS draws for Picker(.menu), sized by its longest item */
-.d-popup {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 152px;
-  height: 24px;
-  margin-right: 20px;
-  padding: 0 9px 0 12.5px;
-  border-radius: 7px;
-  background: var(--d-popup);
-  color: var(--d-label);
+.d-team .d-ico svg {
+  margin-top: -1px;
 }
 
 .d-card-sub {
@@ -1202,11 +1224,16 @@
   transform: translateX(14px);
 }
 
+.d-set .d-btn {
+  gap: 6px;
+}
+
 .d-fine {
   margin: 0;
   font-size: 11px;
   line-height: 14px;
   color: var(--d-fg-3);
+  text-align: center;
 }
 
 /* Sign in */
@@ -1340,7 +1367,7 @@
 }
 
 .d-text-link {
-  color: var(--d-blue);
+  color: var(--d-link);
   font-size: 11px;
   line-height: 14px;
 }
@@ -1400,13 +1427,13 @@
 }
 
 .d-menu:has(.d-menu-check) button {
-  padding-left: 24px;
+  padding-left: 30px;
 }
 
 .d-menu-check {
   position: absolute;
   top: 6px;
-  left: 9px;
+  left: 12px;
 }
 
 .d-menu-check svg {
@@ -1521,17 +1548,6 @@
   to {
     transform: scale(2.5);
     opacity: 0;
-  }
-}
-
-@keyframes d-breathe {
-  from {
-    transform: scale(1);
-    opacity: 1;
-  }
-  to {
-    transform: scale(1.3);
-    opacity: 0.6;
   }
 }
 
