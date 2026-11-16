@@ -339,7 +339,9 @@ h2 {
 
 .features span,
 .steps span {
+  display: block;
   color: var(--fg-2);
+  text-wrap: pretty;
 }
 
 .steps {
