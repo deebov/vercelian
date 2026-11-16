@@ -745,25 +745,6 @@
     if (!glides.has(scroller)) scroller.style.overflowX = "";
   }
 
-  // Trackpads keep sending a swipe's events after the fingers lift, as
-  // momentum, and browsers don't mark which is which. Momentum's steps
-  // shrink steadily, each a little smaller than the one before, so a run of
-  // them means the fingers have lifted. A larger step, or a pause, starts
-  // over: fingers are moving the scroller again.
-  function isMomentum(scroller, delta) {
-    const now = performance.now();
-    const step = Math.abs(delta);
-    const run = scroller.wheelRun;
-    if (!run || now - run.at > 100 || step > run.last || step < run.last * 0.6) {
-      scroller.wheelRun = { first: step, last: step, steps: 0, at: now };
-      return false;
-    }
-    run.steps++;
-    run.last = step;
-    run.at = now;
-    return run.steps >= 4 && step < run.first * 0.9;
-  }
-
   // Calls `settled(scroller)` once a scroller comes to rest: the fingers have
   // lifted and any momentum has run out. Fingers holding still mid-swipe
   // don't count, so only browsers without `scrollend` fall back on a pause.
@@ -1031,21 +1012,30 @@
       },
       true,
     );
-    // A sideways swipe takes a row over from any glide it's in. As in the
-    // app, the row settles the moment the fingers lift, and their momentum
-    // doesn't carry it on, out past its actions.
+    // A sideways swipe takes a row over from any glide it's in. Browsers that
+    // mark the events a trackpad sends once the fingers lift, as momentum
+    // (WheelEvent.momentum), tell the moment they lift: there, as in the
+    // app, the row settles then, and the momentum doesn't carry it on, out
+    // past its actions. Elsewhere it settles once the browser has snapped
+    // it, after the fingers lift. Either way, fingers resting on the
+    // trackpad hold it where it is.
     list.addEventListener(
       "wheel",
       (e) => {
         const wrap = e.target.closest(".d-row-wrap");
         const sideways = Math.abs(e.deltaX) > Math.abs(e.deltaY);
-        if (wrap && sideways && isMomentum(wrap, e.deltaX)) {
+        if (wrap && sideways && e.momentum) {
           // Held still until the momentum runs out.
           wrap.classList.add("is-coasting");
           clearTimeout(wrap.coastTimer);
           wrap.coastTimer = setTimeout(() => wrap.classList.remove("is-coasting"), 120);
           if (!glides.has(wrap) && wrap.scrollLeft > 0) stopAndSettle(wrap, settleRow);
           return;
+        }
+        if (wrap) {
+          // The fingers are back, so any momentum is over.
+          clearTimeout(wrap.coastTimer);
+          wrap.classList.remove("is-coasting");
         }
         noteInput(e);
         if (wrap && sideways) takeOver(wrap, settleRow);
