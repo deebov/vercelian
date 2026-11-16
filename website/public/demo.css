@@ -540,6 +540,11 @@
   background: linear-gradient(var(--d-divider), var(--d-divider)) 42px 0 / calc(100% - 42px) 1px no-repeat;
 }
 
+/* Momentum after a swipe doesn't move a row (see demo.js). */
+.d-row-wrap.is-coasting {
+  overflow-x: hidden;
+}
+
 /* Room to keep pulling: 900 pt past the actions, where the rubber band
    gives so little (0.06 pt per pt pulled) that its end can't be felt, and
    momentum can't carry a row out of sight. */
