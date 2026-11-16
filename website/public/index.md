@@ -4,7 +4,7 @@ Vercelian is a small, native Mac app that shows every build at a glance and tell
 
 Open source · macOS 14 or later · Mac App Store coming soon
 
-[Download for Mac](https://github.com/deebov/vercelian/releases/latest/download/Vercelian.zip) · [View on GitHub](https://github.com/deebov/vercelian)
+[Download for Mac](https://vercelian.co/Vercelian.zip) · [View on GitHub](https://github.com/deebov/vercelian)
 
 ![Vercelian's popover under the macOS menu bar, listing queued, building, ready, and failed deployments](https://vercelian.co/assets/preview.png)
 
@@ -18,7 +18,7 @@ Open source · macOS 14 or later · Mac App Store coming soon
 
 ## Set up in a minute
 
-1. **Download Vercelian and open it.** A triangle appears in your menu bar. GitHub builds aren't notarized, so the first time, allow it in System Settings → Privacy & Security.
+1. **Download Vercelian and open it.** A triangle appears in your menu bar.
 2. **Create an access token.** Click the triangle, then *Continue with Vercel*. Your browser opens your Vercel token page.
 3. **Paste it and click Connect.** Your deployments appear right away and stay up to date.
 

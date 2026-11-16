@@ -10,7 +10,7 @@
 [![Built with SwiftUI](https://img.shields.io/badge/SwiftUI-native-F05138?logo=swift&logoColor=white)](#build-from-source)
 [![MIT license](https://img.shields.io/badge/license-MIT-000000)](LICENSE)
 
-[Download](https://github.com/deebov/vercelian/releases/latest) · [Privacy](PRIVACY.md) · [Report an issue](https://github.com/deebov/vercelian/issues)
+[Download](https://vercelian.co/Vercelian.zip) · [Privacy](PRIVACY.md) · [Report an issue](https://github.com/deebov/vercelian/issues)
 
 <sub>An unofficial app, not affiliated with or endorsed by Vercel Inc.</sub>
 
@@ -35,22 +35,7 @@
 
 **Mac App Store:** coming soon.
 
-**GitHub:** download `Vercelian.zip` from the [latest release](https://github.com/deebov/vercelian/releases/latest), unzip it, and move Vercelian to your Applications folder.
-
-<details>
-<summary>macOS says Vercelian can't be opened</summary>
-
-<br>
-
-GitHub builds aren't notarized, so macOS blocks them the first time:
-
-1. Open Vercelian and dismiss the warning.
-2. Go to **System Settings → Privacy & Security**.
-3. Scroll to the message about Vercelian and click **Open Anyway**.
-
-You only need to do this once. On macOS 15 and later, Control-click → Open no longer gets around it.
-
-</details>
+**Direct download:** download [`Vercelian.zip`](https://vercelian.co/Vercelian.zip), unzip it, and move Vercelian to your Applications folder. It's signed with a Developer ID and notarized by Apple, so macOS opens it like any other app from the internet.
 
 ## Get started
 
