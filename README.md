@@ -12,6 +12,8 @@
 
 [Download](https://github.com/deebov/vercelian/releases/latest) · [Privacy](PRIVACY.md) · [Report an issue](https://github.com/deebov/vercelian/issues)
 
+<sub>An unofficial app, not affiliated with or endorsed by Vercel Inc.</sub>
+
 </div>
 
 <br>
@@ -90,4 +92,10 @@ Issues and pull requests are welcome. For anything bigger than a small fix, plea
 
 ## License
 
-Vercelian is available under the [MIT license](LICENSE). It's an independent project and isn't affiliated with or endorsed by Vercel Inc. Inspired by [Deplog](https://apps.apple.com/app/deplog/id6739449266).
+Vercelian is available under the [MIT license](LICENSE). Inspired by [Deplog](https://apps.apple.com/app/deplog/id6739449266).
+
+## Disclaimer
+
+Vercelian is an independent project, not an official Vercel app. It isn't affiliated with, endorsed by, or sponsored by Vercel Inc. Vercel is a trademark of Vercel Inc.
+
+For help with Vercelian, please [open an issue](https://github.com/deebov/vercelian/issues) here instead of contacting Vercel.

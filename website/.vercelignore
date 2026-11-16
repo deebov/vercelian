@@ -1,0 +1,4 @@
+# Deploys from this folder upload the site and its settings, nothing else.
+/*
+!/public
+!/vercel.json
