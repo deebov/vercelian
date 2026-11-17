@@ -12,6 +12,10 @@
   const demo = document.getElementById("demo");
   if (!demo) return;
 
+  // Apple's systems set the demo in SF, which takes Apple's own weights
+  // (see demo.css).
+  if (/Mac OS X/.test(navigator.userAgent)) demo.classList.add("is-sf");
+
   // MARK: - Icons
 
   const WORDMARK = `<svg viewBox="0 0 347 51" fill="currentColor" aria-hidden="true"><path d="M58.65 51L29.325 0L0 51H58.65ZM88.2274 48.6783L112.735 2.3182H102.134L85.2287 35.9865L68.3231 2.3182H57.7227L82.2299 48.6783H88.2274ZM255.243 2.3182V48.6784H246.467V2.3182H255.243ZM206.393 31.3748C206.393 27.7618 207.147 24.5841 208.656 21.8416C210.164 19.0992 212.267 16.9879 214.964 15.5079C217.66 14.0278 220.814 13.2879 224.426 13.2879C227.625 13.2879 230.504 13.9843 233.064 15.3773C235.623 16.7703 237.657 18.838 239.166 21.5805C240.674 24.3229 241.451 27.6748 241.497 31.6361V33.6602H215.65C215.832 36.5333 216.678 38.7969 218.186 40.451C219.74 42.0617 221.82 42.867 224.426 42.867C226.07 42.867 227.579 42.4317 228.95 41.5611C230.321 40.6904 231.35 39.5151 232.035 38.035L241.017 38.688C239.92 41.9528 237.863 44.5647 234.846 46.5236C231.829 48.4825 228.356 49.4619 224.426 49.4619C220.814 49.4619 217.66 48.7219 214.964 47.2418C212.267 45.7618 210.164 43.6505 208.656 40.9081C207.147 38.1657 206.393 34.9879 206.393 31.3748ZM232.446 28.11C232.127 25.2805 231.235 23.2128 229.773 21.907C228.31 20.5575 226.527 19.8827 224.426 19.8827C222.003 19.8827 220.038 20.601 218.529 22.0375C217.021 23.474 216.083 25.4982 215.718 28.11H232.446ZM191.588 21.907C193.051 23.0822 193.965 24.7147 194.331 26.8041L203.381 26.3471C203.061 23.6917 202.124 21.3846 200.57 19.4257C199.016 17.4668 197.004 15.965 194.537 14.9202C192.114 13.832 189.441 13.2879 186.515 13.2879C182.904 13.2879 179.751 14.0278 177.053 15.5079C174.356 16.9879 172.255 19.0992 170.746 21.8416C169.238 24.5841 168.483 27.7618 168.483 31.3748C168.483 34.9879 169.238 38.1657 170.746 40.9081C172.255 43.6505 174.356 45.7618 177.053 47.2418C179.751 48.7219 182.904 49.4619 186.515 49.4619C189.532 49.4619 192.274 48.9177 194.743 47.8295C197.21 46.6977 199.222 45.1088 200.775 43.0628C202.33 41.0169 203.266 38.6227 203.586 35.8803L194.468 35.4885C194.148 37.7956 193.257 39.5804 191.794 40.8428C190.331 42.0617 188.572 42.6711 186.515 42.6711C183.681 42.6711 181.488 41.6916 179.933 39.7327C178.379 37.7738 177.602 34.9879 177.602 31.3748C177.602 27.7618 178.379 24.9759 179.933 23.017C181.488 21.0581 183.681 20.0786 186.515 20.0786C188.48 20.0786 190.171 20.6881 191.588 21.907ZM147.069 14.0698H155.235L155.472 20.7304C156.051 18.8451 156.857 17.381 157.89 16.3381C159.387 14.8259 161.474 14.0698 164.15 14.0698H167.485V21.1989H164.083C162.177 21.1989 160.612 21.4582 159.387 21.9766C158.207 22.4951 157.3 23.316 156.665 24.4394C156.075 25.5628 155.781 26.9886 155.781 28.7168V48.6783H147.069V14.0698ZM109.401 21.8416C107.893 24.5841 107.138 27.7618 107.138 31.3748C107.138 34.9879 107.893 38.1657 109.401 40.9081C110.909 43.6505 113.011 45.7618 115.708 47.2418C118.405 48.7219 121.559 49.4619 125.17 49.4619C129.101 49.4619 132.575 48.4825 135.591 46.5236C138.607 44.5647 140.665 41.9528 141.761 38.688L132.78 38.035C132.094 39.5151 131.066 40.6904 129.695 41.5611C128.324 42.4317 126.816 42.867 125.17 42.867C122.565 42.867 120.485 42.0617 118.931 40.451C117.423 38.7969 116.577 36.5333 116.394 33.6602H142.241V31.6361C142.196 27.6748 141.419 24.3229 139.911 21.5805C138.402 18.838 136.368 16.7703 133.808 15.3773C131.249 13.9843 128.369 13.2879 125.17 13.2879C121.559 13.2879 118.405 14.0278 115.708 15.5079C113.011 16.9879 110.909 19.0992 109.401 21.8416ZM130.518 21.907C131.98 23.2128 132.872 25.2805 133.191 28.11H116.463C116.828 25.4982 117.765 23.474 119.273 22.0375C120.782 20.601 122.747 19.8827 125.17 19.8827C127.273 19.8827 129.055 20.5575 130.518 21.907Z"/><path d="M316.106 49.0014V13.6346H323.788L323.987 19.6615C325.908 14.8267 329.882 12.8398 334.584 12.8398C342.399 12.8398 346.638 18.3369 346.638 26.2845V49.0014H338.16V28.9999C338.16 23.0392 336.571 19.7278 332.001 19.7278C327.431 19.7278 324.583 23.0392 324.583 28.9999V49.0014H316.106Z"/><path d="M288.081 49.7961C280.663 49.7961 275.762 46.2859 275.762 40.1266C275.762 34.0334 279.537 30.7881 287.286 29.2649L299.009 26.9468C299.009 21.9796 296.691 19.3966 292.187 19.3966C288.081 19.3966 285.763 21.3173 284.968 24.8937L276.358 24.4963C277.749 17.0786 283.445 12.8398 292.187 12.8398C302.254 12.8398 307.486 18.1382 307.486 27.5429V40.3915C307.486 42.3121 308.148 42.842 309.473 42.842H310.599V49.0014C310.003 49.1338 308.678 49.2663 307.486 49.2663C303.645 49.2663 300.797 47.8755 300.135 43.5705C298.346 47.3456 293.843 49.7961 288.081 49.7961ZM289.803 43.6367C295.432 43.6367 299.009 40.0603 299.009 34.6957V32.7088L289.869 34.5632C286.094 35.2918 284.571 36.8813 284.571 39.3318C284.571 42.1135 286.425 43.6367 289.803 43.6367Z"/><path d="M261.544 8.92911V1.37891H270.352V8.92911H261.544ZM261.676 48.9982V13.6314H270.153V48.9982H261.676Z"/></svg>`;
@@ -24,36 +28,37 @@
   const BRANCH_SMALL = fork("-4.9 -13.8 51.3 68.5");
 
   // Each at the size of the SF Symbol shown in that spot, so the layout
-  // matches point for point.
+  // matches point for point. A viewBox that doesn't start at 0 0 moves the
+  // drawing in its box, to where the app draws the symbol.
   const ICON = {
-    refresh: `<svg viewBox="0 0 15 17" width="15" height="17" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.75 9.7 A5.43 5.08 0 1 1 7.34 4.97 L10 5.12 M7.1 2.42 L10 5.12 L7.05 7.92"/></svg>`,
-    refreshSmall: `<svg viewBox="0 0 14 16" width="14" height="16" fill="none" stroke="currentColor" stroke-width="1.06" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11.95 8.95 A5.22 5.2 0 1 1 6.73 4.06 L9.22 4.28 M6.5 1.56 L9.22 4.28 L6.55 6.95"/></svg>`,
-    gear: `<svg viewBox="0 0 17 17" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.17 2.54 L8.48 2.55 L8.78 2.61 L9.06 2.81 L9.25 3.42 L9.37 4.03 L9.56 4.26 L9.77 4.36 L9.99 4.45 L10.2 4.54 L10.43 4.62 L10.72 4.59 L11.24 4.25 L11.8 3.94 L12.14 4 L12.4 4.18 L12.62 4.39 L12.83 4.61 L13.01 4.87 L13.07 5.21 L12.76 5.77 L12.42 6.29 L12.39 6.58 L12.47 6.81 L12.56 7.02 L12.65 7.24 L12.75 7.45 L12.98 7.64 L13.59 7.76 L14.2 7.95 L14.4 8.23 L14.46 8.53 L14.47 8.84 L14.46 9.15 L14.4 9.45 L14.2 9.73 L13.59 9.92 L12.98 10.04 L12.75 10.23 L12.65 10.44 L12.56 10.66 L12.47 10.87 L12.39 11.1 L12.42 11.39 L12.76 11.91 L13.07 12.47 L13.01 12.81 L12.83 13.07 L12.62 13.29 L12.4 13.5 L12.14 13.68 L11.8 13.74 L11.24 13.43 L10.72 13.09 L10.43 13.06 L10.2 13.14 L9.99 13.23 L9.77 13.32 L9.56 13.42 L9.37 13.65 L9.25 14.26 L9.06 14.87 L8.78 15.07 L8.48 15.13 L8.17 15.14 L7.86 15.13 L7.56 15.07 L7.28 14.87 L7.09 14.26 L6.97 13.65 L6.78 13.42 L6.57 13.32 L6.35 13.23 L6.14 13.14 L5.91 13.06 L5.62 13.09 L5.1 13.43 L4.54 13.74 L4.2 13.68 L3.94 13.5 L3.72 13.29 L3.51 13.07 L3.33 12.81 L3.27 12.47 L3.58 11.91 L3.92 11.39 L3.95 11.1 L3.87 10.87 L3.78 10.66 L3.69 10.44 L3.59 10.23 L3.36 10.04 L2.75 9.92 L2.14 9.73 L1.94 9.45 L1.88 9.15 L1.87 8.84 L1.88 8.53 L1.94 8.23 L2.14 7.95 L2.75 7.76 L3.36 7.64 L3.59 7.45 L3.69 7.24 L3.78 7.02 L3.87 6.81 L3.95 6.58 L3.92 6.29 L3.58 5.77 L3.27 5.21 L3.33 4.87 L3.51 4.61 L3.72 4.39 L3.94 4.18 L4.2 4 L4.54 3.94 L5.1 4.25 L5.62 4.59 L5.91 4.62 L6.14 4.54 L6.35 4.45 L6.57 4.36 L6.78 4.26 L6.97 4.03 L7.09 3.42 L7.28 2.81 L7.56 2.61 L7.86 2.55 Z"/><circle cx="8.17" cy="8.84" r="1.87"/></svg>`,
-    close: `<svg viewBox="0 0 15 14" width="15" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.68 2.49 L11.98 11.79 M11.98 2.49 L2.68 11.79"/></svg>`,
-    people: `<svg viewBox="0 0 18 13" width="18" height="13" fill="currentColor" aria-hidden="true"><ellipse cx="5.4" cy="4.38" rx="1.85" ry="2.07"/><path d="M1.5 10.5 A4.42 3.25 0 0 1 7.95 7.61 A5.28 4 0 0 0 6.32 10.5 V11.25 H2.15 Q1.5 11.25 1.5 10.6 Z"/><ellipse cx="11.63" cy="3.94" rx="2.13" ry="2.32"/><path d="M7.07 10.5 A4.53 3.25 0 0 1 16.13 10.5 V10.6 Q16.13 11.25 15.48 11.25 H7.72 Q7.07 11.25 7.07 10.6 Z"/></svg>`,
+    refresh: `<svg viewBox="-0.25 0 15 17" width="15" height="17" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.75 9.7 A5.43 5.08 0 1 1 7.34 4.97 L10 5.12 M7.1 2.42 L10 5.12 L7.05 7.92"/></svg>`,
+    refreshSmall: `<svg viewBox="0 0 13.5 16" width="13.5" height="16" fill="none" stroke="currentColor" stroke-width="1.06" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11.95 8.95 A5.22 5.2 0 1 1 6.73 4.06 L9.22 4.28 M6.5 1.56 L9.22 4.28 L6.55 6.95"/></svg>`,
+    gear: `<svg viewBox="0.4 1.07 15.54 15.54" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.17 2.54 L8.48 2.55 L8.78 2.61 L9.06 2.81 L9.25 3.42 L9.37 4.03 L9.56 4.26 L9.77 4.36 L9.99 4.45 L10.2 4.54 L10.43 4.62 L10.72 4.59 L11.24 4.25 L11.8 3.94 L12.14 4 L12.4 4.18 L12.62 4.39 L12.83 4.61 L13.01 4.87 L13.07 5.21 L12.76 5.77 L12.42 6.29 L12.39 6.58 L12.47 6.81 L12.56 7.02 L12.65 7.24 L12.75 7.45 L12.98 7.64 L13.59 7.76 L14.2 7.95 L14.4 8.23 L14.46 8.53 L14.47 8.84 L14.46 9.15 L14.4 9.45 L14.2 9.73 L13.59 9.92 L12.98 10.04 L12.75 10.23 L12.65 10.44 L12.56 10.66 L12.47 10.87 L12.39 11.1 L12.42 11.39 L12.76 11.91 L13.07 12.47 L13.01 12.81 L12.83 13.07 L12.62 13.29 L12.4 13.5 L12.14 13.68 L11.8 13.74 L11.24 13.43 L10.72 13.09 L10.43 13.06 L10.2 13.14 L9.99 13.23 L9.77 13.32 L9.56 13.42 L9.37 13.65 L9.25 14.26 L9.06 14.87 L8.78 15.07 L8.48 15.13 L8.17 15.14 L7.86 15.13 L7.56 15.07 L7.28 14.87 L7.09 14.26 L6.97 13.65 L6.78 13.42 L6.57 13.32 L6.35 13.23 L6.14 13.14 L5.91 13.06 L5.62 13.09 L5.1 13.43 L4.54 13.74 L4.2 13.68 L3.94 13.5 L3.72 13.29 L3.51 13.07 L3.33 12.81 L3.27 12.47 L3.58 11.91 L3.92 11.39 L3.95 11.1 L3.87 10.87 L3.78 10.66 L3.69 10.44 L3.59 10.23 L3.36 10.04 L2.75 9.92 L2.14 9.73 L1.94 9.45 L1.88 9.15 L1.87 8.84 L1.88 8.53 L1.94 8.23 L2.14 7.95 L2.75 7.76 L3.36 7.64 L3.59 7.45 L3.69 7.24 L3.78 7.02 L3.87 6.81 L3.95 6.58 L3.92 6.29 L3.58 5.77 L3.27 5.21 L3.33 4.87 L3.51 4.61 L3.72 4.39 L3.94 4.18 L4.2 4 L4.54 3.94 L5.1 4.25 L5.62 4.59 L5.91 4.62 L6.14 4.54 L6.35 4.45 L6.57 4.36 L6.78 4.26 L6.97 4.03 L7.09 3.42 L7.28 2.81 L7.56 2.61 L7.86 2.55 Z"/><circle cx="8.17" cy="8.84" r="1.87"/></svg>`,
+    close: `<svg viewBox="-0.25 -0.25 15 14" width="15" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.68 2.49 L11.98 11.79 M11.98 2.49 L2.68 11.79"/></svg>`,
+    people: `<svg viewBox="0 0 17.5 13" width="17.5" height="13" fill="currentColor" aria-hidden="true"><ellipse cx="5.4" cy="4.38" rx="1.85" ry="2.07"/><path d="M1.5 10.5 A4.42 3.25 0 0 1 7.95 7.61 A5.28 4 0 0 0 6.32 10.5 V11.25 H2.15 Q1.5 11.25 1.5 10.6 Z"/><ellipse cx="11.63" cy="3.94" rx="2.13" ry="2.32"/><path d="M7.07 10.5 A4.53 3.25 0 0 1 16.13 10.5 V10.6 Q16.13 11.25 15.48 11.25 H7.72 Q7.07 11.25 7.07 10.6 Z"/></svg>`,
     // The same at 12 pt, for the team card in settings
     peopleLarge: `<svg viewBox="0 0 18 13" width="19.64" height="14.18" fill="currentColor" aria-hidden="true"><ellipse cx="5.4" cy="4.38" rx="1.85" ry="2.07"/><path d="M1.5 10.5 A4.42 3.25 0 0 1 7.95 7.61 A5.28 4 0 0 0 6.32 10.5 V11.25 H2.15 Q1.5 11.25 1.5 10.6 Z"/><ellipse cx="11.63" cy="3.94" rx="2.13" ry="2.32"/><path d="M7.07 10.5 A4.53 3.25 0 0 1 16.13 10.5 V10.6 Q16.13 11.25 15.48 11.25 H7.72 Q7.07 11.25 7.07 10.6 Z"/></svg>`,
-    folder: `<svg viewBox="0 0 16 12" width="16" height="12" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M1.5 2.4 Q1.5 1.19 2.7 1.19 H4.75 Q5.05 1.19 5.3 1.42 L6.05 2 Q6.3 2.19 6.6 2.19 H12.8 Q13.94 2.19 13.94 3.35 V9.85 Q13.94 11 12.8 11 H2.65 Q1.5 11 1.5 9.85 Z M2.5 4.12 V3.7 Q2.5 3.25 2.95 3.25 H12.49 Q12.94 3.25 12.94 3.7 V4.12 Z"/></svg>`,
-    chevronDown: `<svg viewBox="0 0 10 6" width="10" height="6" fill="none" stroke="currentColor" stroke-width="1.05" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.55 1.77 L4.49 4.7 L7.42 1.77"/></svg>`,
+    folder: `<svg viewBox="0 0 15.5 12" width="15.5" height="12" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M1.5 2.4 Q1.5 1.19 2.7 1.19 H4.75 Q5.05 1.19 5.3 1.42 L6.05 2 Q6.3 2.19 6.6 2.19 H12.8 Q13.94 2.19 13.94 3.35 V9.85 Q13.94 11 12.8 11 H2.65 Q1.5 11 1.5 9.85 Z M2.5 4.12 V3.7 Q2.5 3.25 2.95 3.25 H12.49 Q12.94 3.25 12.94 3.7 V4.12 Z"/></svg>`,
+    chevronDown: `<svg viewBox="0 0 9.5 6" width="9.5" height="6" fill="none" stroke="currentColor" stroke-width="1.05" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.55 1.77 L4.49 4.7 L7.42 1.77"/></svg>`,
     chevronRight: `<svg viewBox="0 0 8 11" width="8" height="11" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 2.1 L6.35 5.85 L2.6 9.6"/></svg>`,
-    chevronLeft: `<svg viewBox="0 0 10 13" width="10" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.1 2.37 L1.55 6.75 L6.1 11.13"/></svg>`,
-    clock: `<svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" stroke-width="0.82" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5.72" cy="6.28" r="4.56"/><path d="M5.69 3.29 V6.45 H3.35" stroke-width="0.7"/></svg>`,
+    chevronLeft: `<svg viewBox="0.25 0 9.5 13" width="9.5" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.1 2.37 L1.55 6.75 L6.1 11.13"/></svg>`,
+    clock: `<svg viewBox="-0.25 0.25 12 12" width="12" height="12" fill="none" stroke="currentColor" stroke-width="0.82" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5.72" cy="6.28" r="4.56"/><path d="M5.69 3.29 V6.45 H3.35" stroke-width="0.7"/></svg>`,
     compass: `<svg viewBox="0 0 15 15" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.06" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7.5" cy="7.5" r="5.92" fill="none"/><path fill="currentColor" fill-rule="evenodd" stroke-width="0.5" d="M10.54 4.46 L8.62 8.62 L4.46 10.54 L6.38 6.38 Z M6.5 7.5 a1 1 0 1 0 2 0 a1 1 0 1 0 -2 0 Z"/></svg>`,
-    compassLarge: `<svg viewBox="0 0 17 17" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8.32" cy="8.71" r="6.35" fill="none"/><path fill="currentColor" fill-rule="evenodd" stroke-width="0.5" d="M11.5 5.53 L9.63 10.02 L5.14 11.89 L7.01 7.4 Z M7.25 8.71 a1.07 1.07 0 1 0 2.14 0 a1.07 1.07 0 1 0 -2.14 0 Z"/></svg>`,
-    eye: `<svg viewBox="0 0 21 13" width="21" height="13" fill="none" stroke="currentColor" stroke-width="1.06" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.05 6.56 C2.25 5.06 5.9 1.62 10.15 1.62 C14.4 1.62 18.06 5.06 18.26 6.56 C18.06 8.06 14.4 11.5 10.15 11.5 C5.9 11.5 2.25 8.06 2.05 6.56 Z"/><path fill="currentColor" stroke="none" fill-rule="evenodd" d="M6.62 6.53 a3.55 3.55 0 1 0 7.1 0 a3.55 3.55 0 1 0 -7.1 0 Z M8.98 6.53 a1.19 1.19 0 1 0 2.38 0 a1.19 1.19 0 1 0 -2.38 0 Z"/></svg>`,
-    xCircle: `<svg viewBox="0 0 15 15" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7.5" cy="7.5" r="5.925"/><path d="M5.45 5.45 L9.55 9.55 M9.55 5.45 L5.45 9.55"/></svg>`,
+    compassLarge: `<svg viewBox="-0.25 -0.25 17 17" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8.32" cy="8.71" r="6.35" fill="none"/><path fill="currentColor" fill-rule="evenodd" stroke-width="0.5" d="M11.5 5.53 L9.63 10.02 L5.14 11.89 L7.01 7.4 Z M7.25 8.71 a1.07 1.07 0 1 0 2.14 0 a1.07 1.07 0 1 0 -2.14 0 Z"/></svg>`,
+    eye: `<svg viewBox="0.5 0 20 13" width="20" height="13" fill="none" stroke="currentColor" stroke-width="1.06" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.05 6.56 C2.25 5.06 5.9 1.62 10.15 1.62 C14.4 1.62 18.06 5.06 18.26 6.56 C18.06 8.06 14.4 11.5 10.15 11.5 C5.9 11.5 2.25 8.06 2.05 6.56 Z"/><path fill="currentColor" stroke="none" fill-rule="evenodd" d="M6.62 6.53 a3.55 3.55 0 1 0 7.1 0 a3.55 3.55 0 1 0 -7.1 0 Z M8.98 6.53 a1.19 1.19 0 1 0 2.38 0 a1.19 1.19 0 1 0 -2.38 0 Z"/></svg>`,
+    xCircle: `<svg viewBox="0.25 0 14.5 15" width="14.5" height="15" fill="none" stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7.5" cy="7.5" r="5.925"/><path d="M5.45 5.45 L9.55 9.55 M9.55 5.45 L5.45 9.55"/></svg>`,
     copy: `<svg viewBox="0 0 15 17" width="15" height="17" fill="none" stroke="currentColor" stroke-width="1.0" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.85 4.75 V3.35 A1.6 1.6 0 0 1 6.45 1.75 H8.85 L13.1 6 V10.9 A1.6 1.6 0 0 1 11.5 12.5 H10.25"/><path d="M8.85 1.75 V5.3 Q8.85 6 9.55 6 H13.1"/><path d="M3.6 4.75 H6 L10.25 9 V13.9 A1.6 1.6 0 0 1 8.65 15.5 H3.6 A1.6 1.6 0 0 1 2 13.9 V6.35 A1.6 1.6 0 0 1 3.6 4.75 Z"/><path d="M6 4.75 V8.3 Q6 9 6.7 9 H10.25"/></svg>`,
     check: `<svg viewBox="0 0 14 13" width="14" height="13" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.15 7.7 L5.46 11.42 L11.03 2.5"/></svg>`,
-    link: `<svg viewBox="0 0 15 15" width="15" height="15" fill="none" stroke="currentColor" stroke-width="0.94" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g transform="rotate(-45 7.5 7.5) translate(7.5 7.5)"><path d="M1.66 2.75 H3.15 A2.75 2.75 0 0 0 3.15 -2.75 H0.49 A2.75 2.75 0 0 0 -2.01 1.15"/><path d="M-2.63 -2.75 H-4.12 A2.75 2.75 0 0 0 -4.12 2.75 H-1.46 A2.75 2.75 0 0 0 1.04 -1.15"/></g></svg>`,
-    external: `<svg viewBox="0 0 16 15" width="16" height="15" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.38" y="2.63" width="10.75" height="10.5" rx="1.5"/><path d="M6.9 5.88 H9.78 V8.8 M9.78 5.88 L5.75 9.9" stroke-width="1.05"/></svg>`,
-    lines: `<svg viewBox="0 0 18 15" width="18" height="15" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.38 2.38 H15.19 M2.38 5.94 H10.13 M2.38 9.53 H15.19 M2.38 13.13 H10.13"/></svg>`,
-    bell: `<svg viewBox="0 0 14 15" width="14" height="15" fill="currentColor" aria-hidden="true"><circle cx="6.78" cy="2.7" r="1.15"/><path d="M6.78 3.2 C4.6 3.2 2.85 4.6 2.85 7.2 V8.6 C2.85 9.6 2 10.2 1.4 10.7 C1.05 11 1.2 11.75 1.75 11.75 H11.8 C12.35 11.75 12.5 11 12.15 10.7 C11.55 10.2 10.7 9.6 10.7 8.6 V7.2 C10.7 4.6 8.95 3.2 6.78 3.2 Z"/><path d="M5.03 12.2 H8.53 A1.75 1.75 0 0 1 5.03 12.2 Z"/></svg>`,
-    menubar: `<svg viewBox="0 0 17 13" width="17" height="13" fill="none" stroke="currentColor" stroke-width="1.0" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="1.72" width="12.8" height="9.81" rx="2.3"/><path d="M2.1 3.6 H14.7" stroke-width="0.85"/></svg>`,
-    star: `<svg viewBox="0 0 16 15" width="16" height="15" fill="none" stroke="currentColor" stroke-width="1.0" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.5 1.9 L9.13 5.96 L13.49 6.25 L10.13 9.06 L11.2 13.3 L7.5 10.97 L3.8 13.3 L4.87 9.06 L1.51 6.25 L5.87 5.96 Z"/></svg>`,
+    link: `<svg viewBox="0 0 14.5 15" width="14.5" height="15" fill="none" stroke="currentColor" stroke-width="0.94" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g transform="rotate(-45 7.5 7.5) translate(7.5 7.5)"><path d="M1.66 2.75 H3.15 A2.75 2.75 0 0 0 3.15 -2.75 H0.49 A2.75 2.75 0 0 0 -2.01 1.15"/><path d="M-2.63 -2.75 H-4.12 A2.75 2.75 0 0 0 -4.12 2.75 H-1.46 A2.75 2.75 0 0 0 1.04 -1.15"/></g></svg>`,
+    external: `<svg viewBox="0 0.25 16 15" width="16" height="15" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.38" y="2.63" width="10.75" height="10.5" rx="1.5"/><path d="M6.9 5.88 H9.78 V8.8 M9.78 5.88 L5.75 9.9" stroke-width="1.05"/></svg>`,
+    lines: `<svg viewBox="-0.25 -0.25 18 15" width="18" height="15" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.38 2.38 H15.19 M2.38 5.94 H10.13 M2.38 9.53 H15.19 M2.38 13.13 H10.13"/></svg>`,
+    bell: `<svg viewBox="-0.25 0 14 15" width="14" height="15" fill="currentColor" aria-hidden="true"><circle cx="6.78" cy="2.7" r="1.15"/><path d="M6.78 3.2 C4.6 3.2 2.85 4.6 2.85 7.2 V8.6 C2.85 9.6 2 10.2 1.4 10.7 C1.05 11 1.2 11.75 1.75 11.75 H11.8 C12.35 11.75 12.5 11 12.15 10.7 C11.55 10.2 10.7 9.6 10.7 8.6 V7.2 C10.7 4.6 8.95 3.2 6.78 3.2 Z"/><path d="M5.03 12.2 H8.53 A1.75 1.75 0 0 1 5.03 12.2 Z"/></svg>`,
+    menubar: `<svg viewBox="0 0.5 17 13" width="17" height="13" fill="none" stroke="currentColor" stroke-width="1.0" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="1.72" width="12.8" height="9.81" rx="2.3"/><path d="M2.1 3.6 H14.7" stroke-width="0.85"/></svg>`,
+    star: `<svg viewBox="-0.5 0 16 15" width="16" height="15" fill="none" stroke="currentColor" stroke-width="1.0" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.5 1.9 L9.13 5.96 L13.49 6.25 L10.13 9.06 L11.2 13.3 L7.5 10.97 L3.8 13.3 L4.87 9.06 L1.51 6.25 L5.87 5.96 Z"/></svg>`,
     bubble: `<svg viewBox="0 0 16 15" width="16" height="15" fill="none" stroke="currentColor" stroke-width="0.94" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.9 11.25 H3.97 A2 2 0 0 1 1.97 9.25 V4.35 A2 2 0 0 1 3.97 2.35 H11.97 A2 2 0 0 1 13.97 4.35 V9.25 A2 2 0 0 1 11.97 11.25 H7.25 L4.9 13.6 Z"/><path d="M7.97 4.28 V7.34" stroke-width="1.06"/><circle cx="7.94" cy="9.16" r="0.62" fill="currentColor" stroke="none"/></svg>`,
-    arrowUpRight: `<svg viewBox="0 0 10 10" width="10" height="10" fill="none" stroke="currentColor" stroke-width="1.0" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.19 1.5 H8.06 V7.13 M1.96 8.5 L8.06 1.45"/></svg>`,
+    arrowUpRight: `<svg viewBox="-0.25 -0.5 10 10" width="10" height="10" fill="none" stroke="currentColor" stroke-width="1.0" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.19 1.5 H8.06 V7.13 M1.96 8.5 L8.06 1.45"/></svg>`,
     logOut: `<svg viewBox="0 0 18 16" width="18" height="16" fill="none" stroke="currentColor" stroke-width="1.0" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11.85 5.81 V3.29 A1.6 1.6 0 0 0 10.25 1.69 H3.6 A1.6 1.6 0 0 0 2 3.29 V12.9 A1.6 1.6 0 0 0 3.6 14.5 H10.25 A1.6 1.6 0 0 0 11.85 12.9 V10.38"/><path d="M7.56 8.06 H15.94 M13.6 5.72 L15.94 8.06 L13.6 10.4"/></svg>`,
-    power: `<svg viewBox="0 0 15 15" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.88 4.15 A5.42 5.42 0 1 1 3.22 4.15"/><path d="M7.1 2.16 V7.34"/></svg>`,
+    power: `<svg viewBox="-0.5 0 15 15" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.88 4.15 A5.42 5.42 0 1 1 3.22 4.15"/><path d="M7.1 2.16 V7.34"/></svg>`,
     lock: `<svg viewBox="0 0 10 12" width="10" height="12" fill="currentColor" aria-hidden="true"><path d="M2.5 5.8 V4.14 A2.08 2.08 0 0 1 6.66 4.14 V5.8" fill="none" stroke="currentColor" stroke-width="0.8"/><rect x="1.25" y="5.55" width="6.69" height="5.7" rx="0.85"/></svg>`,
     key: `<svg viewBox="0 0 18 28" width="18" height="28" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M6.5 14.18 A6.25 6.25 0 1 1 10.44 14.37 V14.54 L12.98 17.08 Q13.23 17.33 12.98 17.58 L10.44 20.12 V20.47 L12.27 22.3 Q12.52 22.55 12.27 22.8 L8.75 26.31 L6.5 24.06 Z M7.1 6.25 a1.65 1.65 0 1 0 3.3 0 a1.65 1.65 0 1 0 -3.3 0 Z"/></svg>`,
     box: `<svg viewBox="0 0 30 30" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.56 3.67 Q14.88 2.95 16.19 3.67 L24.56 8.28 Q25.88 9 25.88 10.5 L25.88 19.4 Q25.88 20.9 24.58 21.65 L16.17 26.5 Q14.88 27.25 13.58 26.5 L5.17 21.65 Q3.88 20.9 3.88 19.4 L3.88 10.5 Q3.88 9 5.19 8.28 Z"/><path d="M3.875 9 L14.875 15.05 L25.875 9 M14.875 15.05 V26.9 M9.375 5.975 L20.375 12.025"/></svg>`,
@@ -366,6 +371,27 @@
     appButton.dataset.state = look;
   }
 
+  // MARK: - Text widths
+  //
+  // SwiftUI rounds each text's width up to the pixel, a half point on a
+  // Retina screen, and whatever follows the text moves with it. These texts
+  // get the same rounding, so the demo lands on the app's pixels.
+
+  const ROUNDED =
+    ".d-name, .d-ago, .d-elapsed > span, .d-meta .d-dot, .d-badge, .d-picker > span, .d-status-label > span:last-child, .d-link > span, .d-version";
+
+  function roundWidths(els) {
+    els = [...els];
+    // In the popover's own points, though it may be scaling open
+    const scale = body.getBoundingClientRect().width / body.offsetWidth;
+    if (!scale) return;
+    for (const el of els) el.style.width = "";
+    const widths = els.map((el) => el.getBoundingClientRect().width / scale);
+    els.forEach((el, i) => {
+      if (widths[i]) el.style.width = `${Math.ceil(widths[i] * 2 - 0.001) / 2}px`;
+    });
+  }
+
   // MARK: - Signed in
 
   function renderApp() {
@@ -429,6 +455,7 @@
     if (!list) return;
     teamLabel.textContent = teamName();
     projectLabel.textContent = state.project || "All Projects";
+    roundWidths([teamLabel, projectLabel]);
   }
 
   // Rows are updated in place, so one that is open, or being swiped, stays
@@ -466,6 +493,7 @@
     }
     for (const stale of existing.values()) stale.remove();
     if (swipe.wrap && !swipe.wrap.isConnected) swipe.wrap = null;
+    roundWidths(list.querySelectorAll(ROUNDED));
   }
 
   // A row is a sideways scroller: the browser tracks the swipe, and the row
@@ -547,6 +575,7 @@
           <button class="d-btn d-btn-primary" data-action="redeploy"${state.busy ? " disabled" : ""}>${busy || ICON.refreshSmall}<span>Redeploy</span></button>
         </div>
       </div>`;
+    roundWidths([...badge.querySelectorAll(ROUNDED), ...detail.querySelectorAll(ROUNDED)]);
   }
 
   function renderSettings() {
@@ -602,6 +631,7 @@
         <button class="d-btn d-btn-quiet" data-action="quit">${ICON.power}<span>Quit</span></button>
         <p class="d-fine">Your access token is stored securely in macOS Keychain and will be removed when you sign out.</p>
       </section>`;
+    roundWidths(settingsPane.querySelectorAll(ROUNDED));
   }
 
   // MARK: - Sign in
@@ -930,15 +960,16 @@
   }
 
   // The row slides as far as its scroller has scrolled, rubber band included,
-  // and the actions fan out from under it like a deck of cards. Each card
-  // tucks 1 pt under the row or the card before it, so no seam shows.
+  // and the actions fan out from under it like a deck of cards, each over the
+  // one before. Each card reaches 2 pt under the next, and the first 1 pt
+  // under the row, so no seam shows.
   function drawRow(wrap) {
     const revealed = -rubberBand(-wrap.scrollLeft);
     const width = Math.max(ACTION_WIDTH, revealed / ACTION_COUNT);
     wrap.row.style.transform = revealed ? `translateX(${-revealed}px)` : "";
     wrap.cards.forEach((card, i) => {
       card.style.width = `${width + 2}px`;
-      card.style.transform = `translateX(${revealed * (i / ACTION_COUNT) - revealed - 1}px)`;
+      card.style.transform = `translateX(${revealed * (i / ACTION_COUNT) - revealed - (i ? 0 : 1)}px)`;
     });
   }
 
@@ -1481,9 +1512,11 @@
   setInterval(() => {
     tickClock();
     for (const el of demo.querySelectorAll("[data-elapsed]")) el.textContent = elapsed(Number(el.dataset.elapsed));
+    roundWidths(demo.querySelectorAll("[data-elapsed]"));
   }, SECOND);
   setInterval(() => {
     for (const el of demo.querySelectorAll("[data-ago]")) el.textContent = ago(Number(el.dataset.ago));
+    roundWidths(demo.querySelectorAll("[data-ago]"));
   }, 10 * SECOND);
 
   renderApp();
