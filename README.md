@@ -23,13 +23,13 @@
 ## Features
 
 - **Live status.** Every build, preview, and production deploy across your projects, refreshed every 10 seconds.
-- **An icon that keeps you posted.** The menu bar triangle turns orange while your latest deploy builds and red if it fails.
+- **An icon that keeps you posted.** The triangle turns orange while your latest deploy builds and red if it fails.
 - **Failure alerts.** Get a notification as soon as a deploy fails, and optionally when one succeeds.
 - **Teams and projects.** Switch between your personal account and your teams, and filter by project.
 - **Every detail.** See the branch, commit, repository, and environment of any deployment, and copy its URL.
 - **Actions.** Cancel a build, redeploy, open the site, or inspect it on Vercel.
-- **Swipe for shortcuts.** Swipe left on a deployment with two fingers to visit it, open it on Vercel, or jump to its logs.
-- **Native and private.** Built with SwiftUI, follows light and dark mode, keeps your token in the Keychain, and has no analytics.
+- **Swipe for shortcuts.** Swipe a deployment left with two fingers to visit it, open it on Vercel, or see its logs.
+- **Native and private.** Built with SwiftUI, keeps your token in the Keychain, and has no analytics.
 
 ## Install
 
